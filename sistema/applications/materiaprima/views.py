@@ -414,13 +414,12 @@ def export_materiaprima_to_excel(request):
             'Sí' if caracteristicas and caracteristicas.empaque else 'No',
             'Sí' if caracteristicas and caracteristicas.color else 'No',
             dict(CaracteristicasOrganolepticas.ESTADO_CHOICES).get(caracteristicas.estado, '') if caracteristicas else '',
-            desinfeccion.des_nombre,
-            desinfeccion.concentracion,
-            desinfeccion.responsable.name,
-            desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S"),
-            desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S"),
-            desinfeccion.obsevacion,
-
+            desinfeccion.des_nombre.des_nombre if desinfeccion else '',
+            desinfeccion.concentracion if desinfeccion else '',
+            desinfeccion.responsable.name if desinfeccion else '',
+            desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
+            desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
+            desinfeccion.obsevacion if desinfeccion else '',
         ]
         worksheet.append(data_row)
 
@@ -433,6 +432,7 @@ def export_materiaprima_to_excel(request):
 
     return response
 
+
 def export_materiaprima_to_csv(request):
     '''Vista para exportar datos de tabla producto terminado en formato CSV'''
     materiaprima = MateriaPrima.objects.all()
@@ -443,7 +443,7 @@ def export_materiaprima_to_csv(request):
     headers = [
         'Lote', 'Materia prima', 'Tipo','Cantidad', 'Fecha de llegada', 'Fecha de vencimiento',
          'Olor', 'Textura','Limpieza','Empaque','Color', 'Estado',
-        'Agente desinfectante', 'Concentración', 'Responsable'
+        'Agente desinfectante', 'Concentración', 'Responsable',
         'Tiempo de inicio', 'Tiempo de final','Observaciones'
     ]
     writer.writerow(headers)
@@ -474,12 +474,12 @@ def export_materiaprima_to_csv(request):
             'Sí' if caracteristicas and caracteristicas.empaque else 'No',
             'Sí' if caracteristicas and caracteristicas.color else 'No',
             dict(CaracteristicasOrganolepticas.ESTADO_CHOICES).get(caracteristicas.estado, '') if caracteristicas else '',
-            desinfeccion.des_nombre.des_nombre,
-            desinfeccion.concentracion,
-            desinfeccion.responsable.name,
-            desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S"),
-            desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S"),
-            desinfeccion.obsevacion,
-            ])
-        return response
+            desinfeccion.des_nombre.des_nombre if desinfeccion else '',
+            desinfeccion.concentracion if desinfeccion else '',
+            desinfeccion.responsable.name if desinfeccion else '',
+            desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
+            desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
+            desinfeccion.obsevacion if desinfeccion else '',
+        ])
 
+    return response
