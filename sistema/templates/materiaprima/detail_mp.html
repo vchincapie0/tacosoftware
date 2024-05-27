@@ -1,0 +1,139 @@
+{%extends "base.html"%}
+{%block title%} Detalle Materia Prima {%endblock%}
+
+
+{%block content%}
+
+      <a href="{% url 'mp_app:lista_mp' %}" style="color: rgb(236, 225, 47, .75)"><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
+
+      <div class="mt-3 row">
+
+        <!--Tarjeta de los detalles de materia prima-->
+        <div class="col-sm-6 mb-3 mb-sm-0">
+          <div class="card">
+            <div class="card-header">
+              <h5>Detalles Materia Prima</h5>
+            </div>
+
+            <div class="card-body">
+              <p class="card-text">Lote: {{ materiaprima.mp_lote }} | {{materiaprima.mp_nombre}}</p>
+              <p class="card-text">Tipo: {{ materiaprima.mp_nombre.get_mp_tipo_display }} </p>
+              <p class="card-text">Cantidad: {{ materiaprima.mp_cantidad }} g </p>
+              <p class="card-text">Fecha de Llegada: {{materiaprima.mp_fechallegada}}</p>
+              <p class="card-text">Fecha de Vencimiento: {{materiaprima.mp_fechavencimiento}}</p>
+            </div>
+          </div>
+        </div>
+
+
+      <div class="mt-3 row">
+        <!--Tarjeta de Caracteristicas Organolepticas-->
+        <div class="col-sm-6 mb-3 mb-sm-0">
+          <div class="card">
+            <div class="card-header">
+              Características Organolépticas
+            </div>
+
+            <div class="card-body">
+              <!-- Verificar si ya existen características organolépticas -->
+              {% if materiaprima.caracteristicasorganolepticas_set.all %}
+              <!-- Si ya existen, mostrar un mensaje o desactivar el enlace/botón para ingresar nuevas características -->
+              <div class="alert alert-warning" role="alert">
+                  Ya se han registrado características organolépticas para esta materia prima.                  
+              </div>
+              {% else %}
+                <div class="alert alert-warning" role="alert">
+                  No se han registrado características organolépticas para esta materia prima.                  
+                </div>
+              {% endif %}
+              <p class="card-text">
+                {% for c in materiaprima.caracteristicasorganolepticas_set.all %}
+                  {% if c.estado == '1' %}
+                    <div class="row">
+                      <div class="col-6">Estado: <p style="color: red;">{{ c.get_estado_display }}</p>
+                      <p>Caracerísticas NO Satisfactorias:</p>
+                      <ul>
+                        {% if not c.olor %}<li>Olor</li>{% endif %}
+                        {% if not c.textura %}<li>Textura</li>{% endif %}
+                        {% if not c.limpieza %}<li>Limpieza</li>{% endif %}
+                        {% if not c.empaque %}<li>Empaque</li>{% endif %}
+                        {% if not c.color %}<li>Color</li>{% endif %}
+                      </ul>
+                        
+                      </div>
+                      <div class="col-6 d-flex justify-content-center align-items-center"><a onclick="caracteristicas_update('{% url 'mp_app:updateCaracteristicas_mp' c.pk %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                    </div>
+                  {% else %}
+                    <div class="row">
+                      <div class="col-6">Estado: <p style="color: green;">{{ c.get_estado_display }}</p></div>
+                      <div class="col-6 d-flex justify-content-center align-items-center"><a onclick="caracteristicas_update('{% url 'mp_app:updateCaracteristicas_mp' c.pk %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                    </div>
+ 
+                  {% endif %}
+                {% endfor %}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!--Tarjeta de Desinfección-->
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-header">
+              Desinfección
+            </div>
+
+            <div class="card-body">
+              <!-- Verificar si ya existen Desinfeccion -->
+              {% if materiaprima.desinfeccion_set.all %}
+              <!-- Si ya existen, mostrar un mensaje o desactivar el enlace/botón para ingresar nuevas características -->
+              <div class="alert alert-info" role="alert">
+                {% for d in materiaprima.desinfeccion_set.all %}
+                  <p class="card-text">Agente Desinfectante: {{d.des_nombre}}</p>
+                  <p class="card-text">Concentración: {{d.concentracion}}%</p>
+                  <p class="card-text">Responsable: {{d.responsable.name}} {{d.responsable.last_name}}</p>
+                  <p class="card-text">Tiempo de inicio: {{d.tiempo_inicio}}</p>
+                  <p class="card-text">Tiempo final: {{d.tiempo_fin}}</p>
+                  <p class="card-text">Observaciones: {{d.obsevacion}}</p>
+                  <a onclick="desinfeccion_update('{% url 'mp_app:updateDesinfeccion_mp' d.id %}')" class="btn btn-info" type="button"><i class="fa-solid fa-pump-soap"></i> Editar</a></div>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="alert alert-warning" role="alert">
+                No se han ingresado desinfección para esta materia prima.                  
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="modal fade" id="caracteristicas_update" role="dialog"></div>
+      <div class="modal fade" id="desinfeccion_update" role="dialog"></div>
+      
+
+{%endblock%}
+
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+  
+
+    function caracteristicas_update(url){
+        var $ = jQuery.noConflict();
+        $('#caracteristicas_update').load(url,function(){
+            $(this).modal('show');
+        }); 
+    } 
+
+    function desinfeccion_update(url){
+        var $ = jQuery.noConflict();
+        $('#desinfeccion_update').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+</script>
+{% endblock %}
+  

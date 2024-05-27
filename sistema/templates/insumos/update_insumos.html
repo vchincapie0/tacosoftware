@@ -1,0 +1,77 @@
+<div class="modal-dialog modal-md" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar Insumos</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editInsumosForm" action="{% url 'insumos_app:update_insumos' object.it_codigo %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+            {%csrf_token%}
+
+            {% if form.errors %}
+                <div class="alert alert-info">
+                    {{form.errors.it_nombre.0}}
+                    {{form.errors.it_cantidad.0}}
+                </div>
+            {% endif %}
+
+            <div class="mx-4 my-2 row">
+                
+                <div class="mb-3 col-12">
+                    <label for="id_mp_nombre" class="form-label">Insumo: </label>
+                    {{form.it_nombre}}   
+                </div>
+          
+           
+                <div class="mb-3 col-12">
+                    <label for="id_mp_fechallegada" class="form-label">Cantidad:</label>
+                    {{form.it_cantidad}}   
+                </div>
+
+                <div class="mb-3 col-12">
+                    <label for="id_mp_fechavencimiento" class="form-label">Fecha de Entrega:</label>
+                    <br>
+                    {{form.it_fechaEntrega}}  
+                </div>
+
+                <div class="mb-3 col-12">
+                    <label for="id_imp_lote" class="form-label">Estado: </label>
+                    {{form.it_estado}}
+                </div>
+
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        <button class="btn btn-success" type="submit">Guardar</button>
+                        &nbsp;&nbsp;
+                        <a href="{% url 'insumos_app:list_insumos' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+        </div>
+    
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+            $('#editInsumosForm').submit(function (event) {
+                event.preventDefault(); // Evita la redirección predeterminada
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        // Verifica la respuesta y actualiza el contenido del modal
+                        $('#edit_insumos').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        // Maneja errores de Ajax, si es necesario
+                    }
+                });
+            });
+        });
+</script>

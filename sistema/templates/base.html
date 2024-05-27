@@ -1,0 +1,171 @@
+{%load static%}
+<!doctype html>
+<html lang="es">
+    <head>
+        <title>{%block title%}{%endblock%}</title>
+        <!-- meta tags requeridos -->
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        
+        <link rel="icon" href="{% static 'img/icon.png' %}" type="image/x-icon">
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/style.css'%}">
+        <link rel="stylesheet" href="{% static 'css/estilos.css'%}">
+    </head>
+
+    <body>
+
+        <div class="wrapper">
+            <!-- Sidebar -->
+            <aside id="sidebar">
+                <div class="d-flex">
+                    <button class="toggle-btn" type="button">
+                        <img src="{% static 'img/Logotacomas.png' %}" alt="">
+                    </button>
+                    <div class="mt-2 sidebar-logo">
+                        <a href="{% url 'home_app:home' %}">Taco Mas</a> 
+                        {% if user.is_admin %}
+                            <p style="color: #fff;">Administrador</p>
+                        {% else %}
+                            <p style="color: #fff;">Operario</p>
+                        {% endif %}  
+                    </div>
+                        
+                </div>
+                <hr>
+                    
+                <ul class="sidebar-nav">
+
+                    {% if user.is_admin %}
+                    <li class="sidebar-item">
+                        <a href="{% url 'users_app:list_user' %}" class="sidebar-link">
+                            <i class="fa-solid fa-users pe-2"></i>
+                                <span>Usuarios</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#compras" aria-expanded="false" aria-controls="compras">
+                            <i class="fa-solid fa-truck pe-2"></i>
+                                <span>Compras</span>
+                        </a>
+                        <ul id="compras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{% url 'pedidos_app:list_pedidos' %}" class="sidebar-link"><i class="fa-solid fa-clipboard-list"></i> Pedidos</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'proveedores_app:list_proveedores' %}" class="sidebar-link"><i class="fa-solid fa-clipboard-user"></i> Proveedores</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'facturas_app:list_factura' %}" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Facturas</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                            data-bs-target="#existencias" aria-expanded="false" aria-controls="existencias">
+                            <i class="fa-regular fa-square-check pe-2"></i>
+                              <span>Existencias</span>
+                        </a>
+                        <ul id="existencias" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{% url 'existencias_app:stock_mp' %}" class="sidebar-link">Stock Materia Prima</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="#" class="sidebar-link">Stock Producto Terminado</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'existencias_app:stock_it' %}" class="sidebar-link">Stock Insumos</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- <li class="sidebar-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fa-solid fa-file-lines pe-2"></i>
+                                <span>Reportes</span>
+                        </a>
+                    </li> -->
+
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#modulos" aria-expanded="false" aria-controls="modulos">
+                        <i class="fa-solid fa-wrench"></i>
+                                <span>Herramientas Administrador</span>
+                        </a>
+                        <ul id="modulos" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{% url 'home_app:genericas_index' %}" class="sidebar-link">Tablas Genéricas</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'home_app:auditorias_index' %}" class="sidebar-link">Tablas de Auditoria</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                    
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                            data-bs-target="#producto" aria-expanded="false" aria-controls="producto">
+                            <i class="fa-solid fa-seedling pe-2"></i>
+                              <span>Producto</span>
+                        </a>
+                        <ul id="producto" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="{% url 'mp_app:lista_mp' %}" class="sidebar-link">Materia Prima</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'produ_app:list_produ' %}" class="sidebar-link">Producto Terminado</a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="{% url 'insumos_app:list_insumos' %}" class="sidebar-link">Insumos</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a href="{% url 'procesamientos_app:procesamientos' %}" class="sidebar-link">
+                            <i class="fa-solid fa-arrows-spin pe-2"></i>
+                                <span>Procesamiento</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr>
+                <div class="sidebar-footer">
+                    <a href="{% url 'users_app:logout' %}" class="sidebar-link">
+                        <i class="fa-solid fa-right-from-bracket pe-2"></i>
+                            <span>Cerrar Sesión</span>
+                    </a>
+                </div>
+            </aside>
+            <!-- Main Component -->
+            <div class="main">
+                <main class="content px-3 py-2">
+                    <div class="container-fluid">
+                        <div class="mb-3">
+                            {%block content%}
+        
+                            {%endblock%}
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        
+
+        <!-- JavaScript scripts --> 
+        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/909a90592e.js" crossorigin="anonymous"></script>
+       
+        <script src="{% static 'js/scripts.js' %}"></script>
+
+        {% block extrajs %}
+            
+        {% endblock extrajs %}
+      
+    </body>
+</html>

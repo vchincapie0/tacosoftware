@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Tablas Genéricas
+{% endblock title %}
+    
+
+{% block content %}
+<div class="d-flex justify-content-center">
+    <div class="mt-4 row">
+        <div class="col-12">
+            <h4 style="color: #fff;">Tablas Genéricas</h4>
+        </div>   
+    </div>   
+</div>
+
+<div class="m-2 d-flex justify-content-center">
+    <div class="row">
+
+        <!--Tarjeta de Materia Prima-->
+       <div class="col-md-4 col-4">
+        <div class="card text-center bg-dark border-dark" style="width: 15rem;">
+          <img src="{% static 'img/materiap.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <a href="{% url 'mp_app:listaGenerica_mp' %}" class="btn btn-warning">Materia Prima</a>
+          </div>    
+        </div>
+      </div>
+
+      <!--Tarjeta de Producto Terminado-->
+      <div class="col-md-4 col">
+        <div class="card text-center bg-dark border-dark" style="width: 15rem;">
+            <img src="{% static 'img/productoterminado.png' %}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="{% url 'produ_app:list_pt_generico' %}" class="btn btn-warning">Producto Terminado</a>
+            </div> 
+      </div>
+    </div>
+
+       <!--Tarjeta de IVA-->
+       <div class="col-md-3 col-3">
+        <div class="card text-center bg-dark border-dark" style="width: 15rem;">
+          <img src="{% static 'img/porcentaje.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <a href="{% url 'facturas_app:list_IVA' %}" class="btn btn-warning">IVA</a>
+          </div>    
+        </div>
+      </div>
+
+    </div>
+</div>
+
+<div class="m-2 d-flex justify-content-center">
+    <div class="row">
+        
+       <!--Tarjeta de Desinfectante-->
+       <div class="col-md-6 col">
+        <div class="card text-center bg-dark border-dark" style="width: 15rem;">
+          <img src="{% static 'img/desinfec.png' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <a href="{% url 'mp_app:desinfeccion_generico' %}" class="btn btn-warning">Desinfectante</a>
+          </div>    
+        </div>
+      </div>
+
+       <!--Tarjeta de Implementos de Trabajo-->
+       <div class="col-md-6 col">
+         <div class="card text-center bg-dark border-dark" style="width: 15rem;">
+           <img src="{% static 'img/implementos.png' %}" class="card-img-top" alt="...">
+           <div class="card-body">
+               <a href="{% url 'insumos_app:list_insumos_generico' %}" class="btn btn-warning">Implementos de Trabajo</a>
+           </div>    
+         </div>
+       </div>
+
+    </div>
+</div>  
+{% endblock content %}
+    

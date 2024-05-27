@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %} Detalle Producto Terminado {% endblock %}
+
+{% block content %}
+
+<a href="{% url 'produ_app:list_produ' %}" style="color: rgb(236, 225, 47, .75)"><i class="fa-solid fa-arrow-left fa-2xl"></i></a>
+
+<div class="mt-3 row">
+    <!-- Tarjeta de los detalles de producto terminado -->
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <div class="card">
+            <div class="card-header">
+                <h5>Detalles Producto Terminado</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Lote: {{ productoterminado.pt_lote }} | {{productoterminado.pt_nombre}}</p>
+                <p class="card-text">Cantidad: {{ productoterminado.pt_cantidad }} g </p>
+                <p class="card-text">Fecha de Preparación: {{productoterminado.pt_fechapreparacion}}</p>
+                <p class="card-text">Fecha de Vencimiento: {{productoterminado.pt_fechavencimiento}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <!-- Tarjeta de Caracteristicas Organolepticas -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Características Organolépticas</h5>
+            </div>
+            <div class="card-body">
+                {% if productoterminado.caracteristicasorganolepticaspt_set.all %}
+                    {% for p in productoterminado.caracteristicasorganolepticaspt_set.all %}
+                        {% if p.estado == '1' %}
+                        <div class="row">
+                            <div class="col-6">Estado: <p style="color: red;" >{{ p.get_estado_display }}</p>
+                            <p>Caracerísticas NO Satisfactorias:</p>
+                            <ul>
+                            {% if not p.olor %}<li>Olor</li>{% endif %}
+                            {% if not p.sabor %}<li>Sabor</li>{% endif %}
+                            {% if not p.textura %}<li>Textuara</li>{% endif %}
+                            {% if not p.color %}<li>Color</li>{% endif %}
+                            {% if not p.estado %}<li>Estado</li>{% endif %}
+
+                            </ul>
+                            
+                            </div>
+                            <div class="col-6 d-flex justify-content-center align-items-center"><a onclick="updatecaracteristicas_pt('{% url 'produ_app:updatecaracteristicas_pt' p.pk %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                        </div>
+                        {% else %}
+                        <div class="row">
+                            <div class="col-6">Estado: <p style="color: green;">{{ p.get_estado_display }}</p></div>
+                            <div class="col-6 d-flex justify-content-center align-items-center"><a onclick="updatecaracteristicas_pt('{% url 'produ_app:updatecaracteristicas_pt' p.pk %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        No se han registrado características organolépticas para este producto terminado.                  
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3 row">
+    <!-- Columna derecha -->
+    <div class="col-sm-6 mb-3 mb-sm-0">
+        <!-- Tarjeta de Empaque -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Empaque</h5>
+            </div>
+            <div class="card-body">
+                {% if productoterminado.empaqueproductoterminado_set.all %}
+                    {% for p in productoterminado.empaqueproductoterminado_set.all %}
+                        <p class="card-text">Lote: {{p.pt_lote}}</p>
+                        <p class="card-text">Peso: {{p.emp_pesoKg}}</p>
+                        <p class="card-text">Cantidad Bolsas: {{p.emp_cantidadBolsas}}</p>
+                        <a onclick="empaque_update('{% url 'produ_app:empaque_update' p.id %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        No se han registrado bolsas empacadas de producto terminado.                  
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+  
+
+
+    <div class="col-sm-6 ">
+        <!-- Tarjeta de Vacio -->
+        <div class="card">
+            <div class="card-header">
+                <h5>Empaque al Vacio</h5>
+            </div>
+            <div class="card-body">
+                {% if productoterminado.vacio_set.all %}
+                    {% for p in productoterminado.vacio_set.all %}
+                        <p class="card-text">Lote: {{p.pt_lote}}</p>
+                        <p class="card-text">Cantidad Bolsas Rechazadas: {{p.cantidad_bolsas_rechazadas}}</p>
+                        <p class="card-text">Cantidad Bolsas Liberadas: {{p.cantidad_bolsas_liberadas}}</p>
+                        <a onclick="vacio_update('{% url 'produ_app:vacio_update' p.id %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        No se han registrado bolsas empacadas al vacío de producto terminado.                  
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal fade" id="updatecaracteristicas_pt" role="dialog"></div>
+<div class="modal fade" id="empaque_update" role="dialog"></div>
+<div class="modal fade" id="vacio_update" role="dialog"></div>
+
+{% endblock %}
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    function updatecaracteristicas_pt(url){
+        var $ = jQuery.noConflict();
+        $('#updatecaracteristicas_pt').load(url,function(){
+            $(this).modal('show');
+        }); 
+    } 
+
+    function empaque_update(url){
+        var $ = jQuery.noConflict();
+        $('#empaque_update').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    function vacio_update(url){
+        var $ = jQuery.noConflict();
+        $('#vacio_update').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+</script>
+{% endblock %}

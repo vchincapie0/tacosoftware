@@ -1,0 +1,91 @@
+<div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Materia Prima</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'mp_app:mp_update' object.mp_lote %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" id="MateriaPrimaUpdateForm">
+            {%csrf_token%}
+
+            {% if form.errors %}
+                <div class="alert alert-info">
+                    {{form.errors.mp_lote.0}}
+                    {{form.errors.mp_nombre.0}}
+                    {{form.errors.mp_cantidad.0}}
+                    {{form.errors.mp_fechallegada.0}}
+                    {{form.errors.mp_fechavencimiento.0}}
+                </div>
+            {% endif %}
+
+            <div class="mx-4 my-2 row">
+                
+                <div class="mb-3 col-12">
+                    <label for="id_mp_lote" class="form-label">Lote: </label>
+                    {{form.mp_lote}}   
+                </div>
+          
+           
+                <div class="mb-3 col-12">
+                    <label for="id_mp_nombre" class="form-label">Materia Prima:</label>
+                    {{form.mp_nombre}}   
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <label for="id_mp_cantidad" class="form-label">Cantidad:</label>
+                        {{form.mp_cantidad}}  
+                    </div>
+
+                    <div class="col">
+                        <label for="id_mp_fechallegada" class="form-label">Fecha de Llegada:</label>
+                        {{form.mp_fechallegada}}  
+                    </div>
+                </div>
+
+                <div class="mb-3 row">
+                    <label for="id_mp_fechavencimiento" class="col-sm-3 col-form-label">Fecha Vencimiento </label>
+                    <div class="col-sm-9">{{form.mp_fechavencimiento}}</div>
+                    
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">Guardar</button>
+                            &nbsp;
+                            <a href="{% url 'mp_app:lista_mp' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+
+               
+            </div>
+            
+        </form>
+        </div>
+    
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+            $('#MateriaPrimaUpdateForm').submit(function (event) {
+                event.preventDefault(); // Evita la redirección predeterminada
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        // Verifica la respuesta y actualiza el contenido del modal
+                        $('#mp_update').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        // Maneja errores de Ajax, si es necesario
+                    }
+                });
+            });
+        });
+</script>
+    

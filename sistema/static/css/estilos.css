@@ -1,0 +1,17 @@
+.cont-fecha{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont-fecha select{
+    padding: 8px 10px;
+    min-width: 30%;
+}
+.cont-fecha select:nth-child(1){
+    border-radius: 6px 0 0 6px;
+}
+
+.cont-fecha select:nth-child(3){
+    border-radius: 0 6px 6px 0;
+}

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Inventario Materias Primas
+{% endblock title %}
+
+
+{% block content %}
+<div class="mt-3">
+    <div class="card text-bg-dark mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-6">
+                    <form action="" method="get">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-10">
+                                <select class="form-select" aria-label="Tipo Materia Prima" id="tipo" name="tipo">
+                                    <option value="Todos" {% if tipo_materia_prima == "Todos" %}selected{% endif %}>Todos</option>
+                                    <option value="0" {% if tipo_materia_prima == "0" %}selected{% endif %}>Proteína</option>
+                                    <option value="1" {% if tipo_materia_prima == "1" %}selected{% endif %}>Lácteos</option>
+                                    <option value="2" {% if tipo_materia_prima == "2" %}selected{% endif %}>Verduras</option>
+                                    <option value="3" {% if tipo_materia_prima == "3" %}selected{% endif %}>Frutas</option>
+                                    <option value="4" {% if tipo_materia_prima == "4" %}selected{% endif %}>Otros</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-outline-success">Buscar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="col-6">
+                    <form class="d-flex" role="search">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Buscar Materia Prima" aria-label="Search" name="kword" id="kword">
+                        <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Inventario de Materias Primas</h4>
+            
+            <div class="table-responsive">
+                <table class="table table-secondary text-center">
+                    <thead>
+                        <tr>
+                          <th scope="col">Producto</th>
+                          <th scope="col">Cantidad Disponible</th>
+                          <th scope="col">Fecha Último Ingreso</th>
+                          <th scope="col">Hora Último Ingreso</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for stock in stock_mp %}
+                      <tr>
+                        <td>{{ stock.mp_nombre }}</td>
+                        
+                        {% if stock.cantidad_total > 0 %}
+                            <td>{{ stock.cantidad_total }}</td>
+                        {% else %}
+                            <td class="text-danger">Sin existencias</td>
+                        {% endif %}
+                            
+                        <td>{{ stock.updated_at|date:"d/m/y"}}</td>
+                        <td>{{ stock.updated_at|time:"H:i"}}</td>
+                      </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="row">
+            <div class="col">
+                <!--Si existe paginacion entonces mostrará el menu-->
+                {% if is_paginated %}  
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                        <!--Si existe una pagina anterior mostrará la opcion de atras-->
+                        {% if page_obj.has_previous %}   
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <!--Itera dentro del objeto paginator para mostrar cuantas paginas existen-->
+                        {% for pagina in paginator.page_range %}
+                            <!--Si la pagina es el mismo numero del objeto, entonces pinte la casilla en azul-->
+                            {% if pagina == page_obj.number %} 
+                                <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li> 
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+                            {% endif %}    
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page_obj.next_page_number}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>  
+
+
+
+
+{% endblock content %}
+
+
+{% block extrajs %}
+
+{% endblock  %}
+    
+    

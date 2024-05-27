@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-md" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Borrar Factura</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form action="{% url 'facturas_app:delete_factura' object.num_factura %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+              {%csrf_token%}
+          
+                <div class="row">
+                    <div class="col">
+                        <h4 style="color: red; font-weight: bolder;">¿Desea borrar Factura N°: {{object.num_factura}}?</h4>
+                        <h5>Fecha de Llegada: {{object.fac_fechaLlegada|date:"d/m/y"}}</h5>
+                        <h5>Proveedor: {{object.fac_proveedor}}</h5> 
+                        <h5>Pedido: {{object.fac_numeroPedido.ref_pedido}}</h5> 
+                        <p class="text-center"><i class="fa-solid fa-circle-info"></i> Esta acción será permanente</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col text-center d-flex justify-content-center">
+                        <button class="m-2 btn btn-danger" type="submit">Eliminar</button>
+                        <button type="button" class="m-2 btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+    </div>
+</div>

@@ -1,0 +1,168 @@
+{%extends "base.html"%}
+{% load static %}
+{%block title%} Editar Pedido {%endblock%}
+
+{%block content%}
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 style="color: #fff;">Editar Pedido N° {{object.ref_pedido}} </h1>
+        </div> 
+    </div>
+
+    <div class="mt-4 row justify-content-center">
+        <div class="col-md-7">
+            <form action="" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                {%csrf_token%}
+
+                {% if form.errors %}
+                    <div class="alert alert-info">
+                        {{form.errors.pedi_fecha.0}}
+                    </div>
+                {% endif %}
+
+                <div class="mx-6 my-2 row">
+
+                    <div class="mb-3 col-md-6  col-12">
+                        <label for="id_mp_nombre" class="form-label">Tipo de pedido: </label>
+                        {{form.tipo_pedido}}        
+                    </div>
+                    
+                    <div class="mb-3 col-md-6  col-12">
+                        <label for="id_mp_nombre" class="form-label">Referencia del pedido: </label>
+                        {{form.ref_pedido}}   
+                    </div>
+              
+               
+                    <div class="mb-3 col-md-6  col-12">
+                        <label for="id_mp_fechallegada" class="form-label">Responsable:</label>
+                        {{form.pedi_user}}   
+                    </div>
+
+                    <div class="mb-3 col-md-6  col-12">
+                        <label for="id_imp_lote" class="form-label">Estado: </label>
+                        {{form.pedi_estado}}
+                    </div>
+
+                    
+                    <div class="mb-3 col-md-6 col-12">
+                        <label for="id_imp_lote" class="form-label">Proveedor: </label>
+                        <div class="row">
+                            <div class="col-10">
+                                {{form.pedi_proveedor}}
+                            </div>
+                            <div class="col">
+                                <a onclick="abrir_modal_add_prov('{% url 'pedidos_app:add__prov_pedidos' %}')" type="button" style="color: greenyellow;" class=""><i class="fa-solid fa-plus fa-xl"></i></a>
+                            </div>
+                        
+                        </div>
+                        
+                    </div>
+                    
+
+                    <div class="mb-3 col-md-6  col-12">
+                        <label for="id_imp_lote" class="form-label">N° Comprobante: </label>
+                        {{form.pedi_comprobatePago}}
+                    </div>
+
+                    <div class="mb-3 col-12">
+                        <label for="id_mp_fechavencimiento" class="form-label">Fecha de Recibido:</label>
+                        <div class="cont-fecha">
+                            {{form.pedi_fecha}}
+                        </div>  
+                    </div>
+                    
+                    <div class="mb-3 col-12">
+                        <label for="id_imp_lote" class="form-label">Materia Prima: </label>
+                        <div class="row">
+                            <div class="col-9">
+                                {{form.pedi_materiaprima}}
+                            </div>
+                            <div class="col">
+                                <!--Ignorar este error, si funciona pero visual cree que hay un error en las comillas-->
+                        <a onclick="abrir_modal_add_mp('{% url 'pedidos_app:add__mp_pedidos' %}')" type="button" style="color: greenyellow;" class="m-3"><i class="fa-solid fa-plus fa-xl"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 col-12">
+                        <label for="id_imp_lote" class="form-label">Insumos: </label>
+                        <div class="row">
+                            <div class="col-9">
+                                {{form.pedi_insumos}}
+                            </div>
+                            <div class="col">
+                                <!--Ignorar este error, si funciona pero visual cree que hay un error en las comillas-->
+                        <a onclick="abrir_modal_add_it('{% url 'pedidos_app:add__it_pedidos' %}')" type="button" style="color: greenyellow;" class="m-3"><i class="fa-solid fa-plus fa-xl"></i></a>
+                            </div>
+                        </div>
+                        
+                        
+
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <button class="btn btn-success" type="submit">Guardar</button>
+                            &nbsp; &nbsp;
+                            <a href="{% url 'pedidos_app:list_pedidos' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+</div> 
+
+<div class="modal fade" id="add_mp_pedidos" role="dialog"></div>
+<div class="modal fade" id="add_it_pedidos" role="dialog"></div>
+<div class="modal fade" id="add_prov_pedidos" role="dialog"></div>
+
+{%endblock%}
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script type="text/javascript">
+    function toggleInsumosField(value) {
+    const insumosField = document.getElementById('id_pedi_insumos');
+    insumosField.disabled = value === '0';
+
+    const materiapField = document.getElementById('id_pedi_materiaprima');
+    materiapField.disabled = value === '1';
+    }
+
+    // Trigger the initial state when the page loads
+    toggleInsumosField(document.getElementById('id_tipo_pedido').value);
+
+    function abrir_modal_add_mp(url){
+        //Función para abrir el modal de creación materia prima en el formulario de add_pedido
+        var $ = jQuery.noConflict();
+        $('#add_mp_pedidos').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    function abrir_modal_add_it(url){
+        //Función para abrir el modal de creación implementos de trabajo en el formulario de add_pedido
+        var $ = jQuery.noConflict();
+        $('#add_it_pedidos').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    function abrir_modal_add_prov(url){
+        //Función para abrir el modal de creación proveedores en el formulario de add_pedido
+        var $ = jQuery.noConflict();
+        $('#add_prov_pedidos').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+</script>           
+{% endblock extrajs %}
+
+

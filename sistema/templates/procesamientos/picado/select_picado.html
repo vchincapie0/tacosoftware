@@ -1,0 +1,37 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">¿Qué producto Terminado va a Realizar? (Picado)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="selec_coccion" action="{% url 'procesamientos_app:select_picado' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+            {% csrf_token %}
+
+            <div class="mx-4 my-2 row">
+                <div class="row mb-2">
+                    <div class="col">
+                        <select class="form-select" aria-label="Default select example" id="producto_terminado" name="producto_terminado">
+                            <option value="" selected disabled>-----Seleccione Producto Terminado-----</option> <!-- Opción predeterminada -->
+                            {% for producto in productos %}
+                                <option value="{{ producto.id }}">{{ producto.pt_nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                </div>
+                
+                <div class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col">
+                             <button type="submit" class="btn btn-success">Seleccionar</button>
+                            &nbsp;
+                            <a href="{% url 'procesamientos_app:procesamientos' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>    
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Empaque al Vacio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'produ_app:vacio_update' object.id %}" id="VacioUpdateForm"class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+          {%csrf_token%}
+          {%csrf_token%}
+
+          <div class="mx-4 my-2 row">
+                      
+            <div class="mb-3 col-12">
+                <label for="id_pt_lote" class="form-label">Lote Empaque al Vacio:</label>
+                {{form.pt_lote}}  
+            </div>
+    
+    
+            <div class="mb-3 col-12">
+                <label for="id_cantidad_bolsas_rechazadas" class="form-label">Cantidad Bolsas Rechazadas:</label>
+                {{form.cantidad_bolsas_rechazadas}}
+            </div>
+
+            <div class="mb-3 col-12">
+                <label for="id_cantidad_bolsas_liberadas" class="form-label">Cantidad Bolsas Liberadas:</label>
+                {{form.cantidad_bolsas_liberadas}}
+            </div>       
+
+            <div class="row">
+                <div class="col d-flex justify-content-center">
+                  <button type="submit" class="m-1 btn btn-success">Guardar</button>
+                  &nbsp;
+                  <a type="button" class="m-1 btn btn-secondary" href="{% url 'produ_app:list_produ' %}">Cancelar</a>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

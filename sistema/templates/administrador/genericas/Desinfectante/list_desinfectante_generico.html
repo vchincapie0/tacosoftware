@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Desinfectante
+{% endblock title %}
+
+
+{% block content %}
+<div class="mt-3 container">
+    <div class="card text-bg-dark mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-6">
+                    <a name="" id="" class="btn btn-success" onclick="add_desinfectante('{% url 'mp_app:add_desinfeccion_generico' %}')" role="button">Agregar Desinfectante</a>
+                </div>
+                
+                <!-- Botón con icono para mostrar/ocultar el formulario de filtro -->
+                <div class="col d-flex justify-content-end">
+                    <button id="toggleFilterBtn" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-filter"></i> Filtrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contenedor para formulario filtro, inicialmente oculto -->
+            <div id="filterFormContainer" style="display: none;" class="mt-3">
+                <form method="get" class="d-flex align-items-end">
+                    {% csrf_token %}
+                    <div class="me-2">
+                        <label for="id_des_nombre">Desinfectante: </label>
+                        {{ filter_form.des_nombre }}
+                    </div>
+                    <button type="submit" class="btn btn-success me-2">Filtrar</button>
+                    <a href="{% url 'mp_app:desinfeccion_generico' %}" type="button" class="btn btn-outline-primary">Limpiar Filtro</a>
+                </form>
+            </div>  
+        </div>
+        
+        <div class="card-body">
+            <h4 class="card-title">Desinfectante</h4>
+            
+            <div class="table-responsive">
+                <table class="table table-secondary">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre Desinfectante</th>
+                            <th scope="col">Accion</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for d in desinfectante%}
+                        <tr>
+                            <td><a onclick="edit_desinfectante('{% url 'mp_app:update_desinfeccion_generico' d.id %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{d.des_nombre}}</a></td>
+                            <td><a class="btn btn-danger" onclick="delete_desinfectante('{% url 'mp_app:delete_desinfeccion_generico' d.id %}')" type="button"><i class="fa-solid fa-trash-can"></i></a></td>
+
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <div class="row">
+            <div class="col">
+                <!--Si existe paginacion entonces mostrará el menu-->
+                {% if is_paginated %}  
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                        <!--Si existe una pagina anterior mostrará la opcion de atras-->
+                        {% if page_obj.has_previous %}   
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <!--Itera dentro del objeto paginator para mostrar cuantas paginas existen-->
+                        {% for pagina in paginator.page_range %}
+                            <!--Si la pagina es el mismo numero del objeto, entonces pinte la casilla en azul-->
+                            {% if pagina == page_obj.number %} 
+                                <li class="page-item active" aria-current="page"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li> 
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{pagina}}">{{pagina}}</a></li>
+                            {% endif %}    
+                        {% endfor %}
+                            
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page_obj.next_page_number}}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>   
+<div class="modal fade" id="delete_desinfectante" role="dialog"></div>
+<div class="modal fade" id="add_desinfectante" role="dialog"></div>
+<div class="modal fade" id="edit_desinfectante" role="dialog"></div>
+
+
+{% endblock content %}
+
+{% block extrajs %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+    function add_desinfectante(url){
+        var $ = jQuery.noConflict();
+        $('#add_desinfectante').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    function edit_desinfectante(url){
+        var $ = jQuery.noConflict();
+        $('#edit_desinfectante').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    function delete_desinfectante(url){
+        var $ = jQuery.noConflict();
+        $('#delete_desinfectante').load(url,function(){
+            $(this).modal('show');
+        }); 
+    }
+
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+</script>
+
+<!-- Script para manejar la funcionalidad de mostrar/ocultar el formulario de filtro -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggleFilterBtn = document.getElementById('toggleFilterBtn');
+        const filterFormContainer = document.getElementById('filterFormContainer');
+    
+        toggleFilterBtn.addEventListener('click', function() {
+            if (filterFormContainer.style.display === 'none') {
+                filterFormContainer.style.display = 'block';
+            } else {
+                filterFormContainer.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+
+

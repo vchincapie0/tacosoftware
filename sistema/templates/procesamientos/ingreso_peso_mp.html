@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Picado
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h3>PROCESAMIENTO COCCIÓN Y LIBERACIÓN</h3>
+        </div>
+    </div>
+    <!-- Formulario principal -->
+    <form id="main-form" method="post" action="{% url 'procesamientos_app:ingresar_peso_materias_primas' producto.id %}">
+        {% csrf_token %}
+        <!-- Primer fieldset -->
+        <div class="row gap-2">
+            <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <fieldset id="fieldset1">
+                    <legend>{{ producto.pt_nombre }}</legend>
+                    <p>Ingrese el peso en gramos deseado para cada materia prima</p>
+                    
+                    {% for materia_prima in materias_primas %}
+                        <div class="form-group">
+                            <label for="peso_{{ materia_prima.id }}" class="m-2">{{ materia_prima.mp_nombre }} :</label>
+                            <input type="number" id="peso_{{ materia_prima.id }}" name="peso_{{ materia_prima.id }}" class="form-control" required>
+                        </div>
+                    {% endfor %}
+                    <div class="m-2 row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" id="validate-button" class="btn btn-warning">Validar</button>
+                        </div> 
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <!-- Segundo fieldset -->
+                <fieldset id="fieldset2" disabled>
+                    <legend>Post-Producción</legend>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="peso_post_produccion">Peso Post Producción:</label>
+                        <input class="form-control" type="number" id="peso_post_produccion" name="peso_post_produccion">
+                        
+                        <label class="form-label" for="tiempo_coccion">Tiempo de cocción:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" aria-label="Tiempo_coccion" id="tiempo_coccion" name="tiempo_coccion">
+                            <span class="input-group-text">Minutos</span>
+                        </div>
+                        
+                        <label for="temperatura" class="form-label">Temperatura:</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" aria-label="Temperatura" id="temperatura" name="temperatura">
+                            <span class="input-group-text">°C</span>
+                        </div>
+                    </div>        
+                </fieldset>
+
+                <!-- Tercer fieldset -->
+                <fieldset>
+                    <legend>Características Organolépticas</legend>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check_olor">
+                        <label class="form-check-label" for="check_olor">Olor</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check_sabor">
+                        <label class="form-check-label" for="check_sabor">Sabor</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check_color">
+                        <label class="form-check-label" for="check_color">Color</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check_textura">
+                        <label class="form-check-label" for="check_textura">Textura</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" placeholder="Si tiene alguna observación escríbala aquí" id="observacion" name="observacion">
+                        <label for="observacion">Observaciones</label>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <!-- Botón de enviar -->
+        <div class="m-2 row">
+            <div class="col d-flex justify-content-end">
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div> 
+        </div>
+    </form>            
+          
+</div>
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+document.getElementById('validate-button').addEventListener('click', function() {
+    let valid = true;
+    document.querySelectorAll('#fieldset1 input[type="number"]').forEach(function(input) {
+        if (!input.value) {
+            valid = false;
+        }
+    });
+
+    if (valid) {
+        document.getElementById('fieldset2').removeAttribute('disabled');
+    } else {
+        alert('Por favor, complete todos los campos del primer fieldset.');
+    }
+});
+</script>
+{% endblock %}

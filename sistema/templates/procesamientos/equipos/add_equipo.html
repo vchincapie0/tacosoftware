@@ -1,0 +1,87 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Añadir Coccion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="proAddForm" action="{% url 'procesamientos_app:add_equipos' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+            {% csrf_token %}
+            {% if form.errors  %}
+                <div class="alert alert-info"> 
+                    {{fom.errors}}
+                    {{form.errors.id_equipo.0}}
+                    {{form.errors.equi_encargadoCocina.0}}
+                    {{form.errors.equi_encargadoEntrega.0}}
+                    {{form.errors.equi_nombre.0}}
+                    {{form.errors.equi_calidad.0}}
+                    
+                </div>
+            {% endif %}
+
+            <div class="mx-4 my-2 row">
+                
+                <div class="mb-3 col-12">
+                    <label for="id_equi_encargadoCocina" class="form-label">Nombre Encargado en Cocina: </label>
+                    {{form.equi_encargadoCocina}}   
+                </div>
+        
+        
+                <div class="mb-3 col-12">
+                    <label for="id_equi_encargadoEntrega" class="form-label">Quien lo Entrego:</label>
+                    {{form.equi_encargadoEntrega}}   
+                </div>
+
+                <div class="mb-3 col-12">
+                    <label for="id_equi_calidad" class="form-label">Calidad del Equipo:</label>
+                    {{form.equi_calidad}}  
+                </div>
+
+                <div class="mb-3 col-12">
+                    <label for="id_equi_nombre" class="form-label">Nombre del Equipo:</label>
+                    <br>
+                    {{form.equi_nombre}}  
+                </div>
+
+                <div class="mb-3 col-12">
+                    <label for="id_equi_calidad" class="form-label">Check:</label>
+                    <br>
+                    {{form.equi_check}}  
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-success" type="submit">Guardar</button>
+                            &nbsp;
+                            <a href="{% url 'procesamientos_app:equipos' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </form>
+        </div>    
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+            $('#proAddForm').submit(function (event) {
+                event.preventDefault(); // Evita la redirección predeterminada
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (data) {
+                        // Verifica la respuesta y actualiza el contenido del modal
+                        $('#add_equipos').html(data);
+                        $('#add_equipos').modal('hide');
+                    },
+                    error: function (xhr, status, error) {
+                        // Maneja errores de Ajax, si es necesario
+                    }
+                });
+            });
+        });
+</script>

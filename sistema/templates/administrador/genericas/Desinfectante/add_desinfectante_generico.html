@@ -1,0 +1,36 @@
+<div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title">Registrar Desinfectante</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'mp_app:add_desinfeccion_generico' %}" id="desinfeccionForm" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+            {%csrf_token%}
+
+            {% if form.errors %}
+                <div class="alert alert-info">
+                    {{form.errors.des_nombre.0}}
+                </div>
+            {% endif %}
+  
+          <div class="mx-4 my-2 row">
+          <div class="mb-3 col-12">
+                <label for="id_des_nombre" class="form-label">Nombre Desinfectante:</label>
+                {{form.des_nombre}}
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-center">
+                  <button type="submit" class="m-1 btn btn-success">Guardar</button>
+                  &nbsp;
+                  <a type="button" class="m-1 btn btn-danger" href="{% url 'mp_app:desinfeccion_generico' %}">Cancelar</a>
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  
+ 

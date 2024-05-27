@@ -1,0 +1,85 @@
+<div class="modal-dialog modal-dialog-scrollable" role="document">
+  <div class="modal-content bg-dark text-white">
+    <div class="modal-header">
+      <h5 class="modal-title">Registrar Desinfección</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <form method="post" action="{% url 'mp_app:desinfeccion_mp' %}" id="desinfeccionForm" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+        {%csrf_token%}
+
+        <div class="mx-4 my-2 row">
+                    
+          <div class="mb-3 col-12">
+              <label for="id_mp_lote" class="form-label">Lote Materia Prima:</label>
+              {{form.mp_lote}}  
+          </div>
+  
+  
+          <div class="mb-3 col-12">
+              <label for="id_des_nombre" class="form-label">Agente Desinfectante:</label>
+              {{form.des_nombre}}
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+                <label for="id_concentracion" class="form-label">Concentración: </label>
+            </div>
+            <div class="input-group mb-3 col-6">
+                {{form.concentracion}}
+                <span class="input-group-text">%</span>
+            </div>
+          </div>
+
+          <div class="mb-3 col-12">
+              <label for="id_tiempo_inicio" class="form-label">Tiempo Inicio:</label>
+              {{form.tiempo_inicio}} 
+          </div>
+
+          <div class="mb-3 col-12">
+              <label for="id_tiempo_fin" class="form-label">Tiempo Final: </label>
+              {{form.tiempo_fin}}
+          </div>
+
+          <div class="mb-3 col-12">
+              <label for="id_fac_numeroUnidades" class="form-label">Observaciones: </label>
+              {{form.obsevacion}}
+          </div>
+
+          
+        
+
+          <div class="row">
+              <div class="col d-flex justify-content-center">
+                <button type="submit" class="m-1 btn btn-success">Guardar</button>
+                &nbsp;
+                <a type="button" class="m-1 btn btn-secondary" href="{% url 'mp_app:lista_mp' %}">Cancelar</a>
+              </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $(document).ready(function () {
+          $('#desinfeccionForm').submit(function (event) {
+              event.preventDefault(); // Evita la redirección predeterminada
+
+              $.ajax({
+                  type: 'POST',
+                  url: $(this).attr('action'),
+                  data: $(this).serialize(),
+                  success: function (data) {
+                      // Verifica la respuesta y actualiza el contenido del modal
+                      $('#desinfeccion_add').html(data);
+                  },
+                  error: function (xhr, status, error) {
+                      // Maneja errores de Ajax, si es necesario
+                  }
+              });
+          });
+      });
+</script>

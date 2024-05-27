@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+   Procesamiento
+{% endblock title %}
+
+
+{% block content %}
+
+ <div class="d-flex justify-content-center align-items-center vh-100">
+   <div class="row">
+      <div class="col-md-4 col-4">
+        <div class="card text-center bg-dark border-dark" style="width: 18rem;">
+          <img src="{% static 'img/picado.jpg' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+            <div class="col-15">
+              <a name="" id="" class="btn btn-warning" onclick="select_picado('{% url 'procesamientos_app:select_picado' %}')"  role="button">Picado</a>
+            </div>
+       </div>   
+        </div>
+      </div>
+
+      <div class="col-md-4 col">
+          <div class="card text-center bg-dark border-dark" style="width: 18rem;">
+              <img src="{% static 'img/coccion.jpeg' %}" class="card-img-top" alt="...">
+              <div class="card-body">
+                 <div class="col-15">
+                   <a name="" id="" class="btn btn-warning" onclick="select_coccion('{% url 'procesamientos_app:select_coccion' %}')" role="button">Coccion</a>
+                 </div>
+            </div> 
+        </div>
+      </div>
+
+      <div class="col-md-4 col-4">
+        <div class="card text-center bg-dark border-dark" style="width: 18rem;">
+          <img src="{% static 'img/equipo.jpg' %}" class="card-img-top" alt="...">
+          <div class="card-body">
+              <a href="{% url 'procesamientos_app:equipos' %}" class="btn btn-warning">Equipos</a>
+          </div>    
+        </div>
+      </div>
+    </div>
+ </div>
+ 
+
+ <div class="modal fade" id="selec_coccion" role="dialog"></div>
+ <div class="modal fade" id="selec_picado" role="dialog"></div>
+{% endblock content %}
+
+{% block extrajs %}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script>
+        function select_coccion(url){
+            var $ = jQuery.noConflict();
+            $('#selec_coccion').load(url,function(){
+                $(this).modal('show');
+            }); 
+        }
+
+        function select_picado(url){
+            var $ = jQuery.noConflict();
+            $('#selec_picado').load(url,function(){
+                $(this).modal('show');
+            }); 
+        }
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+{% endblock  %}
