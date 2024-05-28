@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
-        <h5 class="modal-title">Agregar Insumos</h5>
+        <h5 class="modal-title">Editar Insumos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -24,18 +24,19 @@
           
            
                 <div class="mb-3 col-12">
-                    <label for="id_mp_fechallegada" class="form-label">Cantidad:</label>
+                    <label for="id_it_cantidad" class="form-label">Cantidad:</label>
                     {{form.it_cantidad}}   
                 </div>
 
                 <div class="mb-3 col-12">
-                    <label for="id_mp_fechavencimiento" class="form-label">Fecha de Entrega:</label>
+                    <label for="id_it_fechaEntrega" class="form-label">Fecha de Entrega:</label>
                     <br>
-                    {{form.it_fechaEntrega}}  
+                    <div class="cont-fecha">{{form.it_fechaEntrega}}</div>  
+                    
                 </div>
 
                 <div class="mb-3 col-12">
-                    <label for="id_imp_lote" class="form-label">Estado: </label>
+                    <label for="id_it_estado" class="form-label">Estado: </label>
                     {{form.it_estado}}
                 </div>
 
