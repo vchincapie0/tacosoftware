@@ -3,7 +3,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import csv
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -78,6 +78,7 @@ class ProduUpdateView(LoginRequiredMixin, UpdateView):
     login_url=reverse_lazy('users_app:login')
     form_class=ProductoTerminadoForm
     success_url= reverse_lazy('produ_app:list_produ')
+    
 
     def form_valid(self, form):
         #Obtener los datos del fomulario
