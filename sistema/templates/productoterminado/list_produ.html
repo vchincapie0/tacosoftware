@@ -18,10 +18,7 @@
     <div class="card text-bg-dark mb-3">
         <div class="card-header">
             <div class="row">
-                <div class="col-6">
-                    <a name="" id="" class="btn btn-success" onclick="add_produ('{% url 'produ_app:add_produ' %}')" role="button">Agregar Producto Terminado</a>
-                </div>
-                
+ 
                 <div class="col-6">
                     <form class="d-flex" role="search">
                         {% csrf_token %}
@@ -171,7 +168,6 @@
         </div>
     </div>
 </div>   
-<div class="modal fade" id="add_produ" role="dialog"></div>
 <div class="modal fade" id="update_produ" role="dialog"></div>
 <div class="modal fade" id="caracteristicas_add" role="dialog"></div>
 <div class="modal fade" id="empaque_add" role="dialog"></div>
@@ -184,12 +180,7 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-    function add_produ(url){
-        var $ = jQuery.noConflict();
-        $('#add_produ').load(url,function(){
-            $(this).modal('show');
-        }); 
-    }
+
     function update_produ(url){
         var $ = jQuery.noConflict();
         $('#update_produ').load(url,function(){
