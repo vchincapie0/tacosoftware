@@ -101,6 +101,7 @@ class CaracteristicasMPForm(forms.ModelForm):
         )
 
         widgets={
+                'mp_lote':forms.Select(attrs={'class':'form-control'}),
                 'olor':forms.CheckboxInput(),
                 'textura':forms.CheckboxInput(),
                 'limpieza':forms.CheckboxInput(),
@@ -124,7 +125,7 @@ class CaracteristicasMPUpdateForm(forms.ModelForm):
         )
 
         widgets={
-                'mp_lote':forms.TextInput(attrs={'class':'form-control'}),
+                'mp_lote':forms.Select(attrs={'class':'form-control'}),
                 'olor':forms.CheckboxInput(),
                 'textura':forms.CheckboxInput(),
                 'limpieza':forms.CheckboxInput(),
