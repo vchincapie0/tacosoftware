@@ -1,5 +1,5 @@
 from django.db import models
-from applications.productoterminado.models import ProductoTerminadoGenerico
+from applications.productoterminado.models import ProductoTerminado
 from applications.materiaprima.models import MateriaPrimaGenerica
 
 
@@ -13,7 +13,7 @@ class Picado(models.Model):
     )
 
     pica_id=models.AutoField(primary_key=True)
-    pica_producto=models.ManyToManyField(ProductoTerminadoGenerico, blank=True)
+    pica_producto=models.ForeignKey(ProductoTerminado, on_delete=models.CASCADE)
     pica_cantidad_total = models.IntegerField('Cantidad',default=0)
     pica_pesoPostProcesamiento=models.FloatField('Peso',default=0)
     pica_merma=models.FloatField('Peso Merma',default=0)
@@ -39,7 +39,7 @@ class Coccion(models.Model):
     )
 
     cocc_id=models.AutoField(primary_key=True)
-    cocc_producto=models.ManyToManyField(ProductoTerminadoGenerico, blank=True)
+    cocc_producto=models.ForeignKey(ProductoTerminado, on_delete=models.CASCADE)
     cocc_cantidad_total = models.IntegerField('Cantidad',default=0)
     cocc_pesoPostProcesamiento=models.FloatField('Peso',default=0)
     cocc_merma=models.FloatField('Merma',default=0)

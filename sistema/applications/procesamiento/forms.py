@@ -13,58 +13,21 @@ class SelectProductoTerminado(forms.ModelForm):
             attrs={'class':'form-select'}
         )}
 
-# class addPicado(forms.ModelForm):
+class PicadoForm(forms.ModelForm):
 
-#     """Form definition Picado."""
+    """Form definition Picado."""
 
-#     class Meta:
-#         """Meta definition Picadoform."""
+    class Meta:
+        """Meta definition Picadoform."""
 
-#         model = Picado
-#         fields = (
-            
-#             'pica_nombre',
-#             'pica_cantidad',
-#             'pica_pesoMPposproceso',
-#             'pica_merma',
-#             'pica_check',
-#             )
-        
-#         widgets={
-            
-#             'pica_nombre':forms.TextInput(attrs={'placeholder': 'Nombre del Producto','class': 'form-select'}),
-#             'pica_cantidad':forms.NumberInput(attrs={'placeholder': 'Peso ','class': 'form-control'}),
-#             'pica_pesoMPposproceso':forms.NumberInput(attrs={'placeholder': 'Peso Post Proceso','class': 'form-control'}),
-#             'pica_merma':forms.NumberInput(attrs={'placeholder': 'Peso Merma', 'class': 'form-control'}),
-#             'pica_check':forms.Select(attrs={'class': 'form-select'}),
-            
-#         }
-        
-#     def clean_pica_nombre(self):
-#         nombre = self.cleaned_data['pica_nombre']
-#         if not re.match("^[a-zA-Z ]+$", nombre):
-#             raise forms.ValidationError("El nombre no debe contener números o caracteres especiales.")
-#         return nombre
-    
-
-#     def clean_pica_cantidad(self):
-#         cantidad = self.cleaned_data['pica_cantidad']
-#         if cantidad <= 0:
-#             raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-#         return cantidad
-    
-#     def clean_proces_pesoPostProceso(self):
-#         cantidad = self.cleaned_data['pica_pesoMPposproceso']
-#         if cantidad <= 0:
-#             raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-#         return cantidad
-    
-#     def clean_pica_merma(self):
-#         cantidad = self.cleaned_data['pica_merma']
-#         if cantidad <= 0:
-#             raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-#         return cantidad
-    
+        model = Picado
+        fields = (
+            'pica_cantidad_total',
+            'pica_pesoPostProcesamiento',
+            'pica_merma',
+            'pica_check',
+            )
+         
 # class PicadoUpdateForm(forms.ModelForm):
 #     """Form Update Picado."""
 #     class Meta:

@@ -60,34 +60,19 @@ class ProductoTerminadoForm(forms.ModelForm):
         model = ProductoTerminado
         fields = (
             'pt_cantidad',   
-            'pt_nombre', 
             'pt_fechapreparacion',
             'pt_fechavencimiento',
             )
-        
-        widgets={
 
-            'pt_nombre':forms.Select(attrs={'class':'form-select'}),
-            'pt_cantidad':forms.NumberInput(attrs={'class':'form-control'}),
-            'pt_fechapreparacion':forms.SelectDateWidget(),
-            'pt_fechavencimiento':forms.SelectDateWidget(),
-        }
-    def pt_cantidad(self):
-        cantidad = self.cleaned_data['pt_cantidad']
-        if cantidad <= 0:
-            raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-        return cantidad
+    # def clean_PT_fechavencimiento(self):
+    #     fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
+    #     fecha_actual = timezone.now().date()
 
+    #     # Comprueba si la fecha de vencimiento es anterior a la fecha actual
+    #     if fecha_vencimiento < fecha_actual:
+    #         raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
 
-    def clean_PT_fechavencimiento(self):
-        fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
-        fecha_actual = timezone.now().date()
-
-        # Comprueba si la fecha de vencimiento es anterior a la fecha actual
-        if fecha_vencimiento < fecha_actual:
-            raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
-
-        return fecha_vencimiento
+    #     return fecha_vencimiento
 
 class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 

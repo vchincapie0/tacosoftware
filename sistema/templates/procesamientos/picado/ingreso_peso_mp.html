@@ -40,8 +40,8 @@
                         </div>
                     {% endfor %}
                     <div class="form-group">
-                        <label for="total_mp_ingresada" class="form-label">Peso Total: </label>
-                        <input type="number" id="total_mp_ingresada" name="total_mp_ingresada" class="form-control" readonly>
+                        <label for="pica_cantidad_total" class="form-label">Peso Total: </label>
+                        <input type="number" id="pica_cantidad_total" name="pica_cantidad_total" class="form-control" readonly>
                     </div>
                     
                     <div class="m-2 row">
@@ -60,13 +60,13 @@
                     <legend>Post-Producción</legend>
                     
                     <div class="form-group">
-                        <label class="form-label" for="peso_post_produccion">Peso Post Producción:</label>
-                        <input class="form-control" type="number" id="peso_post_produccion" name="peso_post_produccion">
+                        <label class="form-label" for="pica_pesoPostProcesamiento">Peso Post Producción:</label>
+                        <input class="form-control" type="number" id="pica_pesoPostProcesamiento" name="pica_pesoPostProcesamiento">
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label" for="merma">Merma:</label>
-                        <input class="form-control" type="number" id="merma" name="merma" readonly>
+                        <label class="form-label" for="pica_merma">Merma:</label>
+                        <input class="form-control" type="number" id="pica_merma" name="pica_merma" readonly>
                     </div> 
 
                     <div class="m-2 row">
@@ -74,6 +74,15 @@
                             <button type="button" class="btn btn-primary" onclick="calculateMerma()">Calcular</button>
                         </div> 
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="pica_check">Aceptabilidad/Rechazo:</label>
+                        <select class="form-select" id="pica_check" name="pica_check">
+                            <option selected>-----Seleccione una opción</option>
+                            <option value="0">Aprobado</option>
+                            <option value="1">No aprobado</option>
+                          </select>
+                    </div> 
                 </fieldset>
 
             </div>
@@ -121,14 +130,14 @@
         let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
         total += peso_{{ materia_prima.id }};
         {% endfor %}
-        document.getElementById('total_mp_ingresada').value = total;
+        document.getElementById('pica_cantidad_total').value = total;
     }
     
     function calculateMerma() {
-        let total_mp_ingresada = parseFloat(document.getElementById('total_mp_ingresada').value) || 0;
-        let peso_post_produccion = parseFloat(document.getElementById('peso_post_produccion').value) || 0;
-        let merma = total_mp_ingresada - peso_post_produccion;
-        document.getElementById('merma').value = merma;
+        let pica_cantidad_total = parseFloat(document.getElementById('pica_cantidad_total').value) || 0;
+        let pica_pesoPostProcesamiento = parseFloat(document.getElementById('pica_pesoPostProcesamiento').value) || 0;
+        let pica_merma = pica_cantidad_total - pica_pesoPostProcesamiento;
+        document.getElementById('pica_merma').value = pica_merma;
     }
 </script>
 {% endblock %}
