@@ -1,4 +1,7 @@
+import random
+import string
 from django.db import models
+from django.utils import timezone
 from applications.materiaprima.models import MateriaPrimaGenerica
 
 # Creacion model Producto terminado.
@@ -19,11 +22,16 @@ class ProductoTerminadoGenerico(models.Model):
 
 class ProductoTerminado(models.Model):
     '''Clase para la creacion de tabla de producto terminado'''
-    pt_lote=models.AutoField(primary_key=True)
+    pt_lote= models.CharField(max_length=8, unique=True, editable=False)
     pt_cantidad=models.IntegerField()
     pt_nombre=models.ForeignKey(ProductoTerminadoGenerico,on_delete=models.CASCADE)
-    pt_fechapreparacion=models.DateField('Fecha Preparacion')
+    pt_fechapreparacion=models.DateField('Fecha Preparacion',default=timezone.now)
     pt_fechavencimiento=models.DateField('Fecha Vencimiento')
+
+    def save(self, *args, **kwargs):
+        if not self.pt_lote:
+            self.pt_lote = 'PT' + ''.join(random.choices(string.digits, k=4))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.pt_lote}-{self.pt_nombre}"
@@ -50,7 +58,7 @@ class CaracteristicasOrganolepticasPT(models.Model):
         ('1','No Aprobado'),
     )
 
-    producto=models.ForeignKey(ProductoTerminadoGenerico,on_delete=models.CASCADE)
+    producto=models.ForeignKey(ProductoTerminadoGenerico,on_delete=models.CASCADE, default=0)
     observaciones = models.CharField('Observaciones', max_length=50)
     olor = models.BooleanField('Olor',default=False)
     sabor = models.BooleanField('Sabor',default=False)
