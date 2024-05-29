@@ -9,13 +9,10 @@
     <div class="card text-bg-dark mb-3">
         <div class="card-header">
             <div class="row">
-                <div class="col-6">
-                    <a name="" id="" class="btn btn-success" onclick="add_produ('{% url 'produ_app:add_pt_generico' %}')" role="button">Agregar Producto Terminado</a>
-                </div>
-                
-                <!-- Botón con icono para mostrar/ocultar el formulario de filtro -->
-                <div class="col d-flex justify-content-end">
-                    <button id="toggleFilterBtn" class="btn btn-outline-secondary">
+                <!-- Usamos col-12 para que ocupen el ancho completo en pantallas pequeñas -->
+                <div class="col-12 d-flex justify-content-start flex-wrap">
+                    <a name="" id="" class="btn btn-success me-2 mb-2" onclick="add_mp('{% url 'produ_app:add_pt_generico' %}')" role="button">Agregar Producto Terminado</a>
+                    <button id="toggleFilterBtn" class="btn btn-outline-secondary mb-2">
                         <i class="fa-solid fa-filter"></i> Filtrar
                     </button>
                 </div>
@@ -24,21 +21,24 @@
             <div id="filterFormContainer" style="display: none;">
                 <form method="get" class="">
                     <div class="row align-items-end">
-                        <div class="col-4">
+                        <div class="col-md-3"> <!-- Ajusta el ancho de las columnas según tu diseño -->
                             <label for="">Producto: </label> {{ filter_form.pt_nombre }}
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-3"> <!-- Ajusta el ancho de las columnas según tu diseño -->
                             <label for="">Materia Prima Utilizada: </label> {{ filter_form.materiaPrimaUsada }}
                         </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-success me-2">Filtrar</button>
+                        <div class="col-md-3"> <!-- Ajusta el ancho de las columnas según tu diseño -->
+                            <label for="">Tipo de Procesamiento: </label> {{ filter_form.pt_tipo }}
                         </div>
-                        <div class="col-2">
-                            <a href="{% url 'produ_app:list_pt_generico' %}" type="button" class="btn btn-outline-primary">Limpiar Filtro</a>
+                        <div class="col-md-3"> <!-- Ajusta el ancho de las columnas según tu diseño -->
+                            <div class="d-flex justify-content-start align-items-end">
+                                <button type="submit" class="btn btn-success me-2">Filtrar</button>
+                                <a href="{% url 'produ_app:list_pt_generico' %}" type="button" class="btn btn-outline-primary">Limpiar Filtro</a>
+                            </div>
                         </div>
                     </div>
                 </form>
-            </div>  
+            </div>
         </div>
         <div class="card-body">
             <h4 class="card-title">Producto Terminado</h4>
@@ -49,7 +49,8 @@
                         <tr>
                             <th scope="col">Producto</th>
                             <th scope="col">Materia Prima Utilizada</th>
-                            <th scope="col">Detalles</th>
+                            <th scope="col">Tipo de Procesamiento</th>
+                            <th scope="col">Detalles</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +70,8 @@
                                 -
                                 {% endif %}
                             </td>
+                            <td>{{ p.get_pt_tipo_display }}</td> <!-- Mostrar Tipo de Procesamiento -->
+                            
                             <td>
                                 <a class="btn btn-danger" onclick="delete_producto('{% url 'produ_app:delete_pt_generico' p.id %}')" type="button">
                                     <i class="fa-solid fa-trash-can"></i>
