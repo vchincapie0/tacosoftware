@@ -25,8 +25,10 @@ from .forms import (
     CaracteristicasMPUpdateForm,
     DesinfeccionMPForm,
     DesinfeccionMPUpdateForm,
+    DesinfectanteGenericoFilterForm,
     MateriaPrimaGenericaForm,
     MateriaPrimaGenericaUpdateForm,
+    MateriaPrimaGenericaFilterForm,
     DesinfectanteGenericoForm,
     MateriaAuditFilterForm
 )
@@ -36,25 +38,42 @@ from .forms import (
 class MateriaPrimaGenericaListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de las materias primas'''
     model = MateriaPrimaGenerica
-    template_name = "administrador/genericas/lista_mp_generica.html"
-    login_url=reverse_lazy('users_app:login')
-    paginate_by=10
+    template_name = "administrador/genericas/materiaprima/lista_mp_generica.html"
+    login_url = reverse_lazy('users_app:login')
+    paginate_by = 10
     context_object_name = 'materiaprima'
 
     def get_queryset(self):
-        palabra_clave = self.request.GET.get("kword", '')
-        
-        # Filtrar por nombre específico de la materia prima
-        queryset = MateriaPrimaGenerica.objects.filter(
-            mp_nombre__icontains=palabra_clave
-        )
-        
+        queryset = super().get_queryset()
+
+        # Obtener los parámetros de filtrado del formulario
+        form = MateriaPrimaGenericaFilterForm(self.request.GET)
+
+        # Aplicar filtros si el formulario es válido
+        if form.is_valid():
+            mp_nombre = form.cleaned_data.get('mp_nombre')
+            mp_tipo = form.cleaned_data.get('mp_tipo')
+
+            # Filtrar por nombre de materia prima
+            if mp_nombre:
+                queryset = queryset.filter(mp_nombre__icontains=mp_nombre)
+            # Filtrar por tipo solo si se seleccionó uno
+            if mp_tipo:
+                queryset = queryset.filter(mp_tipo=mp_tipo)
+            
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = MateriaPrimaGenericaFilterForm(self.request.GET)
+        return context
+
+
 
 class MateriaPrimaGenericaCreateView(LoginRequiredMixin, CreateView):
     '''Clase donde se crea una nueva materia prima'''
     model = MateriaPrimaGenerica
-    template_name = "administrador/genericas/add_mp_generica.html"
+    template_name = "administrador/genericas/materiaprima/add_mp_generica.html"
     login_url=reverse_lazy('users_app:login')
     #Campos que se van a mostrar en el formulario
     form_class = MateriaPrimaGenericaForm
@@ -64,7 +83,7 @@ class MateriaPrimaGenericaCreateView(LoginRequiredMixin, CreateView):
 class MateriaPrimaGenericaUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de materia prima generica'''
     model = MateriaPrimaGenerica
-    template_name = "administrador/genericas/update_mp_generica.html"
+    template_name = "administrador/genericas/materiaprima/update_mp_generica.html"
     login_url=reverse_lazy('users_app:login')
     form_class=MateriaPrimaGenericaUpdateForm
     success_url= reverse_lazy('mp_app:listaGenerica_mp')
@@ -72,7 +91,7 @@ class MateriaPrimaGenericaUpdateView(LoginRequiredMixin, UpdateView):
 class MateriaPrimaGenericaDeleteView(LoginRequiredMixin, DeleteView):
     '''Vista para borrar Implenentos de Trabajo'''
     model = MateriaPrimaGenerica
-    template_name = "administrador/genericas/delete_mp_generica.html"
+    template_name = "administrador/genericas/materiaprima/delete_mp_generica.html"
     login_url=reverse_lazy('users_app:login')
     success_url= reverse_lazy('mp_app:listaGenerica_mp')
 
@@ -165,23 +184,32 @@ class CaracteristicasMateriaPrimaUpdateView(LoginRequiredMixin, UpdateView):
 class DesinfectanteGenericoListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de los Implementos de trabajo'''
     model = DesinfectanteGenerico
-    template_name = "administrador/genericas/list_desinfectante_generico.html"
+    template_name = "administrador/genericas/desinfectante/list_desinfectante_generico.html"
     login_url=reverse_lazy('users_app:login')
     paginate_by=10
     context_object_name = 'desinfectante'
 
     def get_queryset(self):
-        '''Funcion que toma de la barra de busqueda la pablabra clave para filtrar'''
-        palabra_clave= self.request.GET.get("kword",'')
-        lista = DesinfectanteGenerico.objects.filter(
-           des_nombre__icontains = palabra_clave
-        )
-        return lista
+        '''Funcion que toma de la barra de busqueda la palabra clave para filtrar'''
+        queryset = super().get_queryset()
+        form = DesinfectanteGenericoFilterForm(self.request.GET)
+        
+        if form.is_valid():
+            des_nombre = form.cleaned_data.get('des_nombre')
+            if des_nombre:
+                queryset = queryset.filter(des_nombre__icontains=des_nombre)
+        
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = DesinfectanteGenericoFilterForm(self.request.GET or None)
+        return context
     
 class DesinfectanteGenericoCreateView(LoginRequiredMixin, CreateView):
     '''Clase donde se crea una nueva materia prima'''
     model = DesinfectanteGenerico
-    template_name = "administrador/genericas/add_desinfectante_generico.html"
+    template_name = "administrador/genericas/desinfectante/add_desinfectante_generico.html"
     login_url=reverse_lazy('users_app:login')
     #Campos que se van a mostrar en el formulario
     form_class = DesinfectanteGenericoForm
@@ -191,7 +219,7 @@ class DesinfectanteGenericoCreateView(LoginRequiredMixin, CreateView):
 class DesinfectanteGenericoUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de materia prima generica'''
     model = DesinfectanteGenerico
-    template_name = "administrador/genericas/update_desinfectante_generico.html"
+    template_name = "administrador/genericas/desinfectante/update_desinfectante_generico.html"
     login_url=reverse_lazy('users_app:login')
     form_class=DesinfectanteGenericoForm
     success_url= reverse_lazy('mp_app:desinfeccion_generico')
@@ -199,7 +227,7 @@ class DesinfectanteGenericoUpdateView(LoginRequiredMixin, UpdateView):
 class DesinfectanteGenericoDeleteView(LoginRequiredMixin, DeleteView):
     '''Vista para borrar Implenentos de Trabajo'''
     model = DesinfectanteGenerico
-    template_name = "administrador/genericas/delete_desinfectante_generico.html"
+    template_name = "administrador/genericas/desinfectante/delete_desinfectante_generico.html"
     login_url=reverse_lazy('users_app:login')
     success_url= reverse_lazy('mp_app:desinfeccion_generico')
 
@@ -414,12 +442,22 @@ def export_materiaprima_to_excel(request):
             'Sí' if caracteristicas and caracteristicas.empaque else 'No',
             'Sí' if caracteristicas and caracteristicas.color else 'No',
             dict(CaracteristicasOrganolepticas.ESTADO_CHOICES).get(caracteristicas.estado, '') if caracteristicas else '',
+<<<<<<< HEAD
             desinfeccion.des_nombre.des_nombre if desinfeccion else '',
             desinfeccion.concentracion if desinfeccion else '',
             desinfeccion.responsable.name if desinfeccion else '',
             desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
             desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S") if desinfeccion else '',
             desinfeccion.obsevacion if desinfeccion else '',
+=======
+            desinfeccion.des_nombre.des_nombre,
+            desinfeccion.concentracion,
+            desinfeccion.responsable.name,
+            desinfeccion.tiempo_inicio.strftime("%Y-%m-%d %H:%M:%S"),
+            desinfeccion.tiempo_fin.strftime("%Y-%m-%d %H:%M:%S"),
+            desinfeccion.obsevacion,
+
+>>>>>>> 941a389288adbdc854798c73fc01e85627ee17b0
         ]
         worksheet.append(data_row)
 
