@@ -1,55 +1,55 @@
+{% load static %}
 <div class="modal-dialog modal-md" role="document">
-  <div class="modal-content bg-dark text-white">
-    <div class="modal-header">
-      <h5 class="modal-title">Agregar Características Organolepticas</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-      <form id="addCaracteristicasForm" method="POST" action="{% url 'mp_app:caracteristicas_mp' %}">
-        {%csrf_token%}
-            <div class="mx-4 my-2 row">
-                
-                <div class="mb-3 col-12">
-                    <label for="id_mp_nombre" class="form-label">Lote Materia Prima: </label>
+      <div class="modal-content bg-dark text-white">
+        <div class="modal-header">
+        <h5 class="modal-title">Agregar Características Organolépticas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form id="addCaracteristicasForm" action="{% url 'mp_app:caracteristicas_mp' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+              {%csrf_token%}
+                            
+                  <div class="mb-3 col">
+                    <label for="id_mp_nombre" class="form-label">Lote Materia Prima:</label>
                     {{form.mp_lote}}   
-                </div>
-          
-           
-                <div class="mb-3 col-12 text-center">
-                    <label for="id_mp_fechallegada" class="form-label">Olor:</label>
+                  </div>
+            
+            
+                  <div class="mb-3 col text-center">
+                    <label for="id_mp_Olor" class="form-label">Olor:</label>
                     {{form.olor}}   
-                </div>
+                  </div>
 
-                <div class="mb-3 col-12 text-center" >
+                  <div class="mb-3 col text-center" >
                     <label for="id_mp_fechavencimiento" class="form-label">Textura: </label>
                     {{form.textura}}  
-                </div>
+                  </div>
 
-                <div class="mb-3 col-12 text-center">
+                  <div class="mb-3 col text-center">
                     <label for="id_imp_lote" class="form-label">Limpieza: </label>
                     {{form.limpieza}}
-                </div>
+                  </div>
 
-                <div class="mb-3 col-12 text-center">
-                  <label for="id_imp_lote" class="form-label">Empaque: </label>
-                  {{form.empaque}}
-                </div>
+                  <div class="mb-3 col text-center">
+                    <label for="id_imp_lote" class="form-label">Empaque: </label>
+                    {{form.empaque}}
+                  </div>
 
-              <div class="mb-3 col-12 text-center">
-                <label for="id_imp_lote" class="form-label">Color: </label>
-                {{form.color}}
-              </div>
+                  <div class="mb-3 col text-center">
+                  <label for="id_imp_lote" class="form-label">Color: </label>
+                    {{form.color}}
+                  </div>
 
-                <div class="col text-center">
+                  <div class="col text-center">
                     <button class="btn btn-success" type="submit">Guardar</button>
                     &nbsp;
                     <a href="{% url 'mp_app:lista_mp' %}" type="button" class="btn btn-secondary">Cancelar</a>
-                </div>
-            </div>
-            
-        </form>
+                  </div>
+              
+              
+          </form>
+        </div>
+    
       </div>
-  
-  </div>
-</div>
+ </div>
 

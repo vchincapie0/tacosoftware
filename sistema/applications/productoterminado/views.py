@@ -3,7 +3,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import csv
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -78,6 +78,7 @@ class ProduUpdateView(LoginRequiredMixin, UpdateView):
     login_url=reverse_lazy('users_app:login')
     form_class=ProductoTerminadoForm
     success_url= reverse_lazy('produ_app:list_produ')
+    
 
     def form_valid(self, form):
         #Obtener los datos del fomulario
@@ -118,10 +119,9 @@ class CaracteristicasProductoTerminadoCreateView(LoginRequiredMixin, CreateView)
         #Obtener los datos del fomulario
         pt_lote = form.cleaned_data['pt_lote']
         producto_nombre = pt_lote.pt_nombre.pt_nombre
-        pt_fecha = form.cleaned_data['pt_fechapreparacion']
-        
+                
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡Las características de {producto_nombre} de la fecha de preparación {pt_fecha} se ha guardado correctamente!')
+        messages.success(self.request, f'¡Las características de {producto_nombre} se ha guardado correctamente!')
 
         return super(CaracteristicasProductoTerminadoCreateView, self).form_valid(form)
 
@@ -139,12 +139,11 @@ class CaracteristicasProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView)
         #Obtener los datos del fomulario
         pt_lote = form.cleaned_data['pt_lote']
         producto_nombre = pt_lote.pt_nombre.pt_nombre
-        pt_fecha = form.cleaned_data['pt_fechapreparacion']
-        
+               
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡Las características de {producto_nombre} de la fecha de preparación {pt_fecha} se ha actualizado correctamente!')
+        messages.success(self.request, f'¡Las características de {producto_nombre} se ha actualizado correctamente!')
 
-        return super(CaracteristicasProductoTerminadoCreateView, self).form_valid(form)
+        return super(CaracteristicasProductoTerminadoUpdateView, self).form_valid(form)
 
 class ProductoTerminadoDetailView(LoginRequiredMixin, DetailView):
     

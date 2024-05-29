@@ -8,7 +8,7 @@
       <div class="modal-body">
             <form id="facAddForm" action="{% url 'facturas_app:add_factura' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" enctype="multipart/form-data">
                 {%csrf_token%}
-
+                
                 <!-- {% if form.errors %}
                     <div class="alert alert-info">
                         {{form.errors.it_nombre.0}}

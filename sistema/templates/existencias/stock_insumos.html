@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Inventario de Implementos de Trabajo
+    Inventario de Insumos
 {% endblock title %}
 
 
@@ -13,7 +13,7 @@
                 <div class="col-6">
                     <form class="d-flex" role="search">
                         {% csrf_token %}
-                        <input class="form-control me-2" type="search" placeholder="Buscar Implemento de Trabajo" aria-label="Search" name="kword" id="kword">
+                        <input class="form-control me-2" type="search" placeholder="Buscar Insumo" aria-label="Search" name="kword" id="kword">
                         <button class="btn btn-outline-success" type="submit">Buscar</button>
                     </form>
                 </div>
@@ -21,13 +21,13 @@
             
         </div>
         <div class="card-body">
-            <h4 class="card-title">Inventario de Implementos de Trabajo</h4>
+            <h4 class="card-title">Inventario Insumos</h4>
             
             <div class="table-responsive">
                 <table class="table table-secondary text-center">
                     <thead>
                         <tr>
-                          <th scope="col">Implemento de Trabajo</th>
+                          <th scope="col">Insumo</th>
                           <th scope="col">Cantidad Disponible </th>
                           <th scope="col">Fecha Último Ingreso</th>
                           <th scope="col">Hora Último Ingreso</th>

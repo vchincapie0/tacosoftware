@@ -65,15 +65,15 @@ class ProductoTerminadoForm(forms.ModelForm):
 
         model = ProductoTerminado
         fields = (
-            'pt_lote',
-            'pt_cantidad',   
+            'pt_lote', 
             'pt_nombre', 
+            'pt_cantidad',   
             'pt_fechapreparacion',
             'pt_fechavencimiento',
             )
         
         widgets={
-            'pt_lote':forms.NumberInput(attrs={'class':'form-control'}),
+            'pt_lote':forms.Select(attrs={'class':'form-select'}),
             'pt_nombre':forms.Select(attrs={'class':'form-select'}),
             'pt_cantidad':forms.NumberInput(attrs={'class':'form-control'}),
             'pt_fechapreparacion':forms.SelectDateWidget(),
