@@ -19,7 +19,7 @@ class Picado(models.Model):
     
     def __str__(self):
         return f"{self.pica_producto}-{self.pica_cantidad}{self.pica_pesoMPposproceso}-{self.pica_merma}-{self.pica_check}"
-
+    
 
 class Equipos(models.Model):
 

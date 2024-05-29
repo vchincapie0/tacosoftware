@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Proceso de Picado
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h3 style="color: #FFFF; font-weight: bolder;">PROCESAMIENTO</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page"><a href="#" style="text-decoration: none; color: rgb(236, 225, 47, .75); font-weight: bolder;">Procesamiento</a></li>
+                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Características Organolépticas</li>
+                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Empaque y Vacio</li>
+                </ol>
+              </nav>
+        </div>
+    </div>
+    <!-- Formulario principal -->
+    <form method="post" action="{% url 'procesamientos_app:procesamiento_picado' producto.id %}">
+        {% csrf_token %}
+        <!-- Primer fieldset -->
+        <div class="row">
+            <div class="col-8 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <fieldset id="fieldset1">
+                    <legend>{{ producto.pt_nombre }}</legend>
+                    <p>Ingrese el peso en gramos deseado para cada materia prima</p>
+                    
+                    {% for materia_prima in materias_primas %}
+                        <div class="form-group">
+                            <label for="peso_{{ materia_prima.id }}" class="m-2">{{ materia_prima.mp_nombre }} (Disponible: {{ materia_prima.cantidad_total }}g):</label>
+                            <input type="number" id="peso_{{ materia_prima.id }}" name="peso_{{ materia_prima.id }}" class="form-control" required>
+                            <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
+                        </div>
+                    {% endfor %}
+                    <div class="form-group">
+                        <label for="total_mp_ingresada" class="form-label">Peso Total: </label>
+                        <input type="number" id="total_mp_ingresada" name="total_mp_ingresada" class="form-control" readonly>
+                    </div>
+                    
+                    <div class="m-2 row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-warning" onclick="validateFieldset1()">Validar</button>
+                        </div> 
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="mt-2 row">
+            <div class="col-6 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <!-- Segundo fieldset -->
+                <fieldset id="fieldset2" disabled>
+                    <legend>Post-Producción</legend>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="peso_post_produccion">Peso Post Producción:</label>
+                        <input class="form-control" type="number" id="peso_post_produccion" name="peso_post_produccion">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="merma">Merma:</label>
+                        <input class="form-control" type="number" id="merma" name="merma" readonly>
+                    </div> 
+
+                    <div class="m-2 row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" onclick="calculateMerma()">Calcular</button>
+                        </div> 
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+
+        <!-- Botón de enviar -->
+        <div class="m-2 row">
+            <div class="col d-flex justify-content-center">
+                <button type="submit" class="btn btn-success">Guardar</button>
+            </div> 
+        </div>
+    </form>            
+</div>
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+    function validateFieldset1() {
+        let isValid = true;
+        {% for materia_prima in materias_primas %}
+        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+        let cantidadTotal_{{ materia_prima.id }} = {{ materia_prima.cantidad_total }};
+        let errorSpan_{{ materia_prima.id }} = document.getElementById('error_{{ materia_prima.id }}');
+        if (peso_{{ materia_prima.id }} > cantidadTotal_{{ materia_prima.id }}) {
+            errorSpan_{{ materia_prima.id }}.style.display = 'block';
+            isValid = false;
+        } else {
+            errorSpan_{{ materia_prima.id }}.style.display = 'none';
+        }
+        {% endfor %}
+        
+        if (isValid) {
+            // Calculate total weight
+            calculateTotal();
+            // Disable the first fieldset
+            document.getElementById('fieldset1').disabled = true;
+            // Enable the second fieldset
+            document.getElementById('fieldset2').disabled = false;
+        }
+    }
+    
+    function calculateTotal() {
+        let total = 0;
+        {% for materia_prima in materias_primas %}
+        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+        total += peso_{{ materia_prima.id }};
+        {% endfor %}
+        document.getElementById('total_mp_ingresada').value = total;
+    }
+    
+    function calculateMerma() {
+        let total_mp_ingresada = parseFloat(document.getElementById('total_mp_ingresada').value) || 0;
+        let peso_post_produccion = parseFloat(document.getElementById('peso_post_produccion').value) || 0;
+        let merma = total_mp_ingresada - peso_post_produccion;
+        document.getElementById('merma').value = merma;
+    }
+</script>
+{% endblock %}

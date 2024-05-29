@@ -50,13 +50,13 @@ class CaracteristicasOrganolepticasPT(models.Model):
         ('1','No Aprobado'),
     )
 
-    pt_lote=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)
+    producto=models.ForeignKey(ProductoTerminadoGenerico,on_delete=models.CASCADE)
     observaciones = models.CharField('Observaciones', max_length=50)
     olor = models.BooleanField('Olor',default=False)
     sabor = models.BooleanField('Sabor',default=False)
     textura = models.BooleanField('Textura',default=False)
     color = models.BooleanField('Color',default=False)
-    estado=models.CharField('Estado',max_length=1,choices=ESTADO_CHOICES)
+    estado=models.CharField('Estado',max_length=1,choices=ESTADO_CHOICES, default=0)
     
     def __str__(self):
         return str(self.pt_lote)+'-'+self.estado

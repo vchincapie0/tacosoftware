@@ -96,7 +96,7 @@ class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
         model = CaracteristicasOrganolepticasPT
         fields=(
-            'pt_lote',
+            'producto',
             'observaciones',
             'olor',
             'sabor',
@@ -120,7 +120,7 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
         model = CaracteristicasOrganolepticasPT
         fields=(
 
-            'pt_lote',
+            'producto',
             'observaciones',
             'olor',
             'sabor',
@@ -131,7 +131,7 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         widgets={
                 
-                'pt_lote':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
+                'producto':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
                 'observaciones':forms.Textarea(attrs={'class':'form-control' }),
                 'olor':forms.CheckboxInput(),
                 'sabor':forms.CheckboxInput(),
