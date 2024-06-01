@@ -5,6 +5,7 @@ from django.views.generic import ListView
 from django.urls import reverse_lazy
 from applications.materiaprima.models import MateriaPrimaGenerica
 from applications.insumos.models import InsumosGenerico
+from applications.productoterminado.models import ProductoTerminadoGenerico
 
 class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
     model = MateriaPrimaGenerica
@@ -45,3 +46,27 @@ class ExistenciasInsumosListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('users_app:login')
     paginate_by= 10
     context_object_name = "stock_it"
+
+class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
+    model = ProductoTerminadoGenerico
+    template_name = "existencias/stock_pt.html"
+    login_url = reverse_lazy('users_app:login')
+    paginate_by = 10
+    context_object_name = "stock_pt"
+
+    def get_queryset(self):
+        '''Function that retrieves the keyword from the search bar to filter results'''
+        palabra_clave = self.request.GET.get("kword", '')
+        
+        queryset = ProductoTerminadoGenerico.objects.all()
+
+        if palabra_clave:
+            queryset = queryset.filter(mp_nombre__icontains=palabra_clave)
+        queryset = queryset.order_by(F('cantidad_total').desc())
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['palabra_clave'] = self.request.GET.get('kword', '')
+        return context
