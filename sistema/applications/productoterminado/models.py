@@ -39,6 +39,9 @@ class ProductoTerminado(models.Model):
             self.pt_lote = 'PT' + ''.join(random.choices(string.digits, k=4))
         super().save(*args, **kwargs)
 
+        # Actualizar la cantidad total del ProductoTerminadoGenerico relacionado
+        self.pt_nombre.actualizar_cantidad_total()
+
     def __str__(self):
         return f"{self.pt_lote}-{self.pt_nombre}"
 
@@ -91,6 +94,9 @@ class Vacio(models.Model):
         # Actualizar la cantidad de producto terminado
         self.pt_lote.pt_cantidad = self.cantidad_bolsas_liberadas
         self.pt_lote.save()
+
+        # Actualizar la cantidad total del ProductoTerminadoGenerico relacionado
+        self.pt_lote.pt_nombre.actualizar_cantidad_total()
 
     def __str__(self):
         return f"{self.pt_lote}-{self.cantidad_bolsas_rechazadas}"
