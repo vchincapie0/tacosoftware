@@ -25,7 +25,7 @@
     </div>
 
     <!-- Formulario principal -->
-    <form method="post" action="{% url 'procesamientos_app:procesamiento_coccion' producto.id %}">
+    <form id="mainForm" method="post" action="{% url 'procesamientos_app:procesamiento_coccion' producto.id %}">
         {% csrf_token %}
         <!-- Primer fieldset -->
         <div class="row gap-2">
@@ -49,7 +49,7 @@
                     
                     <div class="m-2 row">
                         <div class="col d-flex justify-content-end">
-                            <button type="button" class="btn btn-warning" onclick="validateFieldset1()">Validar</button>
+                            <button type="button" class="btn btn-warning" onclick="confirmValidation()">Validar</button>
                         </div> 
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                       
                         <label class="form-label" for="cocc_merma">Merma:</label>
                         <input class="form-control" type="number" id="cocc_merma" name="cocc_merma" readonly>
-                       
+                        <span class="mt-1 alert alert-warning" id="error_merma" style="display: none;">La merma no puede ser un valor negativo.</span>
     
                         <div class="m-2 row">
                             <div class="col d-flex justify-content-end">
@@ -105,7 +105,7 @@
         <!-- Botón de enviar -->
         <div class="m-2 row">
             <div class="col d-flex justify-content-end">
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
             </div> 
         </div>
     </form>            
@@ -114,7 +114,13 @@
 
 {% block extrajs %}
 <script>
-   function validateFieldset1() {
+    function confirmValidation() {
+        if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
+            validateFieldset1();
+        }
+    }
+
+    function validateFieldset1() {
         let isValid = true;
         {% for materia_prima in materias_primas %}
         let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
@@ -149,9 +155,22 @@
     
     function calculateMerma() {
         let cocc_cantidad_total = parseFloat(document.getElementById('cocc_cantidad_total').value) || 0;
-        let cocc_pesoPostProcesamiento= parseFloat(document.getElementById('cocc_pesoPostProcesamiento').value) || 0;
+        let cocc_pesoPostProcesamiento = parseFloat(document.getElementById('cocc_pesoPostProcesamiento').value) || 0;
         let cocc_merma = cocc_cantidad_total - cocc_pesoPostProcesamiento;
-        document.getElementById('cocc_merma').value = cocc_merma;
+        let errorSpan_merma = document.getElementById('error_merma');
+        
+        if (cocc_merma < 0) {
+            errorSpan_merma.style.display = 'block';
+        } else {
+            errorSpan_merma.style.display = 'none';
+            document.getElementById('cocc_merma').value = cocc_merma;
+        }
+    }
+
+    function confirmSubmission() {
+        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+            document.getElementById('mainForm').submit();
+        }
     }
 </script>
 {% endblock %}

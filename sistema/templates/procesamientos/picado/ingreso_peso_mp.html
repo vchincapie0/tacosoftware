@@ -23,7 +23,7 @@
         </div>
     </div>
     <!-- Formulario principal -->
-    <form method="post" action="{% url 'procesamientos_app:procesamiento_picado' producto.id %}">
+    <form id="mainForm" method="post" action="{% url 'procesamientos_app:procesamiento_picado' producto.id %}">
         {% csrf_token %}
         <!-- Primer fieldset -->
         <div class="row">
@@ -48,7 +48,7 @@
                     
                     <div class="m-2 row">
                         <div class="col d-flex justify-content-end">
-                            <button type="button" class="btn btn-warning" onclick="validateFieldset1()">Validar</button>
+                            <button type="button" class="btn btn-warning" onclick="confirmValidation()">Validar</button>
                         </div> 
                     </div>
                 </div>
@@ -69,6 +69,7 @@
                     <div class="form-group">
                         <label class="form-label" for="pica_merma">Merma:</label>
                         <input class="form-control" type="number" id="pica_merma" name="pica_merma" readonly>
+                        <span class="mt-1 alert alert-warning" id="error_merma" style="display: none;">La merma no puede ser un valor negativo.</span>
                     </div> 
 
                     <div class="m-2 row">
@@ -93,7 +94,7 @@
         <!-- Botón de enviar -->
         <div class="m-2 row">
             <div class="col d-flex justify-content-center">
-                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
             </div> 
         </div>
     </form>            
@@ -102,6 +103,12 @@
 
 {% block extrajs %}
 <script>
+    function confirmValidation() {
+        if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
+            validateFieldset1();
+        }
+    }
+
     function validateFieldset1() {
         let isValid = true;
         {% for materia_prima in materias_primas %}
@@ -139,7 +146,20 @@
         let pica_cantidad_total = parseFloat(document.getElementById('pica_cantidad_total').value) || 0;
         let pica_pesoPostProcesamiento = parseFloat(document.getElementById('pica_pesoPostProcesamiento').value) || 0;
         let pica_merma = pica_cantidad_total - pica_pesoPostProcesamiento;
-        document.getElementById('pica_merma').value = pica_merma;
+        let errorSpan_merma = document.getElementById('error_merma');
+        
+        if (pica_merma < 0) {
+            errorSpan_merma.style.display = 'block';
+        } else {
+            errorSpan_merma.style.display = 'none';
+            document.getElementById('pica_merma').value = pica_merma;
+        }
+    }
+    
+    function confirmSubmission() {
+        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+            document.getElementById('mainForm').submit();
+        }
     }
 </script>
 {% endblock %}
