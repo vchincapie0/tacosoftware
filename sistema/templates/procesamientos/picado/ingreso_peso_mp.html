@@ -28,7 +28,7 @@
         <!-- Primer fieldset -->
         <div class="row">
             <div class="col-8 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                <fieldset id="fieldset1">
+                <div id="fieldset1">
                     <legend>{{ producto.pt_nombre }}</legend>
                     <p>Ingrese el peso en gramos deseado para cada materia prima</p>
                     
@@ -39,6 +39,8 @@
                             <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
                         </div>
                     {% endfor %}
+
+                    <legend>Cantidad Total en Crudo</legend>
                     <div class="form-group">
                         <label for="pica_cantidad_total" class="form-label">Peso Total: </label>
                         <input type="number" id="pica_cantidad_total" name="pica_cantidad_total" class="form-control" readonly>
@@ -49,14 +51,14 @@
                             <button type="button" class="btn btn-warning" onclick="validateFieldset1()">Validar</button>
                         </div> 
                     </div>
-                </fieldset>
+                </div>
             </div>
         </div>
 
         <div class="mt-2 row">
             <div class="col-6 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                 <!-- Segundo fieldset -->
-                <fieldset id="fieldset2" disabled>
+                <div id="fieldset2" disabled>
                     <legend>Post-Producción</legend>
                     
                     <div class="form-group">
@@ -83,7 +85,7 @@
                             <option value="1">No aprobado</option>
                           </select>
                     </div> 
-                </fieldset>
+                </div>
 
             </div>
         </div>

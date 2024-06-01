@@ -58,7 +58,7 @@ class CaracteristicasOrganolepticasPT(models.Model):
         ('1','No Aprobado'),
     )
 
-    producto=models.ForeignKey(ProductoTerminadoGenerico,on_delete=models.CASCADE, default=0)
+    producto=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)
     observaciones = models.CharField('Observaciones', max_length=50)
     olor = models.BooleanField('Olor',default=False)
     sabor = models.BooleanField('Sabor',default=False)

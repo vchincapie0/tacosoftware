@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView,CreateView,DeleteView,UpdateView
+from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 #Importacion de modelos y formularios
 from applications.materiaprima.models import MateriaPrimaGenerica
@@ -11,8 +12,8 @@ from applications.productoterminado.models import (
     ProductoTerminado,
     CaracteristicasOrganolepticasPT,
 )
-from .models import Picado,PicadoMateriaPrima,Coccion,Equipos
-from .forms import PicadoForm,addEquipos,EquiposUpdateForm
+from .models import Picado,PicadoMateriaPrima,Coccion,CoccionMateriaPrima,Equipos
+from .forms import addEquipos,EquiposUpdateForm
 
 # Create your views here.
 
@@ -41,101 +42,101 @@ def select_picado_view(request):
     return render(request, 'procesamientos/picado/select_picado.html', {'productos': productos})
 
 def ingresar_peso_materias_primas_coccion(request, producto_id):
-    producto = get_object_or_404(ProductoTerminadoGenerico, pk=producto_id)
+    producto = get_object_or_404(ProductoTerminadoGenerico, id=producto_id)
     materias_primas = producto.materiaPrimaUsada.all()
-
+    
     if request.method == 'POST':
-        # Procesar los datos del primer fieldset
-        for materia_prima in materias_primas:
-            peso = int(request.POST.get(f"peso_{materia_prima.id}"))
-            if peso > materia_prima.cantidad_total:
-                # Redirigir de vuelta al formulario con un mensaje de error
-                return render(request, 'procesamientos/coccion/ingreso_peso_mp.html', {
-                    'producto': producto,
-                    'materias_primas': materias_primas,
-                    'error': f'El peso ingresado para {materia_prima.mp_nombre} excede la cantidad disponible.'
-                })
+         # Crear la instancia de ProductoTerminado
+        producto_terminado = ProductoTerminado(
+            pt_cantidad=0,  # Cantidad inicial es 0
+            pt_nombre=producto,
+            pt_fechapreparacion=timezone.now(),
+            pt_fechavencimiento=timezone.now() + timezone.timedelta(days=20)  # Ajusta esto según tus necesidades
+        )
+        producto_terminado.save()
         
-        # Procesar los datos del segundo y tercer fieldset
-        peso_post_produccion = request.POST.get("peso_post_produccion")
-        tiempo_coccion = request.POST.get("tiempo_coccion")
-        temperatura = request.POST.get("temperatura")
-        olor = request.POST.get("check_olor") == 'on'
-        sabor = request.POST.get("check_sabor") == 'on'
-        color = request.POST.get("check_color") == 'on'
-        textura = request.POST.get("check_textura") == 'on'
-        observaciones = request.POST.get("observacion")
+        # Después de guardar la instancia de ProductoTerminado, obtén el número de lote
+        lote = producto_terminado.pt_lote
 
-        # Guardar los datos en CaracteristicasOrganolepticasPT
-        caracteristicas = CaracteristicasOrganolepticasPT(
-            producto=producto,
-            observaciones=observaciones,
-            olor=olor,
-            sabor=sabor,
-            color=color,
-            textura=textura
+        # Crear la instancia de Picado
+        coccion = Coccion(
+            cocc_producto=producto_terminado,
+            cocc_cantidad_total=request.POST['cocc_cantidad_total'],
+            cocc_pesoPostProcesamiento=request.POST['cocc_pesoPostProcesamiento'],
+            cocc_merma=request.POST['cocc_merma'],
+            cocc_tiempoCoccion=request.POST['cocc_tiempoCoccion'],
+            cocc_temperaturafinal=request.POST['cocc_temperaturafinal'],
+            cocc_check=request.POST['cocc_check']
         )
-        caracteristicas.save()
+        coccion.save()
+        
+         # Guardar los pesos de materias primas
+        for materia_prima in materias_primas:
+            peso = request.POST.get(f'peso_{materia_prima.id}')
+            if peso:
+                peso = int(peso)  # Convertir el peso a entero
+                print(f'Guardando {peso}g de {materia_prima.mp_nombre}')
+                coccion_materia_prima = CoccionMateriaPrima(
+                    coccion=coccion,
+                    materia_prima=materia_prima,
+                    cantidad=peso
+                )
+                coccion_materia_prima.save()
 
-        # Guardar los datos en Picado
-        picado = Picado(
-            pica_pesoMPposproceso=peso_post_produccion,
-            pica_check='0'  # Default to 'Aprobado' for now
-        )
-        picado.save()
-        picado.pica_producto.add(producto)
-        picado.save()
-
-        # Redirigir a una página de éxito
-        return redirect(reverse_lazy('procesamientos_app:empaques'))
+                # Deducir la cantidad del inventario
+                materia_prima.cantidad_total -= peso
+                materia_prima.save()
+        return redirect(reverse_lazy('procesamientos_app:caracteristicas_organolepticas', kwargs={'lote': lote}))
     return render(request, 'procesamientos/coccion/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
-
+        
 def ingresar_peso_materias_primas_picado(request, producto_id):
     producto = get_object_or_404(ProductoTerminadoGenerico, id=producto_id)
     materias_primas = producto.materiaPrimaUsada.all()
     
     if request.method == 'POST':
-        picado_form = PicadoForm(request.POST)
-        if picado_form.is_valid():
-            pica_pesoPostProcesamiento=picado_form.cleaned_data['pica_pesoPostProcesamiento']
-            pica_merma=picado_form.cleaned_data['pica_merma']
-            pica_check = picado_form.cleaned_data['pica_check']
-            print(f'peso post: {pica_pesoPostProcesamiento} - merma: {pica_merma}- check: {pica_check}')
-            picado = picado_form.save(commit=False)
-            
-            # Crear ProductoTerminado con pt_cantidad inicializado a 0
-            producto_terminado = ProductoTerminado.objects.create(
-                pt_cantidad=0,
-                pt_nombre=producto,
-                pt_fechapreparacion=timezone.now(),
-                pt_fechavencimiento=timezone.now() + timezone.timedelta(days=30)
-            )
-            
-            picado.save()
-            picado.pica_producto.add(producto_terminado)
-            picado.save()
+         # Crear la instancia de ProductoTerminado
+        producto_terminado = ProductoTerminado(
+            pt_cantidad=0,  # Cantidad inicial es 0
+            pt_nombre=producto,
+            pt_fechapreparacion=timezone.now(),
+            pt_fechavencimiento=timezone.now() + timezone.timedelta(days=20)  # Ajusta esto según tus necesidades
+        )
+        producto_terminado.save()
+        
+        # Después de guardar la instancia de ProductoTerminado, obtén el número de lote
+        lote = producto_terminado.pt_lote
 
-            # Guardar la cantidad de cada materia prima utilizada
-            for materia_prima in materias_primas:
-                peso = int(request.POST.get(f'peso_{materia_prima.id}', 0))
-                if peso > 0:
-                    PicadoMateriaPrima.objects.create(
-                        picado=picado,
-                        materia_prima=materia_prima,
-                        cantidad=peso
-                    )
-                    # Restar la cantidad de materia prima utilizada
-                    materia_prima.cantidad_total -= peso
-                    materia_prima.save()
+        # Crear la instancia de Picado
+        picado = Picado(
+            pica_producto=producto_terminado,
+            pica_cantidad_total=request.POST['pica_cantidad_total'],
+            pica_pesoPostProcesamiento=request.POST['pica_pesoPostProcesamiento'],
+            pica_merma=request.POST['pica_merma'],
+            pica_check=request.POST['pica_check']
+        )
+        picado.save()
+        
+         # Guardar los pesos de materias primas
+        for materia_prima in materias_primas:
+            peso = request.POST.get(f'peso_{materia_prima.id}')
+            if peso:
+                peso = int(peso)  # Convertir el peso a entero
+                picado_materia_prima = PicadoMateriaPrima(
+                    picado=picado,
+                    materia_prima=materia_prima,
+                    cantidad=peso
+                )
+                picado_materia_prima.save()
 
-            return redirect(reverse_lazy('procesamientos_app:empaques'))
+                # Deducir la cantidad del inventario
+                materia_prima.cantidad_total -= peso
+                materia_prima.save()
 
-    else:
-        picado_form = PicadoForm()
+        return redirect(reverse_lazy('procesamientos_app:caracteristicas_organolepticas', kwargs={'lote': lote}))
 
     return render(request, 'procesamientos/picado/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
 
-def caracteristicas_organolepticas_pt(request):
+def caracteristicas_organolepticas_pt(request, lote):
     
     return render(request, 'procesamientos/caracteristicasorganolepticasPt.html')
 
@@ -157,7 +158,6 @@ class EquiposListView(LoginRequiredMixin, ListView):
                 deleted=False  # Solo picados activos
             )
             return lista
-
 
 class EquiposcreateView(LoginRequiredMixin,CreateView):
     '''Vista para crear  de equipos'''

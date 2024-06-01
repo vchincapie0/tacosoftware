@@ -30,7 +30,7 @@
         <!-- Primer fieldset -->
         <div class="row gap-2">
             <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                <fieldset id="fieldset1">
+                <div id="fieldset1">
                     <legend>{{ producto.pt_nombre }}</legend>
                     <p>Ingrese el peso en gramos deseado para cada materia prima</p>
                     
@@ -41,9 +41,10 @@
                             <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
                         </div>
                     {% endfor %}
+                    <legend>Cantidad Total en Crudo</legend>
                     <div class="form-group">
-                        <label for="total_mp_ingresada" class="form-label">Peso Total: </label>
-                        <input type="number" id="total_mp_ingresada" name="total_mp_ingresada" class="form-control" readonly>
+                        <label for="cocc_cantidad_total" class="form-label">Peso Total: </label>
+                        <input type="number" id="cocc_cantidad_total" name="cocc_cantidad_total" class="form-control" readonly>
                     </div>
                     
                     <div class="m-2 row">
@@ -51,23 +52,23 @@
                             <button type="button" class="btn btn-warning" onclick="validateFieldset1()">Validar</button>
                         </div> 
                     </div>
-                </fieldset>
+                </div>
             </div>
         </div>
 
         <div class="mt-2 row">
             <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                 <!-- Segundo fieldset -->
-                <fieldset id="fieldset2" disabled>
+                <div id="fieldset2" disabled>
                     <legend>Post-Producción</legend>
                     
                     <div class="form-group">
-                        <label class="form-label" for="peso_post_produccion">Peso Post Producción:</label>
-                        <input class="form-control" type="number" id="peso_post_produccion" name="peso_post_produccion">
+                        <label class="form-label" for="cocc_pesoPostProcesamiento">Peso Post Producción:</label>
+                        <input class="form-control" type="number" id="cocc_pesoPostProcesamiento" name="cocc_pesoPostProcesamiento">
                         
                       
-                        <label class="form-label" for="merma">Merma:</label>
-                        <input class="form-control" type="number" id="merma" name="merma" readonly>
+                        <label class="form-label" for="cocc_merma">Merma:</label>
+                        <input class="form-control" type="number" id="cocc_merma" name="cocc_merma" readonly>
                        
     
                         <div class="m-2 row">
@@ -76,19 +77,28 @@
                             </div> 
                         </div>
 
-                        <label class="form-label" for="tiempo_coccion">Tiempo de cocción:</label>
+                        <label class="form-label" for="cocc_tiempoCoccion">Tiempo de cocción:</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" aria-label="Tiempo_coccion" id="tiempo_coccion" name="tiempo_coccion">
+                            <input type="number" class="form-control" aria-label="Tiempo_coccion" id="cocc_tiempoCoccion" name="cocc_tiempoCoccion">
                             <span class="input-group-text">Minutos</span>
                         </div>
                         
-                        <label for="temperatura" class="form-label">Temperatura:</label>
+                        <label for="cocc_temperaturafinal" class="form-label">Temperatura:</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" aria-label="Temperatura" id="temperatura" name="temperatura">
+                            <input type="number" class="form-control" aria-label="Temperatura" id="cocc_temperaturafinal" name="cocc_temperaturafinal">
                             <span class="input-group-text">°C</span>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="cocc_check">Aceptabilidad/Rechazo T°>75°C:</label>
+                            <select class="form-select" id="cocc_check" name="cocc_check">
+                                <option selected>-----Seleccione una opción</option>
+                                <option value="0">Aprobado</option>
+                                <option value="1">No aprobado</option>
+                              </select>
+                        </div>
                     </div>        
-                </fieldset>
+                </div>
             </div>
         </div>
 
@@ -134,14 +144,14 @@
         let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
         total += peso_{{ materia_prima.id }};
         {% endfor %}
-        document.getElementById('total_mp_ingresada').value = total;
+        document.getElementById('cocc_cantidad_total').value = total;
     }
     
     function calculateMerma() {
-        let total_mp_ingresada = parseFloat(document.getElementById('total_mp_ingresada').value) || 0;
-        let peso_post_produccion = parseFloat(document.getElementById('peso_post_produccion').value) || 0;
-        let merma = total_mp_ingresada - peso_post_produccion;
-        document.getElementById('merma').value = merma;
+        let cocc_cantidad_total = parseFloat(document.getElementById('cocc_cantidad_total').value) || 0;
+        let cocc_pesoPostProcesamiento= parseFloat(document.getElementById('cocc_pesoPostProcesamiento').value) || 0;
+        let cocc_merma = cocc_cantidad_total - cocc_pesoPostProcesamiento;
+        document.getElementById('cocc_merma').value = cocc_merma;
     }
 </script>
 {% endblock %}
