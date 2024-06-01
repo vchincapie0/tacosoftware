@@ -28,9 +28,10 @@
             <div class="col">
                 <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                     {% csrf_token %}
-                    <h5>Producto: </h5>
+                    <h5 class="text-center">Producto: {{producto.pt_nombre}}</h5>
+                    <h6 class="text-center">Lote: {{producto.pt_lote}}</h6>
                     <div class="mt-3 row">
-                        <p style="color: #FFFF; font-weight: bold;">Cantidad Preparada</p>
+                        <legend class="text-center">Cantidad Preparada</legend>
                         <label for="cantidad_empaque" class="form-label">Cantidad de bolsas X 500g:</label>
                         <div class="input-group">
                             <input type="number" class="form-control" name="cantidad_empaque" id="cantidad_empaque">
@@ -44,7 +45,7 @@
                     </div>
 
                     <div class="mt-3 row">
-                        <p style="color: #FFFF; font-weight: bold;">Vacío</p>
+                        <legend class="text-center">Vacío</legend>
                         <label for="bolsas_rechazadas" class="form-label">Cantidad de bolsas rechazadas: </label>
                         <div class="input-group">
                             <input type="number" class="form-control" name="bolsas_rechazadas" id="bolsas_rechazadas">
@@ -52,7 +53,7 @@
                         </div>
                         <label for="bolsas_liberadas" class="form-label">Cantidad de bolsas liberadas: </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="bolsas_aprovadas" id="bolsas_liberadas">
+                            <input type="number" class="form-control" name="bolsas_liberadas" id="bolsas_liberadas">
                             <span class="input-group-text">Unds</span>
                         </div>
                     </div>

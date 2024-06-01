@@ -74,8 +74,6 @@ class EmpaqueProductoTerminado(models.Model):
     def __str__(self):
         return f"{self.pt_lote}-{self.emp_pesoKg}-{self.emp_cantidadBolsas}"
 
-# Creación model Vacio.
-
 class Vacio(models.Model):
 
     pt_lote=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)

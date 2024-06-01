@@ -28,32 +28,37 @@
             <div class="col">
                 <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                     {% csrf_token %}
-                    <h5>Producto: {{producto.pt_nombre}}</h5>
+                    <h5 class="text-center">Producto: {{producto.pt_nombre}}</h5>
                     <h6 class="text-center">Lote: {{producto.pt_lote}}</h6>
-
-                    <div class="form-check">
-                        <label class="form-check-label" for="id_olor">Olor</label>
-                        {{form.olor}}
+                    
+                    <div class="row">
+                        <div class="col d-flex justify-content-center gap-2">
+                            <div class="form-check">
+                                <label class="form-check-label" for="id_olor">Olor</label>
+                                {{form.olor}}
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="id_sabor">Sabor</label>
+                                {{form.sabor}}
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="id_color">Color</label>
+                                {{form.color}}
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="id_textura">Textura</label>
+                                {{form.textura}}
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="id_sabor">Sabor</label>
-                        {{form.sabor}}
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="id_color">Color</label>
-                        {{form.color}}
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="id_textura">Textura</label>
-                        {{form.textura}}
-                    </div>
+                    
                     <div class="form-check">
                         <label class="form-check-label" for="id_observaciones">Observaciones</label>
                         {{form.observaciones}}
                     </div>
 
                     <div class="mt-2 row">
-                        <div class="col d-flex justify-content-end">
+                        <div class="col d-flex justify-content-center">
                             <button type="submit" class="btn btn-success">Guardar</button>
                         </div>
                     </div>

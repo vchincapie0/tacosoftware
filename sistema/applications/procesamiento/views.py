@@ -10,7 +10,8 @@ from applications.materiaprima.models import MateriaPrimaGenerica
 from applications.productoterminado.models import (
     ProductoTerminadoGenerico, 
     ProductoTerminado,
-    CaracteristicasOrganolepticasPT,
+    EmpaqueProductoTerminado,
+    Vacio,
 )
 from applications.productoterminado.forms import (CaracteristicasOrganolepticasPTForm)
 
@@ -162,8 +163,29 @@ def caracteristicas_organolepticas_pt(request, lote):
     return render(request, 'procesamientos/caracteristicasorganolepticasPt.html', {'producto': producto, 'form': caracteristicas_form})
 
 def empaque_vacio(request, lote):
+    producto = get_object_or_404(ProductoTerminado, pt_lote=lote)
+
+    if request.method == 'POST':
+
+        #Crear instancia Empaque
+        empaque = EmpaqueProductoTerminado(
+            pt_lote=producto,
+            emp_pesoKg = request.POST['peso_empaque'],
+            emp_cantidadBolsas = request.POST['cantidad_empaque']
+        )
+        empaque.save()
+
+        #Crear instancia Vacio
+        vacio= Vacio(
+           pt_lote=producto,
+           cantidad_bolsas_rechazadas= request.POST['bolsas_rechazadas'],
+           cantidad_bolsas_liberadas= request.POST['bolsas_liberadas'],
+        )
+        vacio.save()
+        
+        return redirect(reverse_lazy('produ_app:list_produ'))
     
-    return render(request, 'procesamientos/empaque.html')
+    return render(request, 'procesamientos/empaque.html',{'producto': producto})
 
 class EquiposListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de equipos'''
