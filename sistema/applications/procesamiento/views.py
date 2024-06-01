@@ -154,6 +154,9 @@ def caracteristicas_organolepticas_pt(request, lote):
                 caracteristicas.estado = '0'
             else:
                 caracteristicas.estado = '1'
+                caracteristicas.save()
+                return redirect(reverse_lazy('produ_app:list_produ'))
+            
             caracteristicas.save()
             return redirect(reverse_lazy('procesamientos_app:empaques', kwargs={'lote': lote}))
     else:
