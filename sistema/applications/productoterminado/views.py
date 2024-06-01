@@ -34,8 +34,6 @@ from .forms import (
     ProductoAuditFilterForm
 )
 
-# Create your views here.
-
 class ProduListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de producto terminado'''
     model = ProductoTerminado
@@ -154,6 +152,10 @@ class ProductoTerminadoDetailView(LoginRequiredMixin, DetailView):
     login_url=reverse_lazy('users_app:login')
     context_object_name = 'productoterminado'
 
+    def get_object(self, queryset=None):
+        lote = self.kwargs.get('pt_lote')
+        return self.model.objects.get(pt_lote=lote)
+    
 class EmpaqueProductoTerminadoCreateView(LoginRequiredMixin, CreateView):
     '''Vists para la creacion del empaque producto terminado'''
     model = EmpaqueProductoTerminado
