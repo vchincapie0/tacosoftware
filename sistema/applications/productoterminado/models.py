@@ -80,7 +80,12 @@ class Vacio(models.Model):
     cantidad_bolsas_rechazadas = models.IntegerField('Cantidad Bolsas Rechazadas')
     cantidad_bolsas_liberadas = models.IntegerField('Cantidad Bolsas Liberadas')
 
-
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Actualizar la cantidad de producto terminado
+        self.pt_lote.pt_cantidad = self.cantidad_bolsas_liberadas
+        self.pt_lote.save()
+        
     def __str__(self):
         return f"{self.pt_lote}-{self.cantidad_bolsas_rechazadas}"
 
