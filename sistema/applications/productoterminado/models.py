@@ -16,6 +16,7 @@ class ProductoTerminadoGenerico(models.Model):
     materiaPrimaUsada=models.ManyToManyField(MateriaPrimaGenerica)
     pt_tipo=models.CharField('Tipo',max_length=1,choices=TIPO_CHOICES,default=0)
     cantidad_total = models.IntegerField('Cantidad Total', default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.pt_nombre}"
