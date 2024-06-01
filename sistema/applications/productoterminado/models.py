@@ -15,10 +15,15 @@ class ProductoTerminadoGenerico(models.Model):
     pt_nombre=models.CharField('Nombre Producto Terminado', max_length=50)
     materiaPrimaUsada=models.ManyToManyField(MateriaPrimaGenerica)
     pt_tipo=models.CharField('Tipo',max_length=1,choices=TIPO_CHOICES,default=0)
-    
+    cantidad_total = models.IntegerField('Cantidad Total', default=0)
 
     def __str__(self):
         return f"{self.pt_nombre}"
+    
+    def actualizar_cantidad_total(self):
+        total = sum([producto.pt_cantidad for producto in self.productoterminado_set.all()])
+        self.cantidad_total = total
+        self.save()
 
 class ProductoTerminado(models.Model):
     '''Clase para la creacion de tabla de producto terminado'''
@@ -85,7 +90,7 @@ class Vacio(models.Model):
         # Actualizar la cantidad de producto terminado
         self.pt_lote.pt_cantidad = self.cantidad_bolsas_liberadas
         self.pt_lote.save()
-        
+
     def __str__(self):
         return f"{self.pt_lote}-{self.cantidad_bolsas_rechazadas}"
 
