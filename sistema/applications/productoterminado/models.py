@@ -36,9 +36,6 @@ class ProductoTerminado(models.Model):
     def __str__(self):
         return f"{self.pt_lote}-{self.pt_nombre}"
 
-
-# Creación model ExistenciaPT.
-
 class ExistenciaPT(models.Model):
 
     pt_lote=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)
@@ -48,9 +45,7 @@ class ExistenciaPT(models.Model):
 
     def __str__(self):
         return f"{self.pt_lote}-{self.exisPT_CantidadIngresada}-{self.exisPT_CantidadEgresada}"
-
-# Creación model caracteristicas organolepticas PT.
-    
+  
 class CaracteristicasOrganolepticasPT(models.Model):
 
     ESTADO_CHOICES=(
@@ -68,8 +63,6 @@ class CaracteristicasOrganolepticasPT(models.Model):
     
     def __str__(self):
         return str(self.pt_lote)+'-'+self.estado
-    
-    # Creación model Empaque.
 
 class EmpaqueProductoTerminado(models.Model):
 

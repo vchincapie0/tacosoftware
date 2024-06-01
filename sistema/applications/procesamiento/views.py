@@ -12,6 +12,8 @@ from applications.productoterminado.models import (
     ProductoTerminado,
     CaracteristicasOrganolepticasPT,
 )
+from applications.productoterminado.forms import (CaracteristicasOrganolepticasPTForm)
+
 from .models import Picado,PicadoMateriaPrima,Coccion,CoccionMateriaPrima,Equipos
 from .forms import addEquipos,EquiposUpdateForm
 
@@ -137,10 +139,29 @@ def ingresar_peso_materias_primas_picado(request, producto_id):
     return render(request, 'procesamientos/picado/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
 
 def caracteristicas_organolepticas_pt(request, lote):
-    
-    return render(request, 'procesamientos/caracteristicasorganolepticasPt.html')
+    producto = get_object_or_404(ProductoTerminado, pt_lote=lote)
 
-def empaque_vacio(request):
+    if request.method == 'POST':
+        # Process form submission
+        caracteristicas_form = CaracteristicasOrganolepticasPTForm(request.POST)
+        if caracteristicas_form.is_valid():
+            # Create and save CaracteristicasOrganolepticasPT instance
+            caracteristicas = caracteristicas_form.save(commit=False)
+            caracteristicas.producto = producto
+            if (caracteristicas.olor and caracteristicas.sabor and
+                    caracteristicas.color and caracteristicas.textura):
+                caracteristicas.estado = '0'
+            else:
+                caracteristicas.estado = '1'
+            caracteristicas.save()
+            return redirect(reverse_lazy('procesamientos_app:empaques', kwargs={'lote': lote}))
+    else:
+        # Render empty form for GET request
+        caracteristicas_form = CaracteristicasOrganolepticasPTForm()
+
+    return render(request, 'procesamientos/caracteristicasorganolepticasPt.html', {'producto': producto, 'form': caracteristicas_form})
+
+def empaque_vacio(request, lote):
     
     return render(request, 'procesamientos/empaque.html')
 

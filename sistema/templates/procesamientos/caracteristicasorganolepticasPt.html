@@ -28,26 +28,28 @@
             <div class="col">
                 <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                     {% csrf_token %}
-                    <h5>Producto: </h5>
+                    <h5>Producto: {{producto.pt_nombre}}</h5>
+                    <h6 class="text-center">Lote: {{producto.pt_lote}}</h6>
+
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check_olor" name="check_olor">
-                        <label class="form-check-label" for="check_olor">Olor</label>
+                        <label class="form-check-label" for="id_olor">Olor</label>
+                        {{form.olor}}
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check_sabor" name="check_sabor">
-                        <label class="form-check-label" for="check_sabor">Sabor</label>
+                        <label class="form-check-label" for="id_sabor">Sabor</label>
+                        {{form.sabor}}
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check_color" name="check_color">
-                        <label class="form-check-label" for="check_color">Color</label>
+                        <label class="form-check-label" for="id_color">Color</label>
+                        {{form.color}}
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="check_textura" name="check_textura">
-                        <label class="form-check-label" for="check_textura">Textura</label>
+                        <label class="form-check-label" for="id_textura">Textura</label>
+                        {{form.textura}}
                     </div>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" placeholder="Si tiene alguna observación escríbala aquí" id="observacion" name="observacion">
-                        <label for="observacion">Observaciones</label>
+                    <div class="form-check">
+                        <label class="form-check-label" for="id_observaciones">Observaciones</label>
+                        {{form.observaciones}}
                     </div>
 
                     <div class="mt-2 row">
