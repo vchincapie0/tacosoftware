@@ -1,13 +1,22 @@
+<!-- 
+    Este es un modal para mostrar un formulario encargado de actualizar datos del usuario.
+    Creado por Vivian Carolina Hincapie Escobar el 02/02/2024.
+    Última actualización el 15/05/2024.
+-->
+
 <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
         <h5 class="modal-title">Editar Usuario</h5>
+        <!-- Botón para cerrar el modal -->
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <!-- Formulario para actualizar datos del usuario -->
         <form action="{% url 'users_app:edit_user' object.id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" id="userEditForm">
             {%csrf_token%}
 
+            <!-- Mensajes de error generales -->
             {% if form.errors %}
                 <div class="alert alert-info">
                     {{form.errors.name.0}}
@@ -18,42 +27,35 @@
                 </div>
             {% endif %}
 
+            <!-- Campos para nombre, apellidos, nombre de usuario y contraseña -->
             <div class="mx-4 my-2 row">
-                
                 <div class="mb-3 col-12">
                     <label for="id_mp_nombre" class="form-label">Nombres: </label>
                     {{form.name}}   
                 </div>
-          
-           
                 <div class="mb-3 col-12">
                     <label for="id_mp_fechallegada" class="form-label">Apellidos:</label>
                     {{form.last_name}}   
                 </div>
-
                 <div class="mb-3 row">
                     <label for="id_imp_lote" class="col-sm-3 col-form-label">Username: </label>
                     <div class="col-sm-9">{{form.username}}</div>
-                    
                 </div>
-
                 <div class="mb-3 col-12">
                     <label for="id_imp_lote" class="form-label">Contraseña Nueva: </label>
                     {{form.password}}
                 </div>
-
                 <div class="mb-3 col-12">
                     <label for="id_imp_lote" class="form-label">Repetir Contraseña Nueva: </label>
                     {{form.password2}}
                 </div>
-
                 <div class="row">
                     <div class="col">
                         <label for="id_is_admin" class="form-label">Administrador:</label>
                         {{form.is_admin}}  
                     </div>
                 </div>
-
+                <!-- Botones para guardar cambios y cancelar -->
                 <div class="d-flex justify-content-center">
                     <div class="row">
                         <div class="col">
@@ -63,34 +65,31 @@
                         </div>
                     </div>
                 </div>
-
-               
             </div>
-            
         </form>
         </div>
-    
     </div>
 </div>
+
+<!-- Script para enviar el formulario a través de AJAX -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function () {
-            $('#userEditForm').submit(function (event) {
-                event.preventDefault(); // Evita la redirección predeterminada
+        $('#userEditForm').submit(function (event) {
+            event.preventDefault(); // Evita la redirección predeterminada
 
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        // Verifica la respuesta y actualiza el contenido del modal
-                        $('#edit_usuarios').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        // Maneja errores de Ajax, si es necesario
-                    }
-                });
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    // Verifica la respuesta y actualiza el contenido del modal
+                    $('#edit_usuarios').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Maneja errores de Ajax, si es necesario
+                }
             });
         });
+    });
 </script>
-    
