@@ -1,3 +1,7 @@
+# Fecha de Creación: 15/05/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 02/06/2024
+
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.urls import reverse_lazy
