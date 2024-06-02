@@ -3,8 +3,6 @@
     Creado por Vivian Carolina Hincapie Escobar el 02/02/2024.
     Última actualización el 15/05/2024.
 -->
-
-{% load static %}
 <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content bg-dark text-white">
         <div class="modal-header">
@@ -70,9 +68,10 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
 <script>
     // Script para enviar el formulario por AJAX
-    $(document).ready(function () {
+    jQuery(document).ready(function($) {
         $('#userAddForm').submit(function (event) {
             event.preventDefault(); // Evita la redirección predeterminada
             // Envía el formulario por AJAX
@@ -90,4 +89,5 @@
             });
         });
     });
+    
 </script>
