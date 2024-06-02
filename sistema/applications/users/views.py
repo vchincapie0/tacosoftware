@@ -1,3 +1,7 @@
+#Fecha de Creación: 02/02/2024
+#Autor: Vivian Carolina Hincapie Escobar
+#Última modficación: 15/05/2024
+
 #Importación de Librerias
 from django.http import HttpResponse
 from openpyxl import Workbook
@@ -18,8 +22,6 @@ from django.urls import reverse_lazy,reverse
 #Importacion modelos y formularios
 from .models import User, UserAudit
 from .forms import UserRegisterForm, UserUpdateForm, UserAuditFilterForm
-
-# Create your views here.
 
 class UsersListView(LoginRequiredMixin, ListView):
     '''vista que muestra todos los usuarios registrados'''
@@ -68,7 +70,7 @@ class UserRegisterView(LoginRequiredMixin,FormView):
         return super(UserRegisterView, self).form_valid(form)
     
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-    '''Vista para actualizar los datos de user'''
+    '''Vista para actualizar los datos del usuario'''
     model = User
     template_name = "usuarios/update_user.html"
     login_url=reverse_lazy('users_app:login')
@@ -98,7 +100,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):
-    '''Vista para borrar user'''
+    '''Vista para borrar usuarios'''
     model = User
     template_name = "usuarios/delete_user.html"
     login_url=reverse_lazy('users_app:login')
