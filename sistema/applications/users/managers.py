@@ -5,11 +5,13 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager
 
-# Clase UserManager: un administrador de usuarios personalizado que extiende BaseUserManager y models.Manager
-class UserManager(BaseUserManager, models.Manager):
 
-    # Método para crear un usuario básico
+class UserManager(BaseUserManager, models.Manager):
+    '''Clase UserManager: un administrador de usuarios personalizado que extiende BaseUserManager y models.Manager'''
+    
     def _create_user(self, name, last_name, username, password, is_staff, is_superuser, **extra_fields):
+        '''Método para crear un usuario básico'''
+        
         # Crea una nueva instancia de usuario con los campos proporcionados
         user = self.model(
             name=name,
