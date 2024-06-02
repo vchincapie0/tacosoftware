@@ -1,11 +1,16 @@
+# Fecha de Creación: 02/02/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 15/05/2024
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
 from . models import User, UserAudit
 
 class UserRegisterForm(forms.ModelForm):
-    """Form definition for UserRegister."""
+    """Formulario para registrar usuarios."""
 
+    # Definición de campos de contraseña y repetición de contraseña
     password=forms.CharField(
         label='Contraseña:',
         required=True,
@@ -26,10 +31,7 @@ class UserRegisterForm(forms.ModelForm):
         """Meta definition for UserRegisterform."""
 
         model = User
-        fields = ('username',
-                  'name',
-                  'last_name',
-                  'is_admin',)
+        fields = ('username', 'name', 'last_name', 'is_admin',)
         widgets={
             'username':forms.TextInput(attrs={'class':'form-control','placeholder':'Ejemplo: mperez22'}),
             'name':forms.TextInput(attrs={'placeholder': 'Ejemplo: María','class':'form-control'}),
@@ -37,20 +39,17 @@ class UserRegisterForm(forms.ModelForm):
             'is_admin':forms.CheckboxInput(attrs={'class':'form-check-input'}),
         }
                   
-        
     def clean_username(self):
         '''Función para validar si el usuario ya existe'''
         username = self.cleaned_data.get('username')
 
-        # Verificar si ya existe un usuario con el mismo nombre de usuario
         if User.objects.filter(username=username).exists():
             raise ValidationError('Este nombre de usuario ya está en uso. Elige otro.')
 
         return username
         
-
     def clean_password(self):
-        '''Funcion para validar que las contraseñas tenga > 6 caracteres'''
+        '''Función para validar la longitud de la contraseña'''
         contraseña = self.cleaned_data.get('password')
 
         if len(contraseña) <= 5:
@@ -59,7 +58,7 @@ class UserRegisterForm(forms.ModelForm):
         return contraseña
 
     def clean_password2(self):
-        '''Funcion para validar que las contraseñas coincidan'''
+        '''Función para validar que las contraseñas coincidan'''
         if self.cleaned_data['password'] != self.cleaned_data['password2']:
             self.add_error('password2','Las contraseñas no coinciden.')
 
@@ -81,23 +80,26 @@ class UserRegisterForm(forms.ModelForm):
 
         return last_name
     
+
 class UserUpdateForm(forms.ModelForm):
     '''Clase de formulario para editar un usuario'''
+
+    # Campos para contraseña y repetición de contraseña (opcionales)
     password=forms.CharField(
-            label='Contraseña:',
-            required=False,
-            widget=forms.PasswordInput(
-                attrs={'placeholder':'Contraseña Nueva','class':'form-control'}
-            )
-        )    
+        label='Contraseña:',
+        required=False,
+        widget=forms.PasswordInput(
+            attrs={'placeholder':'Contraseña Nueva','class':'form-control'}
+        )
+    )    
 
     password2=forms.CharField(
         label='Repetir contraseña:',
-            required=False,
-            widget=forms.PasswordInput(
-                attrs={'placeholder':'Repetir Contraseña Nueva','class':'form-control'}
-            )
-        ) 
+        required=False,
+        widget=forms.PasswordInput(
+            attrs={'placeholder':'Repetir Contraseña Nueva','class':'form-control'}
+        )
+    ) 
 
     class Meta:
         model = User
@@ -110,13 +112,11 @@ class UserUpdateForm(forms.ModelForm):
             'is_admin':forms.CheckboxInput(attrs={'class':'form-check-input'}),
         }
 
-
     def clean_password(self):
         password = self.cleaned_data.get('password')
 
-        if password:
-            if len(password) <= 5:
-                raise ValidationError('La contraseña debe tener más de 5 caracteres.')
+        if password and len(password) <= 5:
+            raise ValidationError('La contraseña debe tener más de 5 caracteres.')
 
         return password
 
