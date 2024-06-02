@@ -103,6 +103,12 @@
 
 {% block extrajs %}
 <script>
+    window.onload = function() {
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    }
+
     function confirmValidation() {
         if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
             validateFieldset1();
