@@ -26,7 +26,7 @@
     <div class="d-flex justify-content-center">
         <div class="row">
             <div class="col">
-                <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <form id="empaqueForm" action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                     {% csrf_token %}
                     <h5 class="text-center">Producto: {{producto.pt_nombre}}</h5>
                     <h6 class="text-center">Lote: {{producto.pt_lote}}</h6>
@@ -34,12 +34,12 @@
                         <legend class="text-center">Cantidad Preparada</legend>
                         <label for="cantidad_empaque" class="form-label">Cantidad de bolsas X 500g:</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="cantidad_empaque" id="cantidad_empaque">
+                            <input type="number" class="form-control" name="cantidad_empaque" id="cantidad_empaque" required>
                             <span class="input-group-text">Unds</span>
                         </div>
                         <label for="peso_empaque" class="form-label">Peso en Kg todo el producto preparado:</label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="peso_empaque" id="peso_empaque">
+                            <input type="number" class="form-control" name="peso_empaque" id="peso_empaque" required>
                             <span class="input-group-text">Kg</span>
                         </div>
                     </div>
@@ -48,19 +48,19 @@
                         <legend class="text-center">Vacío</legend>
                         <label for="bolsas_rechazadas" class="form-label">Cantidad de bolsas rechazadas: </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="bolsas_rechazadas" id="bolsas_rechazadas">
+                            <input type="number" class="form-control" name="bolsas_rechazadas" id="bolsas_rechazadas" required>
                             <span class="input-group-text">Unds</span>
                         </div>
                         <label for="bolsas_liberadas" class="form-label">Cantidad de bolsas liberadas: </label>
                         <div class="input-group">
-                            <input type="number" class="form-control" name="bolsas_liberadas" id="bolsas_liberadas">
+                            <input type="number" class="form-control" name="bolsas_liberadas" id="bolsas_liberadas" required>
                             <span class="input-group-text">Unds</span>
                         </div>
                     </div>
 
                     <div class="mt-2 row">
                         <div class="col d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <button type="button" class="btn btn-success" onclick="validateAndSubmit()">Guardar</button>
                         </div>
                     </div>
 
@@ -68,9 +68,24 @@
             </div>
         </div>
     </div>
-    
-        
-    </div>
-
 </div>
 {% endblock content %}
+
+{% block extrajs %}
+<script>
+    function validateAndSubmit() {
+        let cantidadEmpaque = parseFloat(document.getElementById('cantidad_empaque').value) || 0;
+        let bolsasRechazadas = parseFloat(document.getElementById('bolsas_rechazadas').value) || 0;
+        let bolsasLiberadas = parseFloat(document.getElementById('bolsas_liberadas').value) || 0;
+        
+        if (cantidadEmpaque !== (bolsasRechazadas + bolsasLiberadas)) {
+            alert('La cantidad de bolsas x 500g debe ser igual a la sumatoria de las bolsas rechazadas y liberadas.');
+            return false;
+        }
+        
+        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+            document.getElementById('empaqueForm').submit();
+        }
+    }
+</script>
+{% endblock %}

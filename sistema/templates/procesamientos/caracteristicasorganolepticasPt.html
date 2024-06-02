@@ -26,7 +26,7 @@
     <div class="d-flex justify-content-center">
         <div class="row">
             <div class="col">
-                <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <form action="" method="post" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" id="mainForm">
                     {% csrf_token %}
                     <h5 class="text-center">Producto: {{producto.pt_nombre}}</h5>
                     <h6 class="text-center">Lote: {{producto.pt_lote}}</h6>
@@ -59,7 +59,7 @@
 
                     <div class="mt-2 row">
                         <div class="col d-flex justify-content-center">
-                            <button type="submit" class="btn btn-success">Guardar</button>
+                            <button type="submit" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
                         </div>
                     </div>
 
@@ -73,3 +73,14 @@
 
 </div>
 {% endblock content %}
+
+{% block extrajs %}
+<script>
+    function confirmSubmission() {
+    if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+        document.getElementById('mainForm').submit();
+    }
+}
+</script>
+{% endblock extrajs %}
+    
