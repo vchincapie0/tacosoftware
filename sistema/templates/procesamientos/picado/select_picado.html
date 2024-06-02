@@ -5,7 +5,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="selec_coccion" action="{% url 'procesamientos_app:select_picado' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+        <form id="selec_picado" action="{% url 'procesamientos_app:select_picado' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
             {% csrf_token %}
 
             <div class="mx-4 my-2 row">
@@ -35,3 +35,14 @@
         </div>    
     </div>
 </div>
+
+<script>
+document.getElementById("selec_picado").addEventListener("submit", function(event) {
+    var productoTerminado = document.getElementById("producto_terminado").value;
+    
+    if (productoTerminado == "") {
+        alert("Por favor, seleccione una opción válida");
+        event.preventDefault(); // Evita que el formulario se envíe si no se ha seleccionado una opción válida
+    }
+});
+</script>
