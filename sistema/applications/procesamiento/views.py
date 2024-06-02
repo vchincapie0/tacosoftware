@@ -1,30 +1,33 @@
+#Importación de bibliotecas necesarias
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView,CreateView,DeleteView,UpdateView
-from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
-#Importacion de modelos y formularios
-from applications.materiaprima.models import MateriaPrimaGenerica
+#Importación de modelos y formularios
 from applications.productoterminado.models import (
     ProductoTerminadoGenerico, 
     ProductoTerminado,
     EmpaqueProductoTerminado,
     Vacio,
 )
+from .models import (
+    Picado,
+    PicadoMateriaPrima,
+    Coccion,
+    CoccionMateriaPrima,
+    Equipos)
+from .forms import addEquipos,EquiposUpdateForm
 from applications.productoterminado.forms import (CaracteristicasOrganolepticasPTForm)
 
-from .models import Picado,PicadoMateriaPrima,Coccion,CoccionMateriaPrima,Equipos
-from .forms import addEquipos,EquiposUpdateForm
-
-# Create your views here.
-
+#Autor: Daniel Castro Mercado
 class ProcesamientosView(LoginRequiredMixin, TemplateView):
     '''Clase para mostrar los datos de Procesamiento'''
     template_name = "Procesamientos/procesamiento_view.html"
     login_url=reverse_lazy('users_app:login')
 
+#Autor: Daniel Castro Mercado
 def select_coccion_view(request):
     '''Vista para seleccionar que producto de coccion se va a realizar'''
     productos = ProductoTerminadoGenerico.objects.filter(pt_tipo='0')
@@ -35,6 +38,7 @@ def select_coccion_view(request):
     else:
         return render(request, 'procesamientos/coccion/select_coccion.html', {'productos': productos})
 
+#Autor: Daniel Castro Mercado
 def select_picado_view(request):
     '''Vista para seleccionar que producto de picado se va a realizar'''
     productos = ProductoTerminadoGenerico.objects.filter(pt_tipo='1')
@@ -44,7 +48,13 @@ def select_picado_view(request):
         return redirect(reverse_lazy('procesamientos_app:procesamiento_picado', kwargs={'producto_id': request.POST.get('producto_terminado')}))
     return render(request, 'procesamientos/picado/select_picado.html', {'productos': productos})
 
+#Autor: Vivian carolina Hincapie Escobar
 def ingresar_peso_materias_primas_coccion(request, producto_id):
+    '''
+    Vista para ingresar el peso de las materias primas para el proceso de cocción.
+    Crea instancias de ProductoTerminado, Coccion, y CoccionMateriaPrima.
+    Deduce la cantidad del inventario de materias primas.
+    '''  
     producto = get_object_or_404(ProductoTerminadoGenerico, id=producto_id)
     materias_primas = producto.materiaPrimaUsada.all()
     
@@ -91,8 +101,14 @@ def ingresar_peso_materias_primas_coccion(request, producto_id):
                 materia_prima.save()
         return redirect(reverse_lazy('procesamientos_app:caracteristicas_organolepticas', kwargs={'lote': lote}))
     return render(request, 'procesamientos/coccion/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
-        
+ 
+#Autor: Vivian carolina Hincapie Escobar       
 def ingresar_peso_materias_primas_picado(request, producto_id):
+    '''
+    Vista para ingresar el peso de las materias primas para el proceso de picado.
+    Crea instancias de ProductoTerminado, Picado, y PicadoMateriaPrima.
+    Deduce la cantidad del inventario de materias primas.
+    '''
     producto = get_object_or_404(ProductoTerminadoGenerico, id=producto_id)
     materias_primas = producto.materiaPrimaUsada.all()
     
@@ -139,38 +155,45 @@ def ingresar_peso_materias_primas_picado(request, producto_id):
 
     return render(request, 'procesamientos/picado/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
 
+#Autor: Vivian carolina Hincapie Escobar
 def caracteristicas_organolepticas_pt(request, lote):
+    '''Vista para ingresar las características organolépticas de un producto terminado'''
+    # Obtener el objeto ProductoTerminado asociado al número de lote
     producto = get_object_or_404(ProductoTerminado, pt_lote=lote)
 
     if request.method == 'POST':
-        # Process form submission
+        # Procesar el envío del formulario
         caracteristicas_form = CaracteristicasOrganolepticasPTForm(request.POST)
         if caracteristicas_form.is_valid():
-            # Create and save CaracteristicasOrganolepticasPT instance
+            # Crear y guardar una instancia de CaracteristicasOrganolepticasPT
             caracteristicas = caracteristicas_form.save(commit=False)
             caracteristicas.producto = producto
+            # Verificar si se han ingresado todas las características
             if (caracteristicas.olor and caracteristicas.sabor and
                     caracteristicas.color and caracteristicas.textura):
-                caracteristicas.estado = '0'
+                caracteristicas.estado = '0'  # Estado exitoso
             else:
-                caracteristicas.estado = '1'
+                caracteristicas.estado = '1'  # Estado incompleto
                 caracteristicas.save()
-                return redirect(reverse_lazy('produ_app:list_produ'))
+                return redirect(reverse_lazy('produ_app:list_produ'))  # Redirigir a la lista de productos si falta alguna característica
             
             caracteristicas.save()
-            return redirect(reverse_lazy('procesamientos_app:empaques', kwargs={'lote': lote}))
+            return redirect(reverse_lazy('procesamientos_app:empaques', kwargs={'lote': lote}))  # Redirigir a la vista de empaques
     else:
-        # Render empty form for GET request
+        # Renderizar un formulario vacío para las solicitudes GET
         caracteristicas_form = CaracteristicasOrganolepticasPTForm()
 
     return render(request, 'procesamientos/caracteristicasorganolepticasPt.html', {'producto': producto, 'form': caracteristicas_form})
 
+#Autor: Vivian carolina Hincapie Escobar
 def empaque_vacio(request, lote):
+    '''Vista para ingresar información sobre el empaque y el vacío de un producto terminado'''
+    # Obtener el objeto ProductoTerminado asociado al número de lote
     producto = get_object_or_404(ProductoTerminado, pt_lote=lote)
 
     if request.method == 'POST':
-
-        #Crear instancia Empaque
+        # Procesar los datos del formulario
+        # Crear una instancia de EmpaqueProductoTerminado
         empaque = EmpaqueProductoTerminado(
             pt_lote=producto,
             emp_pesoKg = request.POST['peso_empaque'],
@@ -178,7 +201,7 @@ def empaque_vacio(request, lote):
         )
         empaque.save()
 
-        #Crear instancia Vacio
+        # Crear una instancia de Vacio
         vacio= Vacio(
            pt_lote=producto,
            cantidad_bolsas_rechazadas= request.POST['bolsas_rechazadas'],
@@ -186,10 +209,11 @@ def empaque_vacio(request, lote):
         )
         vacio.save()
         
-        return redirect(reverse_lazy('produ_app:list_produ'))
+        return redirect(reverse_lazy('produ_app:list_produ'))  # Redirigir a la lista de productos
     
-    return render(request, 'procesamientos/empaque.html',{'producto': producto})
+    return render(request, 'procesamientos/empaque.html',{'producto': producto})  # Renderizar el formulario de empaque y vacío
 
+#Autor: Daniel Castro Mercado
 class EquiposListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de equipos'''
     model = Equipos
@@ -205,6 +229,7 @@ class EquiposListView(LoginRequiredMixin, ListView):
             )
             return lista
 
+#Autor: Daniel Castro Mercado
 class EquiposcreateView(LoginRequiredMixin,CreateView):
     '''Vista para crear  de equipos'''
     model = Equipos
@@ -213,6 +238,7 @@ class EquiposcreateView(LoginRequiredMixin,CreateView):
     form_class=addEquipos
     success_url= reverse_lazy('procesamientos_app:equipos')
 
+#Autor: Daniel Castro Mercado
 class EquiposUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de Equipos'''
     model = Equipos
@@ -221,6 +247,7 @@ class EquiposUpdateView(LoginRequiredMixin, UpdateView):
     form_class=EquiposUpdateForm
     success_url= reverse_lazy('procesamientos_app:equipos')
 
+#Autor: Daniel Castro Mercado
 class EquiposDeleteView(LoginRequiredMixin,DeleteView):
     '''Vista para borrar equipos'''
     model = Equipos
