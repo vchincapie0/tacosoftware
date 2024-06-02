@@ -1,3 +1,11 @@
+<!-- 
+Titulo: Formulario de Características Organolépticas de Producto Terminado para procesamiento
+Fecha Elaboracion: 28/05/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+
+Última actualización: 02/06/2024
+ -->
+
 {% extends 'base.html' %}
 
 {% block title %}
@@ -76,17 +84,22 @@
 
 {% block extrajs %}
 <script>
+    // Función que se ejecuta cuando la página se carga completamente.
     window.onload = function() {
+        // Verifica si el navegador soporta el método replaceState.
         if (window.history.replaceState) {
+            // Reemplaza la URL actual en el historial del navegador con la misma URL.
+            // Esto evita que el formulario se vuelva a enviar si el usuario actualiza la página.
             window.history.replaceState(null, null, window.location.href);
         }
     }
-    
+
+    // Función que solicita confirmación al usuario y, si se confirma, envía el formulario.
     function confirmSubmission() {
-    if (confirm('¿Está seguro de que desea guardar el formulario?')) {
-        document.getElementById('mainForm').submit();
+        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+            document.getElementById('mainForm').submit();
+        }
     }
-}
 </script>
 {% endblock extrajs %}
     
