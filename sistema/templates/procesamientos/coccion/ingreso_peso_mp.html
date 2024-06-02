@@ -1,182 +1,222 @@
-{% extends 'base.html' %}
+<!-- 
+Titulo: Formulario de Ingreso de Pesos de Materias Primas para Procesamiento Cocción
+Fecha Elaboracion: 28/05/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
 
-{% block title %}
-    Procesamiento de Cocción
-{% endblock title %}
+Última actualización: 02/06/2024
+ -->
 
-{% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <h3 style="color: #FFFF; font-weight: bolder;">PROCESAMIENTO COCCIÓN Y LIBERACIÓN</h3>
-        </div>
-    </div>
+ {% extends 'base.html' %}
 
-    <div class="row">
-        <div class="col d-flex justify-content-center">
-            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item active" aria-current="page"><a href="#" style="text-decoration: none; color: rgb(236, 225, 47, .75); font-weight: bolder;">Procesamiento</a></li>
-                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Características Organolépticas</li>
-                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Empaque y Vacio</li>
-                </ol>
-              </nav>
-        </div>
-    </div>
-
-    <!-- Formulario principal -->
-    <form id="mainForm" method="post" action="{% url 'procesamientos_app:procesamiento_coccion' producto.id %}">
-        {% csrf_token %}
-        <!-- Primer fieldset -->
-        <div class="row gap-2">
-            <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                <div id="fieldset1">
-                    <legend>{{ producto.pt_nombre }}</legend>
-                    <p>Ingrese el peso en gramos deseado para cada materia prima</p>
-                    
-                    {% for materia_prima in materias_primas %}
-                        <div class="form-group">
-                            <label for="peso_{{ materia_prima.id }}" class="m-2">{{ materia_prima.mp_nombre }} (Disponible: {{ materia_prima.cantidad_total }}g):</label>
-                            <input type="number" id="peso_{{ materia_prima.id }}" name="peso_{{ materia_prima.id }}" class="form-control" required>
-                            <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
-                        </div>
-                    {% endfor %}
-                    <legend>Cantidad Total en Crudo</legend>
-                    <div class="form-group">
-                        <label for="cocc_cantidad_total" class="form-label">Peso Total: </label>
-                        <input type="number" id="cocc_cantidad_total" name="cocc_cantidad_total" class="form-control" readonly>
-                    </div>
-                    
-                    <div class="m-2 row">
-                        <div class="col d-flex justify-content-end">
-                            <button type="button" class="btn btn-warning" onclick="confirmValidation()">Validar</button>
-                        </div> 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-2 row">
-            <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                <!-- Segundo fieldset -->
-                <div id="fieldset2" disabled>
-                    <legend>Post-Producción</legend>
-                    
-                    <div class="form-group">
-                        <label class="form-label" for="cocc_pesoPostProcesamiento">Peso Post Producción:</label>
-                        <input class="form-control" type="number" id="cocc_pesoPostProcesamiento" name="cocc_pesoPostProcesamiento">
-                        
-                      
-                        <label class="form-label" for="cocc_merma">Merma:</label>
-                        <input class="form-control" type="number" id="cocc_merma" name="cocc_merma" readonly>
-                        <span class="mt-1 alert alert-warning" id="error_merma" style="display: none;">La merma no puede ser un valor negativo.</span>
-    
-                        <div class="m-2 row">
-                            <div class="col d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary" onclick="calculateMerma()">Calcular</button>
-                            </div> 
-                        </div>
-
-                        <label class="form-label" for="cocc_tiempoCoccion">Tiempo de cocción:</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" aria-label="Tiempo_coccion" id="cocc_tiempoCoccion" name="cocc_tiempoCoccion">
-                            <span class="input-group-text">Minutos</span>
-                        </div>
-                        
-                        <label for="cocc_temperaturafinal" class="form-label">Temperatura:</label>
-                        <div class="input-group">
-                            <input type="number" class="form-control" aria-label="Temperatura" id="cocc_temperaturafinal" name="cocc_temperaturafinal">
-                            <span class="input-group-text">°C</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label" for="cocc_check">Aceptabilidad/Rechazo T°>75°C:</label>
-                            <select class="form-select" id="cocc_check" name="cocc_check">
-                                <option selected>-----Seleccione una opción</option>
-                                <option value="0">Aprobado</option>
-                                <option value="1">No aprobado</option>
-                              </select>
-                        </div>
-                    </div>        
-                </div>
-            </div>
-        </div>
-
-        <!-- Botón de enviar -->
-        <div class="m-2 row">
-            <div class="col d-flex justify-content-end">
-                <button type="button" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
-            </div> 
-        </div>
-    </form>            
-</div>
-{% endblock content %}
-
-{% block extrajs %}
-<script>
-    window.onload = function() {
-        if (window.history.replaceState) {
-            window.history.replaceState(null, null, window.location.href);
-        }
-    }
-    
-    function confirmValidation() {
-        if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
-            validateFieldset1();
-        }
-    }
-
-    function validateFieldset1() {
-        let isValid = true;
-        {% for materia_prima in materias_primas %}
-        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
-        let cantidadTotal_{{ materia_prima.id }} = {{ materia_prima.cantidad_total }};
-        let errorSpan_{{ materia_prima.id }} = document.getElementById('error_{{ materia_prima.id }}');
-        if (peso_{{ materia_prima.id }} > cantidadTotal_{{ materia_prima.id }}) {
-            errorSpan_{{ materia_prima.id }}.style.display = 'block';
-            isValid = false;
-        } else {
-            errorSpan_{{ materia_prima.id }}.style.display = 'none';
-        }
-        {% endfor %}
-        
-        if (isValid) {
-            // Calculate total weight
-            calculateTotal();
-            // Disable the first fieldset
-            document.getElementById('fieldset1').disabled = true;
-            // Enable the second fieldset
-            document.getElementById('fieldset2').disabled = false;
-        }
-    }
-    
-    function calculateTotal() {
-        let total = 0;
-        {% for materia_prima in materias_primas %}
-        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
-        total += peso_{{ materia_prima.id }};
-        {% endfor %}
-        document.getElementById('cocc_cantidad_total').value = total;
-    }
-    
-    function calculateMerma() {
-        let cocc_cantidad_total = parseFloat(document.getElementById('cocc_cantidad_total').value) || 0;
-        let cocc_pesoPostProcesamiento = parseFloat(document.getElementById('cocc_pesoPostProcesamiento').value) || 0;
-        let cocc_merma = cocc_cantidad_total - cocc_pesoPostProcesamiento;
-        let errorSpan_merma = document.getElementById('error_merma');
-        
-        if (cocc_merma < 0) {
-            errorSpan_merma.style.display = 'block';
-        } else {
-            errorSpan_merma.style.display = 'none';
-            document.getElementById('cocc_merma').value = cocc_merma;
-        }
-    }
-
-    function confirmSubmission() {
-        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
-            document.getElementById('mainForm').submit();
-        }
-    }
-</script>
-{% endblock %}
+ {% block title %}
+     Procesamiento de Cocción
+ {% endblock title %}
+ 
+ {% block content %}
+ <div class="container">
+     <div class="row">
+         <div class="col d-flex justify-content-center">
+             <h3 style="color: #FFFF; font-weight: bolder;">PROCESAMIENTO COCCIÓN Y LIBERACIÓN</h3>
+         </div>
+     </div>
+ 
+     <div class="row">
+         <div class="col d-flex justify-content-center">
+             <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                 <ol class="breadcrumb">
+                   <li class="breadcrumb-item active" aria-current="page"><a href="#" style="text-decoration: none; color: rgb(236, 225, 47, .75); font-weight: bolder;">Procesamiento</a></li>
+                   <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Características Organolépticas</li>
+                   <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Empaque y Vacio</li>
+                 </ol>
+               </nav>
+         </div>
+     </div>
+ 
+     <!-- Formulario principal -->
+     <form id="mainForm" method="post" action="{% url 'procesamientos_app:procesamiento_coccion' producto.id %}">
+         {% csrf_token %}
+         <!-- Primer fieldset -->
+         <div class="row gap-2">
+             <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                 <div id="fieldset1">
+                     <legend>{{ producto.pt_nombre }}</legend>
+                     <p>Ingrese el peso en gramos deseado para cada materia prima</p>
+                     
+                     {% for materia_prima in materias_primas %}
+                         <div class="form-group">
+                             <label for="peso_{{ materia_prima.id }}" class="m-2">{{ materia_prima.mp_nombre }} (Disponible: {{ materia_prima.cantidad_total }}g):</label>
+                             <input type="number" id="peso_{{ materia_prima.id }}" name="peso_{{ materia_prima.id }}" class="form-control" required>
+                             <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
+                         </div>
+                     {% endfor %}
+                     <legend>Cantidad Total en Crudo</legend>
+                     <div class="form-group">
+                         <label for="cocc_cantidad_total" class="form-label">Peso Total: </label>
+                         <input type="number" id="cocc_cantidad_total" name="cocc_cantidad_total" class="form-control" readonly>
+                     </div>
+                     
+                     <div class="m-2 row">
+                         <div class="col d-flex justify-content-end">
+                             <button type="button" class="btn btn-warning" onclick="confirmValidation()">Validar</button>
+                         </div> 
+                     </div>
+                 </div>
+             </div>
+         </div>
+ 
+         <div class="mt-2 row">
+             <div class="col form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                 <!-- Segundo fieldset -->
+                 <div id="fieldset2" disabled>
+                     <legend>Post-Producción</legend>
+                     
+                     <div class="form-group">
+                         <label class="form-label" for="cocc_pesoPostProcesamiento">Peso Post Producción:</label>
+                         <input class="form-control" type="number" id="cocc_pesoPostProcesamiento" name="cocc_pesoPostProcesamiento">
+                         
+                       
+                         <label class="form-label" for="cocc_merma">Merma:</label>
+                         <input class="form-control" type="number" id="cocc_merma" name="cocc_merma" readonly>
+                         <span class="mt-1 alert alert-warning" id="error_merma" style="display: none;">La merma no puede ser un valor negativo.</span>
+     
+                         <div class="m-2 row">
+                             <div class="col d-flex justify-content-end">
+                                 <button type="button" class="btn btn-primary" onclick="calculateMerma()">Calcular</button>
+                             </div> 
+                         </div>
+ 
+                         <label class="form-label" for="cocc_tiempoCoccion">Tiempo de cocción:</label>
+                         <div class="input-group">
+                             <input type="number" class="form-control" aria-label="Tiempo_coccion" id="cocc_tiempoCoccion" name="cocc_tiempoCoccion">
+                             <span class="input-group-text">Minutos</span>
+                         </div>
+                         
+                         <label for="cocc_temperaturafinal" class="form-label">Temperatura:</label>
+                         <div class="input-group">
+                             <input type="number" class="form-control" aria-label="Temperatura" id="cocc_temperaturafinal" name="cocc_temperaturafinal">
+                             <span class="input-group-text">°C</span>
+                         </div>
+ 
+                         <div class="form-group">
+                             <label class="form-label" for="cocc_check">Aceptabilidad/Rechazo T°>75°C:</label>
+                             <select class="form-select" id="cocc_check" name="cocc_check">
+                                 <option selected>-----Seleccione una opción</option>
+                                 <option value="0">Aprobado</option>
+                                 <option value="1">No aprobado</option>
+                               </select>
+                         </div>
+                     </div>        
+                 </div>
+             </div>
+         </div>
+ 
+         <!-- Botón de enviar -->
+         <div class="m-2 row">
+             <div class="col d-flex justify-content-end">
+                 <button type="button" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
+             </div> 
+         </div>
+     </form>            
+ </div>
+ {% endblock content %}
+ 
+ {% block extrajs %}
+ <script>
+     // Función que se ejecuta cuando la página se carga completamente.
+     window.onload = function() {
+         // Verifica si el navegador soporta el método replaceState.
+         if (window.history.replaceState) {
+             // Reemplaza la URL actual en el historial del navegador con la misma URL.
+             // Esto evita que el formulario se vuelva a enviar si el usuario actualiza la página.
+             window.history.replaceState(null, null, window.location.href);
+         }
+     }
+     
+     // Función que solicita confirmación al usuario y, si se confirma, valida el primer fieldset.
+     function confirmValidation() {
+         if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
+             validateFieldset1();
+         }
+     }
+ 
+     // Función que valida los datos del primer fieldset.
+     function validateFieldset1() {
+         let isValid = true; // Variable para rastrear si todos los datos son válidos.
+ 
+         // Itera sobre cada materia prima para validar los datos ingresados.
+         {% for materia_prima in materias_primas %}
+         // Obtiene el valor ingresado para la materia prima actual.
+         let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+         // Obtiene la cantidad total disponible para la materia prima actual.
+         let cantidadTotal_{{ materia_prima.id }} = {{ materia_prima.cantidad_total }};
+         // Obtiene el elemento span para mostrar errores.
+         let errorSpan_{{ materia_prima.id }} = document.getElementById('error_{{ materia_prima.id }}');
+ 
+         // Verifica si el peso ingresado excede la cantidad disponible.
+         if (peso_{{ materia_prima.id }} > cantidadTotal_{{ materia_prima.id }}) {
+             // Muestra un mensaje de error si el peso ingresado es mayor que la cantidad disponible.
+             errorSpan_{{ materia_prima.id }}.style.display = 'block';
+             isValid = false; // Marca los datos como inválidos.
+         } else {
+             // Oculta el mensaje de error si el peso ingresado es válido.
+             errorSpan_{{ materia_prima.id }}.style.display = 'none';
+         }
+         {% endfor %}
+         
+         // Si todos los datos son válidos, realiza las siguientes acciones.
+         if (isValid) {
+             // Calcula el peso total de todas las materias primas.
+             calculateTotal();
+             // Deshabilita el primer fieldset para evitar cambios posteriores.
+             document.getElementById('fieldset1').disabled = true;
+             // Habilita el segundo fieldset para permitir la entrada de datos de post-producción.
+             document.getElementById('fieldset2').disabled = false;
+         }
+     }
+     
+     // Función que calcula el peso total de todas las materias primas.
+     function calculateTotal() {
+         let total = 0; // Inicializa el total en 0.
+ 
+         // Itera sobre cada materia prima para sumar los pesos ingresados.
+         {% for materia_prima in materias_primas %}
+         // Obtiene el valor ingresado para la materia prima actual.
+         let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+         // Suma el peso de la materia prima al total.
+         total += peso_{{ materia_prima.id }};
+         {% endfor %}
+         // Asigna el total calculado al campo de peso total en crudo.
+         document.getElementById('cocc_cantidad_total').value = total;
+     }
+     
+     // Función que calcula la merma en base al peso total y el peso post-producción.
+     function calculateMerma() {
+         // Obtiene el peso total en crudo.
+         let cocc_cantidad_total = parseFloat(document.getElementById('cocc_cantidad_total').value) || 0;
+         // Obtiene el peso post-producción.
+         let cocc_pesoPostProcesamiento = parseFloat(document.getElementById('cocc_pesoPostProcesamiento').value) || 0;
+         // Calcula la merma como la diferencia entre el peso total en crudo y el peso post-producción.
+         let cocc_merma = cocc_cantidad_total - cocc_pesoPostProcesamiento;
+         // Obtiene el elemento span para mostrar errores de merma.
+         let errorSpan_merma = document.getElementById('error_merma');
+         
+         // Verifica si la merma es negativa.
+         if (cocc_merma < 0) {
+             // Muestra un mensaje de error si la merma es negativa.
+             errorSpan_merma.style.display = 'block';
+         } else {
+             // Oculta el mensaje de error y asigna la merma al campo correspondiente si es válida.
+             errorSpan_merma.style.display = 'none';
+             document.getElementById('cocc_merma').value = cocc_merma;
+         }
+     }
+ 
+     // Función que solicita confirmación al usuario y, si se confirma, envía el formulario.
+     function confirmSubmission() {
+         if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+             document.getElementById('mainForm').submit();
+         }
+     }
+ </script>
+ {% endblock %}
+ 
