@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import csv
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -123,13 +123,16 @@ class LogIn(LoginView):
             return redirect(self.get_success_url())
 
 class LogOut(View):
-    '''Vista para cerrar sesion'''
-    def get(self,request,*args,**kwargs):
+    '''Vista para cerrar sesión'''
+    def get(self, request, *args, **kwargs):
         logout(request)
-
-        return HttpResponseRedirect(
-            reverse('users_app:login')
-        )
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Si la solicitud tiene el encabezado 'x-requested-with' establecido en 'XMLHttpRequest',
+            # entonces es una solicitud AJAX, responde con un mensaje JSON
+            return JsonResponse({'message': 'Sesión cerrada correctamente.'})
+        else:
+            # Si no es una solicitud AJAX, redirige a la página de inicio de sesión
+            return HttpResponseRedirect(reverse('users_app:login'))
     
 class UserAuditListView(LoginRequiredMixin, ListView):
     '''Vista para la lista de auditorias de usuarios'''
