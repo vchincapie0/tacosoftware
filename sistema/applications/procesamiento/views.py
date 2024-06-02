@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView,CreateView,DeleteView,UpdateView
 from django.urls import reverse_lazy
+from applications.users.decorators import login_required
 #Importación de modelos y formularios
 from applications.productoterminado.models import (
     ProductoTerminadoGenerico, 
@@ -49,6 +50,7 @@ def select_picado_view(request):
     return render(request, 'procesamientos/picado/select_picado.html', {'productos': productos})
 
 #Autor: Vivian carolina Hincapie Escobar
+@login_required
 def ingresar_peso_materias_primas_coccion(request, producto_id):
     '''
     Vista para ingresar el peso de las materias primas para el proceso de cocción.
@@ -102,7 +104,8 @@ def ingresar_peso_materias_primas_coccion(request, producto_id):
         return redirect(reverse_lazy('procesamientos_app:caracteristicas_organolepticas', kwargs={'lote': lote}))
     return render(request, 'procesamientos/coccion/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
  
-#Autor: Vivian carolina Hincapie Escobar       
+#Autor: Vivian carolina Hincapie Escobar
+@login_required       
 def ingresar_peso_materias_primas_picado(request, producto_id):
     '''
     Vista para ingresar el peso de las materias primas para el proceso de picado.
@@ -156,6 +159,7 @@ def ingresar_peso_materias_primas_picado(request, producto_id):
     return render(request, 'procesamientos/picado/ingreso_peso_mp.html', {'producto': producto, 'materias_primas': materias_primas})
 
 #Autor: Vivian carolina Hincapie Escobar
+@login_required
 def caracteristicas_organolepticas_pt(request, lote):
     '''Vista para ingresar las características organolépticas de un producto terminado'''
     # Obtener el objeto ProductoTerminado asociado al número de lote
@@ -186,6 +190,7 @@ def caracteristicas_organolepticas_pt(request, lote):
     return render(request, 'procesamientos/caracteristicasorganolepticasPt.html', {'producto': producto, 'form': caracteristicas_form})
 
 #Autor: Vivian carolina Hincapie Escobar
+@login_required
 def empaque_vacio(request, lote):
     '''Vista para ingresar información sobre el empaque y el vacío de un producto terminado'''
     # Obtener el objeto ProductoTerminado asociado al número de lote
