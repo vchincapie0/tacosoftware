@@ -1,11 +1,13 @@
+# Fecha de Creación: 04/02/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 11/05/2024
+
 from django.db import models
 from django.utils import timezone
 from applications.users.models import User
 
-# Create your models here.
-
 class Proveedores(models.Model):
-    '''Clase para la creacion de tabla proveedores en bd'''
+    '''Clase para la creación de la tabla proveedores en la base de datos'''
     prov_id=models.AutoField('id',primary_key=True)
     nit = models.IntegerField('NIT',unique=True)
     prov_nombre=models.CharField('Nombre',max_length=40)
@@ -17,11 +19,13 @@ class Proveedores(models.Model):
         return f"{self.prov_nombre}"
     
     def delete(self, using=None, keep_parents=False):
-        '''Funcion para borrado lógico'''
-        self.deleted = True  # Marcar como inactivo en lugar de eliminar
+        '''Función para realizar el borrado lógico del proveedor'''
+        self.deleted = True  # Marca el proveedor como inactivo en lugar de eliminarlo
         self.save(using=using)
 
 class ProveedoresAudit(models.Model):
+    '''Modelo para auditar cambios en los proveedores'''
+
     ACTION_CHOICES = [
         ('C', 'Creado'),
         ('U', 'Actualizado'),
