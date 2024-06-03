@@ -1,71 +1,81 @@
-{% load static %}
+<!-- 
+Titulo: Modal para mostrar el formulario de actualización de datos
+de las facturas registradas en el sistema
+Fecha Elaboracion: 20/02/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+Última actualización: 29/04/2024
+ -->
+
+<!-- Modal dialogo centrado y con desplazamiento -->
 <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
+        <!-- Título del modal -->
         <h5 class="modal-title">Editar Factura</h5>
+        <!-- Botón para cerrar el modal -->
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+            <!-- Formulario para editar factura -->
             <form id="facEditForm" action="{% url 'facturas_app:edit_factura' object.pk %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" enctype="multipart/form-data">
-                {%csrf_token%}
-
-                <!-- {% if form.errors %}
-                    <div class="alert alert-info">
-                        {{form.errors.it_nombre.0}}
-                        {{form.errors.it_cantidad.0}}
-                    </div>
-                {% endif %} --> 
+                {% csrf_token %}
 
                 <div class="mx-4 my-2 row">
-                    
+                    <!-- Campo para el número de factura -->
                     <div class="mb-3 col-12">
                         <label for="id_num_factura" class="form-label">Número Factura: </label>
-                        {{form.num_factura}}   
+                        {{ form.num_factura }}   
                     </div>
             
-            
+                    <!-- Campo para el proveedor -->
                     <div class="mb-3 col-12">
                         <label for="id_fac_proveedor" class="form-label">Proveedor:</label>
-                        {{form.fac_proveedor}}   
+                        {{ form.fac_proveedor }}   
                     </div>
 
+                    <!-- Campo para el número de pedido -->
                     <div class="mb-3 col-12">
                         <label for="id_fac_numeroPedido" class="form-label">Pedido:</label>
                         <br>
-                        {{form.fac_numeroPedido}}  
+                        {{ form.fac_numeroPedido }}  
                     </div>
 
+                    <!-- Campo para la fecha de llegada -->
                     <div class="mb-3 col-12">
                         <label for="" class="form-label">Fecha de Llegada: </label>
-                        <div class="cont-fecha">{{form.fac_fechaLlegada}}</div>
+                        <div class="cont-fecha">{{ form.fac_fechaLlegada }}</div>
                     </div>
 
+                    <!-- Campo para el número de unidades -->
                     <div class="mb-3 col-12">
                         <label for="id_fac_numeroUnidades" class="form-label">Número de Unidades: </label>
-                        {{form.fac_numeroUnidades}}
+                        {{ form.fac_numeroUnidades }}
                     </div>
 
+                    <!-- Campo para cargar imagen -->
                     <div class="mb-3 col-12">
                         <label for="id_img_factura" class="form-label">Cargar Imagen: </label>
-                        {{form.img_factura}}
+                        {{ form.img_factura }}
                     </div>
 
+                    <!-- Campo para el subtotal -->
                     <div class="input-group mb-3 col-12">
                         <span class="input-group-text">$</span>
-                        {{form.fac_subtotal}}
+                        {{ form.fac_subtotal }}
                     </div>
 
+                    <!-- Campo para el IVA -->
                     <div class="row">
                         <div class="col-6">
                             <label for="id_fac_iva" class="form-label">IVA: </label>
                         </div>
                         <div class="input-group mb-3 col-6">
-                            {{form.fac_iva}}
+                            {{ form.fac_iva }}
                             <span class="input-group-text">%</span>
                         </div>
                     </div>
                     
-
+                    <!-- Botones de acción -->
                     <div class="d-flex justify-content-center">
                         <div class="row">
                             <div class="col">
@@ -82,23 +92,24 @@
     </div>
 </div>
 
+<!-- Script para manejar el envío del formulario con AJAX -->
 <script>
     $(document).ready(function () {
-            $('#facEditForm').submit(function (event) {
-                event.preventDefault(); // Evita la redirección predeterminada
+        $('#facEditForm').submit(function (event) {
+            event.preventDefault(); // Evita la redirección predeterminada
 
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        // Verifica la respuesta y actualiza el contenido del modal
-                        $('#edit_factura').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        // Maneja errores de Ajax, si es necesario
-                    }
-                });
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    // Verifica la respuesta y actualiza el contenido del modal
+                    $('#edit_factura').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Maneja errores de Ajax, si es necesario
+                }
             });
         });
+    });
 </script>
