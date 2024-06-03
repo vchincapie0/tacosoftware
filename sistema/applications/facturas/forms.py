@@ -9,7 +9,7 @@ from applications.pedidos.models import Pedidos
 
 #Autor: Kevin Dayann Albarracin Navarrete
 class IVACreateForm(forms.ModelForm):
-    '''Formulario para crear IVAf'''
+    '''Formulario para crear IVA'''
     class Meta:
         model =IVA
         fields = (
@@ -87,7 +87,7 @@ class FacturaUpdateForm(forms.ModelForm):
 
 #Autor: Vivian Carolina Hincapie Escobar
 class FacturasAuditFilterForm(forms.Form):
-    '''Formulario para filtar en PedidosAuditView'''
+    '''Formulario para filtar en FacturasAuditView'''
     factura = forms.ModelChoiceField(
         queryset=Facturas.objects.all(), 
         required=False, 
