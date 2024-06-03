@@ -1,70 +1,77 @@
+<!-- 
+Titulo: Template para mostrar proveedores registrados en el sistema
+Fecha Elaboración: 16/02/2024   
+Última actualización: 06/05/2024
+-->
+
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content bg-dark text-white">
-      <div class="modal-header">
-        <h5 class="modal-title">Editar Proveedor</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="provEditForm" action="{% url 'proveedores_app:update_proveedores' object.prov_id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-            {% csrf_token %}
-            {% if form.errors  %}
-                <div class="alert alert-info">    
-                    {{form.errors.prov_nombre.0}}
-                    {{form.errors.prov_telefono.0}}
-                </div>
-            {% endif %}
+        <div class="modal-header">
+            <h5 class="modal-title">Editar Proveedor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="provEditForm" action="{% url 'proveedores_app:update_proveedores' object.prov_id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-info">
+                        {{form.errors.prov_nombre.0}}
+                        {{form.errors.prov_telefono.0}}
+                    </div>
+                {% endif %}
 
-            <div class="mx-4 my-2 row">
-                
-                <div class="mb-3 col-12">
-                    <label for="id_nit" class="form-label">NIT: </label>
-                    {{form.nit}}   
-                </div>
-        
-        
-                <div class="mb-3 col-12">
-                    <label for="id_prov_nombre" class="form-label">Razón Social:</label>
-                    {{form.prov_nombre}}   
-                </div>
+                <div class="mx-4 my-2 row">
+                    <div class="mb-3 col-12">
+                        <label for="id_nit" class="form-label">NIT: </label>
+                        {{form.nit}}
+                    </div>
 
-                <div class="mb-3 col-12">
-                    <label for="id_prov_telefono" class="form-label">Teléfono:</label>
-                    <br>
-                    {{form.prov_telefono}}  
-                </div>
+                    <div class="mb-3 col-12">
+                        <label for="id_prov_nombre" class="form-label">Razón Social:</label>
+                        {{form.prov_nombre}}
+                    </div>
 
-                <div class="d-flex justify-content-center">
-                    <div class="row">
-                        <div class="col">
-                            <button class="btn btn-success" type="submit">Guardar</button>
-                            &nbsp;
-                            <a href="{% url 'proveedores_app:list_proveedores' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                    <div class="mb-3 col-12">
+                        <label for="id_prov_telefono" class="form-label">Teléfono:</label>
+                        <br>
+                        {{form.prov_telefono}}
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-success" type="submit">Guardar</button>
+                                &nbsp;
+                                <a href="{% url 'proveedores_app:list_proveedores' %}" type="button" class="btn btn-secondary">Cancelar</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-          </form>
-        </div>    
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
-            $('#provEditForm').submit(function (event) {
-                event.preventDefault(); // Evita la redirección predeterminada
+        // Escucha el evento submit del formulario con id 'provEditForm'
+        $('#provEditForm').submit(function (event) {
+            event.preventDefault(); // Evita la redirección predeterminada del formulario
 
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        // Verifica la respuesta y actualiza el contenido del modal
-                        $('#update_proveedor').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        // Maneja errores de Ajax, si es necesario
-                    }
-                });
+            // Realiza una solicitud Ajax
+            $.ajax({
+                type: 'POST', // Método de la solicitud
+                url: $(this).attr('action'), // URL a la que se envía el formulario
+                data: $(this).serialize(), // Datos serializados del formulario
+                success: function (data) {
+                    // Si la solicitud es exitosa, actualiza el contenido del modal
+                    $('#update_proveedor').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Maneja errores de la solicitud Ajax, si es necesario
+                    console.error('Error en la solicitud:', error);
+                }
             });
         });
+    });
 </script>
