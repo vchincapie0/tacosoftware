@@ -1,11 +1,13 @@
+# Fecha de Creación: 27/02/2024
+# Última modificación: 11/05/2024
+
 from django import forms
 from .models import Facturas, IVA, FacturasAudit
 from applications.users.models import User
 from applications.proveedores.models import Proveedores
 from applications.pedidos.models import Pedidos
 
-
-
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVACreateForm(forms.ModelForm):
     '''Formulario para crear IVAf'''
     class Meta:
@@ -17,6 +19,7 @@ class IVACreateForm(forms.ModelForm):
             'valor':forms.NumberInput(attrs={'class':'form-control'}), 
         }
 
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVAUpdateForm(forms.ModelForm):
     '''Formulario para editar IVA'''
     class Meta:
@@ -28,7 +31,7 @@ class IVAUpdateForm(forms.ModelForm):
             'valor':forms.NumberInput(attrs={'class':'form-control'}), 
         }
 
-
+#Autor:     
 class FacturaCreateForm(forms.ModelForm):
     '''Formulario para crear facturas'''
     class Meta:
@@ -55,6 +58,7 @@ class FacturaCreateForm(forms.ModelForm):
             'fac_iva':forms.Select(attrs={'class':'form-select'}),
         }
 
+#Autor: 
 class FacturaUpdateForm(forms.ModelForm):
     '''Formulario para editar facturas'''
     class Meta:
@@ -81,6 +85,7 @@ class FacturaUpdateForm(forms.ModelForm):
             'fac_iva':forms.Select(attrs={'class':'form-select'}),
         }
 
+#Autor: Vivian Carolina Hincapie Escobar
 class FacturasAuditFilterForm(forms.Form):
     '''Formulario para filtar en PedidosAuditView'''
     factura = forms.ModelChoiceField(
