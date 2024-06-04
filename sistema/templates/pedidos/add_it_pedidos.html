@@ -1,3 +1,10 @@
+<!-- 
+Titulo: Modal para registrar insumos en pedidos dentro del sistema
+Fecha Elaboracion: 23/02/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+Última actualización: 15/05/2024
+ -->
+
 <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
@@ -5,7 +12,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <form action="{% url 'pedidos_app:add__it_pedidos' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+          <form id="pedidoAddInsumosForm" action="{% url 'pedidos_app:add__it_pedidos' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
               {%csrf_token%}
           
               {% if form.errors %}
@@ -58,4 +65,23 @@
     </div>
 </div>
 
-    
+<script>
+    $(document).ready(function () {
+        $('#pedidoAddInsumosForm').submit(function (event) {
+            event.preventDefault(); // Evita la redirección predeterminada
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (data) {
+                // Verifica la respuesta y actualiza el contenido del modal
+                $('#add_it_pedidos').html(data);
+                },
+                error: function (xhr, status, error) {
+                // Maneja errores de Ajax, si es necesario
+                }
+            });
+        });
+    });
+</script>    
