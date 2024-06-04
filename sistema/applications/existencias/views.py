@@ -1,3 +1,7 @@
+# Fecha de Creación: 14/04/2024
+# Autor: Vivian Carolina Hincapie Escobar 
+# Última modificación: 01/06/2024
+
 from django.shortcuts import render
 from django.db.models import F
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,6 +12,7 @@ from applications.insumos.models import InsumosGenerico
 from applications.productoterminado.models import ProductoTerminadoGenerico
 
 class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
+    '''Clase encargada de la vista que muestra las existencias de Materia Prima'''
     model = MateriaPrimaGenerica
     template_name = "existencias/stock_mp.html"
     login_url = reverse_lazy('users_app:login')
@@ -15,7 +20,7 @@ class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
     context_object_name = "stock_mp"
 
     def get_queryset(self):
-        '''Function that retrieves the keyword from the search bar to filter results'''
+        '''Funcion que recibe la palabra clave en la barra de busqueda y filtra el resultado'''
         palabra_clave = self.request.GET.get("kword", '')
         tipo_materia_prima = self.request.GET.get('tipo', None)
         
@@ -34,13 +39,13 @@ class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Pass the type and keyword to the template to retain the state of the search and filter form
         context['tipo_materia_prima'] = self.request.GET.get('tipo', 'Todos')
         context['palabra_clave'] = self.request.GET.get('kword', '')
 
         return context
         
 class ExistenciasInsumosListView(LoginRequiredMixin, ListView):
+    '''Clase encargada de la vista que muestra las existencias de Insumos'''
     model=InsumosGenerico
     template_name = "existencias/stock_insumos.html"
     login_url = reverse_lazy('users_app:login')
@@ -48,6 +53,7 @@ class ExistenciasInsumosListView(LoginRequiredMixin, ListView):
     context_object_name = "stock_it"
 
 class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
+    '''Clase encargada de la vista que muestra las existencias de Producto Terminado'''
     model = ProductoTerminadoGenerico
     template_name = "existencias/stock_pt.html"
     login_url = reverse_lazy('users_app:login')
@@ -55,13 +61,14 @@ class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
     context_object_name = "stock_pt"
 
     def get_queryset(self):
-        '''Function that retrieves the keyword from the search bar to filter results'''
+        '''Funcion que recibe la palabra clave en la barra de busqueda y filtra el resultado'''
+
         palabra_clave = self.request.GET.get("kword", '')
         
         queryset = ProductoTerminadoGenerico.objects.all()
 
         if palabra_clave:
-            queryset = queryset.filter(mp_nombre__icontains=palabra_clave)
+            queryset = queryset.filter(pt_nombre__icontains=palabra_clave)
         queryset = queryset.order_by(F('cantidad_total').desc())
 
         return queryset
