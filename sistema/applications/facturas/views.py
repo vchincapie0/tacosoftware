@@ -93,6 +93,10 @@ class FacturasCreateView(LoginRequiredMixin, CreateView):
     success_url= reverse_lazy('facturas_app:list_factura')  
 
     def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']
 
         # Agregar un mensaje de éxito con el numero de factura
@@ -108,6 +112,10 @@ class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     login_url=reverse_lazy('users_app:login')
     form_class=FacturaUpdateForm
     success_url= reverse_lazy('facturas_app:list_factura')
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
 
     def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']

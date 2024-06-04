@@ -22,11 +22,13 @@ class ProductoTerminadoGenericoForm(forms.ModelForm):
         fields = (
             'pt_nombre',
             'materiaPrimaUsada',
+            'pt_tipo',
             )
         
         widgets={
             'pt_nombre':forms.TextInput(attrs={'class':'form-control'}),
             'materiaPrimaUsada':forms.SelectMultiple(attrs={'class':'form-select'}),
+            'pt_tipo':forms.Select(attrs={'class':'form-select'}),
         }
 
 class ProductoTerminadoGenericoFilterForm(forms.ModelForm):
@@ -37,10 +39,12 @@ class ProductoTerminadoGenericoFilterForm(forms.ModelForm):
         fields = (
             'pt_nombre',
             'materiaPrimaUsada',
+            'pt_tipo',
         )
         widgets = {
             'pt_nombre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Buscar por nombre'}),
             'materiaPrimaUsada': forms.SelectMultiple(attrs={'class': 'form-select'}),
+            'pt_tipo':forms.Select(attrs={'class':'form-select'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -49,6 +53,8 @@ class ProductoTerminadoGenericoFilterForm(forms.ModelForm):
         self.fields['pt_nombre'].required = False
         self.fields['materiaPrimaUsada'].required = False
         self.fields['materiaPrimaUsada'].choices = [('', '---------')] + list(self.fields['materiaPrimaUsada'].choices)
+        self.fields['pt_tipo'].required = False
+        self.fields['pt_tipo'].choices = [('', '---------')] + list(self.fields['pt_tipo'].choices)
 
 
 class ProductoTerminadoForm(forms.ModelForm):
