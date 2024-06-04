@@ -1,3 +1,7 @@
+# Fecha de Creación: 20/02/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 29/04/2024
+
 from django.db import models
 from applications.users.models import User
 from applications.materiaprima.models import MateriaPrima
@@ -5,15 +9,14 @@ from applications.insumos.models import Insumos
 from applications.proveedores.models import Proveedores
 from django.utils import timezone
 
-# Create your models here.
-
 class Pedidos(models.Model):
+    '''Definición del modelo para los pedidos'''
 
+    # Opciones para el estado del pedido
     ESTADO_CHOICES=(
         ('0','Completo'),
         ('1','Incompleto'),
         ('2','Rechazado'),
-
     )
 
     id=models.AutoField('id',primary_key=True)
@@ -32,11 +35,13 @@ class Pedidos(models.Model):
         return f"N° Pedido: {self.ref_pedido} - Estado: {estado}"
 
     def delete(self, using=None, keep_parents=False):
-        '''Funcion para borrado lógico'''
+        '''Función para borrado lógico'''
         self.deleted = True # Marcar como inactivo en lugar de eliminar
         self.save(using=using)
 
 class PedidosAudit(models.Model):
+    '''Definición del modelo para el registro de auditoría de pedidos'''
+
     ACTION_CHOICES = [
         ('C', 'Creado'),
         ('U', 'Actualizado'),
@@ -51,5 +56,3 @@ class PedidosAudit(models.Model):
 
     def __str__(self):
         return f'{self.get_action_display()} - {self.changed_by} ({self.changed_at})'
-
-
