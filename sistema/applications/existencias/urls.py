@@ -1,3 +1,7 @@
+# Fecha de Creación: 14/04/2024
+# Autor: Vivian Carolina Hincapie Escobar 
+# Última modificación: 01/06/2024
+
 from django.urls import path
 from . import views 
 
