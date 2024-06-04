@@ -1,3 +1,7 @@
+# Fecha de Creación: 20/02/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 15/05/2024
+
 import re
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -10,7 +14,9 @@ from applications.proveedores.models import Proveedores
 from applications.users.models import User
 
 class PedidosCreateForm(forms.ModelForm):
+    '''Definición del formulario para crear pedidos'''
 
+    # Opciones para el tipo de pedido
     PEDIDO_CHOICES=(
         ('0','materia prima'),
         ('1','insumos'),
@@ -27,7 +33,7 @@ class PedidosCreateForm(forms.ModelForm):
     )
 
     class Meta:
-
+        '''Modelo asociado y campos a incluir en el formulario'''
         model=Pedidos
         fields=(
             'ref_pedido',
@@ -39,6 +45,7 @@ class PedidosCreateForm(forms.ModelForm):
             'pedi_insumos',
         )
 
+        # Definición de widgets para los campos del formulario
         widgets={
             'ref_pedido':forms.NumberInput(attrs={'placeholder': 'Referencia del pedido','class':'form-control'}),
             'pedi_estado':forms.Select(attrs={'class':'form-select'}),
@@ -47,26 +54,24 @@ class PedidosCreateForm(forms.ModelForm):
             'pedi_proveedor':forms.Select(attrs={'class':'form-select'}),
             'pedi_materiaprima':forms.SelectMultiple(attrs={'class':'form-select'}),
             'pedi_insumos':forms.SelectMultiple(attrs={'class':'form-select'}),
-
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Disable Insumos field initially
-        #self.fields['pedi_insumos'].disabled = True
-
-        # Add JavaScript event handler to toggle the disabled state
+        # Agregar evento JavaScript para cambiar el estado del campo de insumos
         self.fields['tipo_pedido'].widget.attrs['onchange'] = (
             'toggleInsumosField(this.value);'
         )
 
     class Media:
+        # Incluir jQuery como archivo de medios
         js = (
             'https://code.jquery.com/jquery-3.7.1.min.js',
         )
 
     def clean_ref_pedido(self):
+        '''Validación personalizada para la referencia del pedido'''
         ref_pedido=self.cleaned_data.get('ref_pedido')
 
         if Pedidos.objects.filter(ref_pedido=ref_pedido).exists():
@@ -74,6 +79,7 @@ class PedidosCreateForm(forms.ModelForm):
         return ref_pedido
         
     def clean_pedi_fecha(self):
+        '''Validación personalizada para la fecha del pedido'''
         fecha_pedido = self.cleaned_data.get('pedi_fecha')
 
         # Obtener la fecha actual
@@ -89,7 +95,7 @@ class PedidosCreateForm(forms.ModelForm):
         return fecha_pedido
 
 class PedidosUpdateForm(forms.ModelForm):
-
+    '''Definición del formulario para actualizar pedidos'''
     PEDIDO_CHOICES=(
         ('0','materia prima'),
         ('1','insumos'),
@@ -134,24 +140,22 @@ class PedidosUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Disable Insumos field initially
-        #self.fields['pedi_insumos'].disabled = True
-
-        # Add JavaScript event handler to toggle the disabled state
+        # Agregar evento JavaScript para cambiar el estado del campo de insumos
         self.fields['tipo_pedido'].widget.attrs['onchange'] = (
             'toggleInsumosField(this.value);'
         )
 
     class Media:
+        # Incluir jQuery como archivo de medios
         js = (
             'https://code.jquery.com/jquery-3.7.1.min.js',
         )
 
 class PedidosAddMpCreateFrom(forms.ModelForm):
-    """Form definition para crear materia prima en el formulario de pedidos."""
+    """Definición del formulario para crear materia prima en el formulario de pedidos."""
 
     class Meta:
-        """Meta definition for MateriaPrimaform."""
+        """Definición Meta para MateriaPrimaform."""
 
         model = MateriaPrima
         fields = (
@@ -171,16 +175,17 @@ class PedidosAddMpCreateFrom(forms.ModelForm):
         }
     
     def clean_it_cantidad(self):
+        '''Función que valida la cantidad sea positiva'''
         cantidad = self.cleaned_data['it_cantidad']
         if cantidad <= 0:
             raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
         return cantidad
 
 class PedidosAddInsumosCreateFrom(forms.ModelForm):
-    """Form definition Implementos de Trabajo en pedidos."""
+    """Definición del formulario Implementos de Trabajo en pedidos."""
 
     class Meta:
-        """Meta definition for implementosTrabajoform."""
+        """Definición Meta implementosTrabajoform."""
 
         model = Insumos
         fields = (
@@ -200,15 +205,17 @@ class PedidosAddInsumosCreateFrom(forms.ModelForm):
         }
 
     def clean_it_cantidad(self):
+        '''Función que valida la cantidad sea positiva'''
         cantidad = self.cleaned_data['it_cantidad']
         if cantidad <= 0:
             raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
         return cantidad
     
 class  PedidosAddProveedorCreateFrom(forms.ModelForm):
-    """Form definition Proveedores."""
-    class Meta:
+    """Definición del formulario Proveedores."""
 
+    class Meta:
+        """Definición Meta Proveedoresform."""
         model=Proveedores
         fields=(
             'nit',
@@ -223,12 +230,14 @@ class  PedidosAddProveedorCreateFrom(forms.ModelForm):
         }
 
     def clean_prov_telefono(self):
+        '''Función para validar que la cantidad de digitos en teléfono sea correcto'''
         cantidad = self.cleaned_data['prov_telefono']
         if len(cantidad) < 10:
             raise forms.ValidationError("El teléfono debe tener al menos 10 digitos.")
         return cantidad
     
     def clean_prov_nombre(self):
+        '''Función para validar que el nombre del proveedor no incluya numeros'''
         nombre = self.cleaned_data['prov_nombre']
         if not re.match("^[a-zA-Z ]+$", nombre):
             raise forms.ValidationError("El nombre no debe contener números o caracteres especiales.")
