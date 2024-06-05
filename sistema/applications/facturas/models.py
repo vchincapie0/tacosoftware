@@ -30,6 +30,12 @@ class Facturas(models.Model):
     img_factura=models.ImageField(upload_to='facturas',blank=True,null=True)
     deleted = models.BooleanField(default=False)  # Campo para el borrado lógico
 
+    class Meta:
+        '''Clase que asegura de no registrar dos facturas a un pedido'''
+        constraints = [
+            models.UniqueConstraint(fields=['fac_numeroPedido'], name='unique_factura_per_pedido')
+        ]
+
     def __str__(self):
         return f"{self.num_factura}-{self.fac_proveedor}-{self.fac_numeroPedido}-{self.fac_total}"
 
