@@ -31,7 +31,7 @@ class Facturas(models.Model):
     deleted = models.BooleanField(default=False)  # Campo para el borrado lógico
 
     def __str__(self):
-        return f"{self.num_factura}-{self.fac_proveedor}-{self.fac_numeroPedido}-{self.fac_total}"
+        return f"{self.num_factura}-{self.fac_numeroPedido}-{self.fac_total}"
 
     def delete(self, using=None, keep_parents=False):
         '''Funcion para borrado lógico'''
