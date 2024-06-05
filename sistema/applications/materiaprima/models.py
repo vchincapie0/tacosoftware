@@ -23,9 +23,11 @@ class MateriaPrimaGenerica(models.Model):
         return f"{self.mp_nombre}"
     
     def actualizar_cantidad_total(self):
-        total = sum([materia.mp_cantidad for materia in self.materiaprima_set.all()])
-        self.cantidad_total = total
-        self.save()
+        # Verificar si existen características organolépticas aprobadas y desinfección asociada
+        if self.caracteristicasorganolepticas_set.filter(estado='0').exists() and self.desinfeccion_set.exists():
+            total = sum([materia.mp_cantidad for materia in self.materiaprima_set.all()])
+            self.cantidad_total = total
+            self.save()
   
 class MateriaPrima(models.Model):
     ''''Tabla de materia prima con caracteristicas'''
