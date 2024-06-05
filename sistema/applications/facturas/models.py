@@ -22,7 +22,6 @@ class Facturas(models.Model):
     '''Clase para la creacion de tabla factura en bd'''
 
     num_factura=models.PositiveIntegerField('Numero Factura',unique=True, primary_key=True)
-    fac_proveedor=models.ForeignKey(Proveedores, on_delete=models.CASCADE)
     fac_numeroPedido=models.ForeignKey(Pedidos,on_delete=models.CASCADE)
     fac_fechaLlegada=models.DateField('Fecha Llegada', default=timezone.now)
     fac_numeroUnidades=models.PositiveIntegerField('Numero de Unidades')
@@ -34,6 +33,12 @@ class Facturas(models.Model):
 
     def __str__(self):
         return f"{self.num_factura}-{self.fac_proveedor}-{self.fac_numeroPedido}-{self.fac_total}"
+
+    def save(self, *args, **kwargs):
+        # Asignar fac_fechaLlegada al pedi_fecha del pedido si existe
+        if self.fac_numeroPedido:
+            self.fac_fechaLlegada = self.fac_numeroPedido.pedi_fecha
+        super(Facturas, self).save(*args, **kwargs)
 
     def delete(self, using=None, keep_parents=False):
         '''Funcion para borrado lógico'''

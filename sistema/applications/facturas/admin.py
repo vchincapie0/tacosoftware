@@ -9,7 +9,6 @@ class FacturasAdmin(admin.ModelAdmin):
     #Muestra los datos en forma mas estetica en admin
     list_display=(
         'num_factura',
-        'fac_proveedor',
         'fac_numeroPedido',
         'fac_total',    
     )

@@ -38,7 +38,6 @@ class FacturaCreateForm(forms.ModelForm):
         model = Facturas
         fields = (
             'num_factura',
-            'fac_proveedor',
             'fac_numeroPedido',
             'fac_fechaLlegada',
             'fac_numeroUnidades',
@@ -49,7 +48,6 @@ class FacturaCreateForm(forms.ModelForm):
         
         widgets={
             'num_factura':forms.NumberInput(attrs={'class':'form-control'}),
-            'fac_proveedor':forms.Select(attrs={'class':'form-select'}),
             'fac_numeroPedido':forms.Select(attrs={'class':'form-select'}),
             'fac_fechaLlegada':forms.SelectDateWidget(),
             'fac_numeroUnidades':forms.NumberInput(attrs={'class':'form-control'}), 
@@ -65,7 +63,6 @@ class FacturaUpdateForm(forms.ModelForm):
         model = Facturas
         fields = (
             'num_factura',
-            'fac_proveedor',
             'fac_numeroPedido',
             'fac_fechaLlegada',
             'fac_numeroUnidades',
@@ -76,7 +73,6 @@ class FacturaUpdateForm(forms.ModelForm):
         
         widgets={
             'num_factura':forms.NumberInput(attrs={'class':'form-control'}),
-            'fac_proveedor':forms.Select(attrs={'class':'form-select'}),
             'fac_numeroPedido':forms.Select(attrs={'class':'form-select'}),
             'fac_fechaLlegada':forms.SelectDateWidget(),
             'fac_numeroUnidades':forms.NumberInput(attrs={'class':'form-control'}), 
