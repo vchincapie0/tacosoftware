@@ -2,8 +2,6 @@ from django.db import models
 from applications.productoterminado.models import ProductoTerminado
 from applications.materiaprima.models import MateriaPrimaGenerica
 
-
-# Create your models here.
 class Picado(models.Model):
 
     ESTADO_CHOICES=(
@@ -20,7 +18,7 @@ class Picado(models.Model):
     pica_check=models.CharField('estado',max_length=1, choices=ESTADO_CHOICES)
     
     def __str__(self):
-        return f"{self.pica_producto}-{self.pica_cantidad}{self.pica_pesoMPposproceso}-{self.pica_merma}-{self.pica_check}"
+        return f"{self.pica_producto}-{self.pica_cantidad_total}{self.pica_pesoPostProcesamiento}-{self.pica_merma}-{self.pica_check}"
 
 class PicadoMateriaPrima(models.Model):
     picado = models.ForeignKey(Picado, on_delete=models.CASCADE)
@@ -49,7 +47,7 @@ class Coccion(models.Model):
 
     
     def __str__(self):
-        return f"{self.id_coccion}-{self.cocc_cantidad}-{self.cocc_pesoMPposproceso}-{self.cocc_merma}-{self.cocc_tiempoCoccion}-{self.cocc_temperaturafinal}-{self.cocc_check}"
+        return f"{self.cocc_producto}-{self.cocc_cantidad_total}-{self.cocc_pesoPostProcesamiento}-{self.cocc_merma}-{self.cocc_tiempoCoccion}-{self.cocc_temperaturafinal}-{self.cocc_check}"
 
 class CoccionMateriaPrima(models.Model):
     coccion = models.ForeignKey(Coccion, on_delete=models.CASCADE)
