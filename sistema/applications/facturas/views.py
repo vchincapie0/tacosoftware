@@ -1,7 +1,8 @@
 # Fecha de Creación: 27/02/2024
-# Última modificación: 22/05/2024
+# Última modificación: 05/06/2024
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -86,25 +87,25 @@ class FacturasCreateView(LoginRequiredMixin, CreateView):
     '''Clase encargada de vista de crear factura'''
     model = Facturas
     template_name = "facturas/add_fact.html"
-    login_url = reverse_lazy('users_app:login')
+    login_url=reverse_lazy('users_app:login')
+    #Campos que se van a mostrar en el formulario
     form_class = FacturaCreateForm
-    success_url = reverse_lazy('facturas_app:list_factura')  
+    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
+    success_url= reverse_lazy('facturas_app:list_factura')  
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         numeroFactura = form.cleaned_data['num_factura']
         pedido = form.cleaned_data['fac_numeroPedido']
 
-        # Verificar si ya existe una factura para el mismo pedido
         if Facturas.objects.filter(fac_numeroPedido=pedido).exists():
-            form.add_error('fac_numeroPedido', 'Ya existe una factura para este pedido.')
-            messages.error(self.request, 'Ya existe una factura para el pedido seleccionado.')
-            return self.form_invalid(form)
+            messages.error(self.request, f'El pedido {pedido} ya cuenta con una factura registrada')
+            return redirect(reverse_lazy('facturas_app:list_factura'))
 
-        # Agregar un mensaje de éxito con el número de factura
+        # Agregar un mensaje de éxito con el numero de factura
         messages.success(self.request, f'¡La factura {numeroFactura} se ha agregado correctamente!')
-        return super(FacturasCreateView, self).form_valid(form)
-    
+        return super().form_valid(form)
+
 #Autor:
 class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de Facturas'''
@@ -114,20 +115,14 @@ class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     form_class=FacturaUpdateForm
     success_url= reverse_lazy('facturas_app:list_factura')
 
-def form_valid(self, form):
-        form.instance.created_by = self.request.user
+    def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']
-        pedido = form.cleaned_data['fac_numeroPedido']
+        form.instance.updated_by = self.request.user
 
-        # Verificar si ya existe una factura para el mismo pedido
-        if Facturas.objects.filter(fac_numeroPedido=pedido).exists():
-            form.add_error('fac_numeroPedido', 'Ya existe una factura para este pedido.')
-            messages.error(self.request, 'Ya existe una factura para el pedido seleccionado.')
-            return self.form_invalid(form)
-
-        # Agregar un mensaje de éxito con el número de factura
+        # Agregar un mensaje de éxito con el numero de factura
         messages.success(self.request, f'¡La factura {numeroFactura} se ha actualizado correctamente!')
-        return super(FacturasCreateView, self).form_valid(form)
+
+        return super(FacturasUpdateView, self).form_valid(form)
 
 #Autor:
 class FacturasDeleteView(LoginRequiredMixin, DeleteView):
