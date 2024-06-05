@@ -2,7 +2,7 @@
 Titulo: Template para mostrar las facturas de pedidos registrados en el sistema
 Fecha Elaboracion: 04/03/2024 
 Elaborado por: Vivian Carolina Hincapie Escobar 
-Última actualización: 17/05/2024
+Última actualización: 05/06/2024
  -->
 
 {% extends 'base.html' %}
@@ -85,7 +85,7 @@ Elaborado por: Vivian Carolina Hincapie Escobar
                                 <!-- Enlace para editar la factura, abre un modal -->
                                 <a onclick="edit_factura('{% url 'facturas_app:edit_factura' f.pk %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{f.num_factura}}</a>
                             </td>
-                            <td>{{f.fac_proveedor}}</td>
+                            <td>{{f.fac_numeroPedido.pedi_proveedor}}</td>
                             <td>{{f.fac_numeroPedido.ref_pedido}}</td>
                             <td>{{f.fac_fechaLlegada|date:"d/m/y"}}</td>
                             <td>{{f.fac_numeroUnidades}}</td>
