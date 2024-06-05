@@ -39,7 +39,6 @@ class FacturaCreateForm(forms.ModelForm):
         fields = (
             'num_factura',
             'fac_numeroPedido',
-            'fac_fechaLlegada',
             'fac_numeroUnidades',
             'img_factura',
             'fac_subtotal',
@@ -49,7 +48,6 @@ class FacturaCreateForm(forms.ModelForm):
         widgets={
             'num_factura':forms.NumberInput(attrs={'class':'form-control'}),
             'fac_numeroPedido':forms.Select(attrs={'class':'form-select'}),
-            'fac_fechaLlegada':forms.SelectDateWidget(),
             'fac_numeroUnidades':forms.NumberInput(attrs={'class':'form-control'}), 
             'img_factura':forms.FileInput(attrs={'class':'form-control'}),
             'fac_subtotal':forms.NumberInput(attrs={'class':'form-control','placeholder':'Subtotal'}),
@@ -64,7 +62,6 @@ class FacturaUpdateForm(forms.ModelForm):
         fields = (
             'num_factura',
             'fac_numeroPedido',
-            'fac_fechaLlegada',
             'fac_numeroUnidades',
             'img_factura',
             'fac_subtotal',
@@ -74,7 +71,6 @@ class FacturaUpdateForm(forms.ModelForm):
         widgets={
             'num_factura':forms.NumberInput(attrs={'class':'form-control'}),
             'fac_numeroPedido':forms.Select(attrs={'class':'form-select'}),
-            'fac_fechaLlegada':forms.SelectDateWidget(),
             'fac_numeroUnidades':forms.NumberInput(attrs={'class':'form-control'}), 
             'img_factura':forms.FileInput(attrs={'class':'form-control'}),
             'fac_subtotal':forms.NumberInput(attrs={'class':'form-control','placeholder':'Subtotal'}),

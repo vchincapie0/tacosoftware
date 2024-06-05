@@ -1,13 +1,12 @@
 # Fecha de Creación: 27/02/2024
 #Autor: Vivian Carolina Hincapie Escobar
-# Última modificación: 29/04/2024
+# Última modificación: 05/06/2024
 
 from django.db import models
 from django.utils import timezone
 from applications.proveedores.models import Proveedores
 from applications.pedidos.models import Pedidos
 from applications.users.models import User
-
 
 class IVA (models.Model):
     "Clase para tabla generica de IVA"
@@ -33,12 +32,6 @@ class Facturas(models.Model):
 
     def __str__(self):
         return f"{self.num_factura}-{self.fac_proveedor}-{self.fac_numeroPedido}-{self.fac_total}"
-
-    def save(self, *args, **kwargs):
-        # Asignar fac_fechaLlegada al pedi_fecha del pedido si existe
-        if self.fac_numeroPedido:
-            self.fac_fechaLlegada = self.fac_numeroPedido.pedi_fecha
-        super(Facturas, self).save(*args, **kwargs)
 
     def delete(self, using=None, keep_parents=False):
         '''Funcion para borrado lógico'''
