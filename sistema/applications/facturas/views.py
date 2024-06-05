@@ -86,24 +86,24 @@ class FacturasCreateView(LoginRequiredMixin, CreateView):
     '''Clase encargada de vista de crear factura'''
     model = Facturas
     template_name = "facturas/add_fact.html"
-    login_url=reverse_lazy('users_app:login')
-    #Campos que se van a mostrar en el formulario
+    login_url = reverse_lazy('users_app:login')
     form_class = FacturaCreateForm
-    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
-    success_url= reverse_lazy('facturas_app:list_factura')  
+    success_url = reverse_lazy('facturas_app:list_factura')  
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
-
-    def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']
+        pedido = form.cleaned_data['fac_numeroPedido']
 
-        # Agregar un mensaje de éxito con el numero de factura
+        # Verificar si ya existe una factura para el mismo pedido
+        if Facturas.objects.filter(fac_numeroPedido=pedido).exists():
+            form.add_error('fac_numeroPedido', 'Ya existe una factura para este pedido.')
+            messages.error(self.request, 'Ya existe una factura para el pedido seleccionado.')
+            return self.form_invalid(form)
+
+        # Agregar un mensaje de éxito con el número de factura
         messages.success(self.request, f'¡La factura {numeroFactura} se ha agregado correctamente!')
-
         return super(FacturasCreateView, self).form_valid(form)
-
 #Autor:
 class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de Facturas'''
