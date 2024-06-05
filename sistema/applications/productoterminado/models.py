@@ -71,7 +71,7 @@ class CaracteristicasOrganolepticasPT(models.Model):
     estado=models.CharField('Estado',max_length=1,choices=ESTADO_CHOICES, default=0)
     
     def __str__(self):
-        return str(self.pt_lote)+'-'+self.estado
+        return f'{self.producto}-{self.estado}-{self.observaciones}'
 
 class EmpaqueProductoTerminado(models.Model):
 
