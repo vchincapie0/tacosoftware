@@ -13,6 +13,10 @@ class IVA (models.Model):
 
     valor=models.FloatField('IVA', default=0)
 
+    class Meta:
+        verbose_name = "IVA"
+        verbose_name_plural = "IVA"
+
     def __str__(self):
         return f"{self.valor}"
 
@@ -29,6 +33,10 @@ class Facturas(models.Model):
     fac_total=models.FloatField('Total', default=0.0)
     img_factura=models.ImageField(upload_to='facturas',blank=True,null=True)
     deleted = models.BooleanField(default=False)  # Campo para el borrado lógico
+
+    class Meta:
+        verbose_name = "Factura"
+        verbose_name_plural = "Factura"
 
     def __str__(self):
         return f"{self.num_factura}-{self.fac_numeroPedido}-{self.fac_total}"
@@ -52,6 +60,10 @@ class FacturasAudit(models.Model):
     action = models.CharField(max_length=1, choices=ACTION_CHOICES)
     details = models.TextField(blank=True, null=True)
     changed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Auditoria de Factura"
+        verbose_name_plural = "Auditorias de Facturas"
 
     def __str__(self):
         return f'{self.get_action_display()} - {self.changed_by} ({self.changed_at})'
