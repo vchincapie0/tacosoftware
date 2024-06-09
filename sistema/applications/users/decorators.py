@@ -1,5 +1,10 @@
+# Fecha de Creación: 15/05/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 02/06/2024
+
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 def admin_required(view_func):
     def wrapped_view(request, *args, **kwargs):
@@ -12,3 +17,11 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return wrapped_view
+
+def login_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # Si el usuario no está autenticado, redirigirlo a la página de inicio de sesión
+            return redirect(reverse_lazy('users_app:login'))
+        return view_func(request, *args, **kwargs)
+    return wrapper

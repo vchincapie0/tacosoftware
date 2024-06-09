@@ -1,3 +1,7 @@
+# Fecha de Creación: 27/02/2024
+#Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 29/04/2024
+
 from django.db import models
 from django.utils import timezone
 from applications.proveedores.models import Proveedores
@@ -5,7 +9,6 @@ from applications.pedidos.models import Pedidos
 from applications.users.models import User
 
 
-# Create your models here.
 class IVA (models.Model):
     "Clase para tabla generica de IVA"
 

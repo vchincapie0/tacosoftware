@@ -1,3 +1,6 @@
+# Fecha de Creación: 27/02/2024
+# Última modificación: 22/05/2024
+
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
@@ -13,13 +16,8 @@ from django.views.generic import (
     )
 from django.urls import reverse_lazy
 
-#Importacion de modelos y formulariosg
-from .models import Facturas,IVA
-
 #Importacion de modelos y formularios
-from .models import Facturas, FacturasAudit
-
-#from .forms import 
+from .models import Facturas,IVA,FacturasAudit 
 from .forms import (
     FacturaCreateForm, 
     FacturaUpdateForm, 
@@ -28,7 +26,7 @@ from .forms import (
     FacturasAuditFilterForm
 )
 
-# Create your views here.
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVAListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de los Implementos de trabajo'''
     model = IVA
@@ -37,6 +35,7 @@ class IVAListView(LoginRequiredMixin, ListView):
     paginate_by=10
     context_object_name = 'facturas'
 
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVACreateView(LoginRequiredMixin, CreateView):
     '''Clase donde se crea una nueva factura'''
     model = IVA
@@ -47,6 +46,7 @@ class IVACreateView(LoginRequiredMixin, CreateView):
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('facturas_app:list_IVA') 
 
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVAUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de Facturas'''
     model =IVA 
@@ -55,6 +55,7 @@ class IVAUpdateView(LoginRequiredMixin, UpdateView):
     form_class=IVAUpdateForm
     success_url= reverse_lazy('facturas_app:list_IVA')
 
+#Autor: Kevin Dayann Albarracin Navarrete
 class IVADeleteView(LoginRequiredMixin, DeleteView):
     '''Vista para borrar Implenentos de Trabajo'''
     model = IVA
@@ -62,7 +63,7 @@ class IVADeleteView(LoginRequiredMixin, DeleteView):
     login_url=reverse_lazy('users_app:login')
     success_url= reverse_lazy('facturas_app:list_IVA') 
 
-
+#Autor:
 class FacturasListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de las Facturas'''
     model = Facturas
@@ -79,9 +80,10 @@ class FacturasListView(LoginRequiredMixin, ListView):
             deleted=False  # Solo usuarios activos
         )
         return lista
-    
+
+#Autor:
 class FacturasCreateView(LoginRequiredMixin, CreateView):
-    '''Clase donde se crea una nueva factura'''
+    '''Clase encargada de vista de crear factura'''
     model = Facturas
     template_name = "facturas/add_fact.html"
     login_url=reverse_lazy('users_app:login')
@@ -102,6 +104,7 @@ class FacturasCreateView(LoginRequiredMixin, CreateView):
 
         return super(FacturasCreateView, self).form_valid(form)
 
+#Autor:
 class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para actualizar los datos de Facturas'''
     model =Facturas 
@@ -122,6 +125,7 @@ class FacturasUpdateView(LoginRequiredMixin, UpdateView):
 
         return super(FacturasUpdateView, self).form_valid(form)
 
+#Autor:
 class FacturasDeleteView(LoginRequiredMixin, DeleteView):
     '''Vista para borrar facturas'''
     model = Facturas
@@ -129,8 +133,9 @@ class FacturasDeleteView(LoginRequiredMixin, DeleteView):
     login_url=reverse_lazy('users_app:login')
     success_url= reverse_lazy('facturas_app:list_factura')
 
+#Autor:Vivian Carolina Hincapie Escobar
 class FacturasAuditListView(LoginRequiredMixin, ListView):
-    '''Clase para mostrar los datos de logs de Facturas'''
+    '''Clase para mostrar los datos de las auditorias de Facturas'''
     model = FacturasAudit
     template_name = "administrador/auditorias/factura_audit.html"
     login_url=reverse_lazy('users_app:login')
@@ -179,7 +184,9 @@ class FacturasAuditListView(LoginRequiredMixin, ListView):
         context['filter_form'] = FacturasAuditFilterForm(self.request.GET)
         return context
     
+#Autor:Vivian Carolina Hincapie Escobar   
 def export_facturas_to_excel(request):
+    '''Vista de exportación en archivo tipo excel de los datos en el modelo Facturas'''
     # Obtener la fecha y hora actual
     fecha_descarga = timezone.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -258,7 +265,10 @@ def export_facturas_to_excel(request):
 
     return response
 
+#Autor:Vivian Carolina Hincapie Escobar
 def export_facturas_to_csv(request):
+    '''Vista de exportación en archivo tipo CSV de los datos en el modelo Facturas'''
+    
     facturas = Facturas.objects.filter(deleted=False)  # Obtener datos de facturas
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename=facturas.csv'

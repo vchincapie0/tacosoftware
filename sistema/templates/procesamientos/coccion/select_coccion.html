@@ -35,3 +35,13 @@
         </div>    
     </div>
 </div>
+<script>
+    document.getElementById("selec_coccion").addEventListener("submit", function(event) {
+    var productoTerminado = document.getElementById("producto_terminado").value;
+    
+    if (productoTerminado == "") {
+        alert("Por favor, seleccione una opción válida");
+        event.preventDefault(); // Evita que el formulario se envíe si no se ha seleccionado una opción válida
+    }
+});
+</script>

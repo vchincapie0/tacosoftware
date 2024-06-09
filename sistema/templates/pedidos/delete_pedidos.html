@@ -1,45 +1,53 @@
-<div class="modal-dialog modal-md" role="document">
+<!-- 
+Titulo: Modal para validar borrado
+de pedidos registrados en el sistema
+Fecha Elaboracion: 23/02/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+Última actualización: 13/04/2024
+ -->
+
+ <div class="modal-dialog modal-md" role="document">
     <div class="modal-content bg-dark text-white">
-      <div class="modal-header">
-        <h5 class="modal-title">Borrar Pedido</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <form action="{% url 'pedidos_app:delete_pedidos' object.id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-              {%csrf_token%}
-          
+        <div class="modal-header">
+            <h5 class="modal-title">Borrar Pedido</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <!-- Formulario para confirmar el borrado del pedido -->
+            <form action="{% url 'pedidos_app:delete_pedidos' object.id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                {% csrf_token %}
+                
                 <div class="row">
                     <div class="col">
-                        <h4 style="color: red; font-weight: bolder;">¿Desea borrar pedido N°: {{object.ref_pedido}} ?</h4>
-                        <h5>Proveedor: {{object.pedi_proveedor.prov_nombre}}</h5>
-                        <h5>Este pedido cuenta con:
-                            <!--Si el pedido es de Materia Prima-->
+                        <!-- Mensaje de confirmación con información del pedido -->
+                        <h4 style="color: red; font-weight: bolder;">¿Desea borrar pedido N°: {{ object.ref_pedido }}?</h4>
+                        <h5>Proveedor: {{ object.pedi_proveedor.prov_nombre }}</h5>
+                        <h5>Este pedido cuenta con:</h5>
+                        <!-- Lista de Materia Prima -->
+                        <ul>
                             {% for materia_prima in object.pedi_materiaprima.all %}
-                            <ul>
                                 <li>{{ materia_prima.mp_nombre }}</li>
-                            </ul>  
                             {% endfor %}
-                            <!--Si el pedido es de Implementos de trabajo-->
+                        </ul>
+                        <!-- Lista de Implementos de trabajo -->
+                        <ul>
                             {% for insumos in object.pedi_insumos.all %}
-                            <ul>
                                 <li>{{ insumos.it_nombre }}</li>
-                            </ul>  
-                            {% endfor %} 
-                        </h5>
+                            {% endfor %}
+                        </ul>
                         <p class="text-center"><i class="fa-solid fa-circle-info"></i> Esta acción será permanente</p>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col text-center d-flex justify-content-center">
+                        <!-- Botón para confirmar la eliminación -->
                         <button class="m-2 btn btn-danger" type="submit">Eliminar</button>
+                        <!-- Botón para cerrar el modal sin realizar la acción -->
                         <button type="button" class="m-2 btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </form>
         </div>
-    
     </div>
 </div>
-
-    

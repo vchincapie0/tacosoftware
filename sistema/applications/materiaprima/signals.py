@@ -38,7 +38,6 @@ def log_user_change(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=MateriaPrima)
 def actualizar_cantidad_total_insumo(sender, instance, **kwargs):
-    print('Dentro de señal cantidad')
     insumo = instance.mp_nombre
     insumo.actualizar_cantidad_total()
-    insumo.save()  # Guarda el insumo después de actualizar la cantidad total
+    insumo.save()  # Guarda la materia prima después de actualizar la cantidad total

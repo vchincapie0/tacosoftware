@@ -65,36 +65,20 @@ class ProductoTerminadoForm(forms.ModelForm):
 
         model = ProductoTerminado
         fields = (
-            'pt_lote', 
-            'pt_nombre', 
             'pt_cantidad',   
             'pt_fechapreparacion',
             'pt_fechavencimiento',
             )
-        
-        widgets={
-            'pt_lote':forms.Select(attrs={'class':'form-select'}),
-            'pt_nombre':forms.Select(attrs={'class':'form-select'}),
-            'pt_cantidad':forms.NumberInput(attrs={'class':'form-control'}),
-            'pt_fechapreparacion':forms.SelectDateWidget(),
-            'pt_fechavencimiento':forms.SelectDateWidget(),
-        }
-    def pt_cantidad(self):
-        cantidad = self.cleaned_data['pt_cantidad']
-        if cantidad <= 0:
-            raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-        return cantidad
 
+    # def clean_PT_fechavencimiento(self):
+    #     fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
+    #     fecha_actual = timezone.now().date()
 
-    def clean_PT_fechavencimiento(self):
-        fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
-        fecha_actual = timezone.now().date()
+    #     # Comprueba si la fecha de vencimiento es anterior a la fecha actual
+    #     if fecha_vencimiento < fecha_actual:
+    #         raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
 
-        # Comprueba si la fecha de vencimiento es anterior a la fecha actual
-        if fecha_vencimiento < fecha_actual:
-            raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
-
-        return fecha_vencimiento
+    #     return fecha_vencimiento
 
 class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
@@ -102,7 +86,6 @@ class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
         model = CaracteristicasOrganolepticasPT
         fields=(
-            'pt_lote',
             'observaciones',
             'olor',
             'sabor',
@@ -112,11 +95,11 @@ class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
         widgets={
                 
-                'observaciones':forms.Textarea(),
-                'olor':forms.CheckboxInput(),
-                'sabor':forms.CheckboxInput(),
-                'textura':forms.CheckboxInput(),
-                'color':forms.CheckboxInput(),   
+                'observaciones':forms.Textarea(attrs={'class':'form-control'}),
+                'olor':forms.CheckboxInput(attrs={'class':'form-check-input'}),
+                'sabor':forms.CheckboxInput(attrs={'class':'form-check-input'}),
+                'textura':forms.CheckboxInput(attrs={'class':'form-check-input'}),
+                'color':forms.CheckboxInput(attrs={'class':'form-check-input'}),   
             }
         
 class CaracteristicasPTUpdateForm(forms.ModelForm):
@@ -126,7 +109,7 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
         model = CaracteristicasOrganolepticasPT
         fields=(
 
-            'pt_lote',
+            'producto',
             'observaciones',
             'olor',
             'sabor',
@@ -137,7 +120,7 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         widgets={
                 
-                'pt_lote':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
+                'producto':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
                 'observaciones':forms.Textarea(attrs={'class':'form-control' }),
                 'olor':forms.CheckboxInput(),
                 'sabor':forms.CheckboxInput(),

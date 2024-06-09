@@ -1,3 +1,7 @@
+#Fecha de Creación: 22/04/2024
+#Autor: Vivian Carolina Hincapie Escobar
+#Última modficación: 17/05/2024
+
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 import threading
 from django.db.models.signals import post_save
@@ -10,18 +14,21 @@ User = get_user_model()
 
 @receiver(user_logged_in)
 def log_user_login(sender, request, user, **kwargs):
+    '''Señal para validar que el usuario inicie sesion para auditorias'''
     current_user = user  # El usuario que se ha autenticado
     details = f"{current_user.name} {current_user.last_name} ha iniciado sesión."
     UserAudit.objects.create(user=current_user, action='L', details=details, changed_by=current_user)
 
 @receiver(user_logged_out)
 def log_user_logout(sender, request, user, **kwargs):
+    '''Señal para validar que el usuario cierre sesion para auditorias'''
     current_user = user  # El usuario que se ha desconectado
     details = f"{current_user.name} {current_user.last_name} ha cerrado sesión."
     UserAudit.objects.create(user=current_user, action='O', details=details, changed_by=current_user)
 
 @receiver(post_save, sender=User)
 def log_user_change(sender, instance, created, **kwargs):
+    '''Señal para validar si el usuario se crea, modifica o se borra para auditorias'''
     current_user = getattr(threading, 'current_user', None)
 
     if current_user:

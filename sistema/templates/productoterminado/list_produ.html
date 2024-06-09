@@ -55,7 +55,7 @@
                         <tr>
                             <th scope="col">Lote</th>
                             <th scope="col">Producto</th>
-                            <th scope="col">Cantidad</th>
+                            <th scope="col">Bolsas Disponibles</th>
                             <th scope="col">Fecha de preparación</th>
                             <th scope="col">Fecha de vencimiento</th>
                             <th scope="col">Estado Características Organolepticas</th>
@@ -70,7 +70,7 @@
                         <tr>
                             <td>{{p.pt_lote}}</td>
                             <td><a  onclick="update_produ('{% url 'produ_app:update_produ' p.pt_lote %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{p.pt_nombre}}</a></td>
-                            <td>{{p.pt_cantidad}} g</td>
+                            <td>{{p.pt_cantidad}}</td>
                             <td>{{p.pt_fechapreparacion|date:"d/m/y"}}</td>
                             <td>{{p.pt_fechavencimiento}}</td>
                             <td>

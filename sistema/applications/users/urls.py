@@ -1,3 +1,7 @@
+#Fecha de Creación: 02/02/2024
+#Autor: Vivian Carolina Hincapie Escobar
+#Última modficación: 15/05/2024
+
 from django.urls import path
 from . import views
 from .decorators import admin_required  # Importa el decorador personalizado

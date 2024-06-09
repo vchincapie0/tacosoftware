@@ -105,3 +105,5 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8000',
     # Agrega aquí otros orígenes permitidos si es necesario
 ]
+
+SESSION_COOKIE_AGE = 1800  # Tiempo de sesión en segundos (ejemplo: 30 minutos)

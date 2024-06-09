@@ -1,9 +1,13 @@
+#Fecha de Creación: 02/02/2024
+#Autor: Vivian Carolina Hincapie Escobar
+#Última modficación: 15/05/2024
+
 #Importación de Librerias
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 import csv
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
@@ -18,8 +22,6 @@ from django.urls import reverse_lazy,reverse
 #Importacion modelos y formularios
 from .models import User, UserAudit
 from .forms import UserRegisterForm, UserUpdateForm, UserAuditFilterForm
-
-# Create your views here.
 
 class UsersListView(LoginRequiredMixin, ListView):
     '''vista que muestra todos los usuarios registrados'''
@@ -68,7 +70,7 @@ class UserRegisterView(LoginRequiredMixin,FormView):
         return super(UserRegisterView, self).form_valid(form)
     
 class UserUpdateView(LoginRequiredMixin, UpdateView):
-    '''Vista para actualizar los datos de user'''
+    '''Vista para actualizar los datos del usuario'''
     model = User
     template_name = "usuarios/update_user.html"
     login_url=reverse_lazy('users_app:login')
@@ -98,7 +100,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):
-    '''Vista para borrar user'''
+    '''Vista para borrar usuarios'''
     model = User
     template_name = "usuarios/delete_user.html"
     login_url=reverse_lazy('users_app:login')
@@ -123,13 +125,16 @@ class LogIn(LoginView):
             return redirect(self.get_success_url())
 
 class LogOut(View):
-    '''Vista para cerrar sesion'''
-    def get(self,request,*args,**kwargs):
+    '''Vista para cerrar sesión'''
+    def get(self, request, *args, **kwargs):
         logout(request)
-
-        return HttpResponseRedirect(
-            reverse('users_app:login')
-        )
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Si la solicitud tiene el encabezado 'x-requested-with' establecido en 'XMLHttpRequest',
+            # entonces es una solicitud AJAX, responde con un mensaje JSON
+            return JsonResponse({'message': 'Sesión cerrada correctamente.'})
+        else:
+            # Si no es una solicitud AJAX, redirige a la página de inicio de sesión
+            return HttpResponseRedirect(reverse('users_app:login'))
     
 class UserAuditListView(LoginRequiredMixin, ListView):
     '''Vista para la lista de auditorias de usuarios'''

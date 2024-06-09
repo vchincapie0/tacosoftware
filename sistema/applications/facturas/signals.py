@@ -1,3 +1,7 @@
+# Fecha de Creación: 11/04/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 10/05/2024
+
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -6,12 +10,14 @@ import threading
 
 @receiver(pre_save, sender=Facturas)
 def calcular_total_factura(sender, instance, **kwargs):
+    '''Función para calcular el total de la factura antes de guardarla'''
+
     # Obtener el valor de IVA asociado a la factura
     iva_valor = instance.fac_iva.valor if instance.fac_iva else 0.0
     
     # Calcular el total como subtotal más IVA
     subtotal = instance.fac_subtotal
-    total = subtotal+((subtotal * iva_valor)/100)  # Calcular el total con IVA
+    total = subtotal + ((subtotal * iva_valor) / 100)  # Calcular el total con IVA
     # Asignar el total calculado a fac_total
     instance.fac_total = total
 
@@ -20,6 +26,8 @@ User = get_user_model()
 
 @receiver(post_save, sender=Facturas)
 def log_facturas_change(sender, instance, created, **kwargs):
+    '''Función para registrar cambios en las facturas en la tabla de auditoría'''
+
     current_user = getattr(threading, 'current_user', None)
 
     if current_user:
@@ -39,7 +47,7 @@ def log_facturas_change(sender, instance, created, **kwargs):
     pedido_instance = instance.fac_numeroPedido
 
     # Obtener el proveedor asociado a la factura
-    proveedor_instance=instance.fac_proveedor
+    proveedor_instance = instance.fac_proveedor
 
     # Crear el registro de auditoría con el usuario que realizó la acción
     FacturasAudit.objects.create( 

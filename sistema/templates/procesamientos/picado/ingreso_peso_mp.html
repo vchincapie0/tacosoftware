@@ -1,0 +1,217 @@
+<!-- 
+Titulo: Formulario de Ingreso de Pesos de Materias Primas para Procesamiento Picado
+Fecha Elaboracion: 28/05/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+
+Última actualización: 02/06/2024
+ -->
+
+{% extends 'base.html' %}
+
+{% block title %}
+    Proceso de Picado
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h3 style="color: #FFFF; font-weight: bolder;">PROCESAMIENTO</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active" aria-current="page"><a href="#" style="text-decoration: none; color: rgb(236, 225, 47, .75); font-weight: bolder;">Procesamiento</a></li>
+                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Características Organolépticas</li>
+                  <li class="breadcrumb-item" style="text-decoration: none; color: #FFFF;">Empaque y Vacio</li>
+                </ol>
+              </nav>
+        </div>
+    </div>
+    
+    <!-- Formulario principal -->
+    <form id="mainForm" method="post" action="{% url 'procesamientos_app:procesamiento_picado' producto.id %}">
+        {% csrf_token %}
+        <!-- Primer fieldset -->
+        <div class="row">
+            <div class="col-8 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <div id="fieldset1">
+                    <legend class="text-center">{{ producto.pt_nombre }}</legend>
+                    <p class="text-center">Ingrese el peso en gramos deseado para cada materia prima</p>
+                    
+                    {% for materia_prima in materias_primas %}
+                        <label for="peso_{{ materia_prima.id }}" class="m-2 form-label">{{ materia_prima.mp_nombre }} (Disponible: {{ materia_prima.cantidad_total }}g):</label>
+                        <div class="input-group">
+                            <input type="number" id="peso_{{ materia_prima.id }}" name="peso_{{ materia_prima.id }}" class="form-control" required>
+                            
+                            {% if materia_prima.mp_nombre == 'Agua'  %}
+                                <span class="input-group-text">L.</span>
+                            {% else %}
+                                <span class="input-group-text">gr.</span>
+                            {% endif %}
+                            <span class="mt-1 alert alert-warning" id="error_{{ materia_prima.id }}" style="display: none;">El peso ingresado excede la cantidad disponible.</span>
+                        </div>
+                    {% endfor %}
+
+                    <legend class="text-center">Cantidad Total en Crudo</legend>
+                    <label for="pica_cantidad_total" class="form-label">Peso Total: </label>
+                    <div class="input-group">      
+                        <input type="number" id="pica_cantidad_total" name="pica_cantidad_total" class="form-control" readonly>
+                        <span class="input-group-text">gr.</span>
+                    </div>
+                    
+                    <div class="m-2 row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-warning" onclick="confirmValidation()">Validar</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2 row">
+            <div class="col-6 form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+                <!-- Segundo fieldset -->
+                <div id="fieldset2" disabled>
+                    <legend class="text-center">Post-Producción</legend>
+
+                    <label class="form-label" for="pica_pesoPostProcesamiento">Peso Post Producción:</label>
+                    <div class="input-group"> 
+                        <input class="form-control" type="number" id="pica_pesoPostProcesamiento" name="pica_pesoPostProcesamiento">
+                        <span class="input-group-text">gr.</span>
+                    </div>
+                    
+                    <label class="form-label" for="pica_merma">Merma:</label>
+                    <div class="input-group">
+                        <input class="form-control" type="number" id="pica_merma" name="pica_merma" readonly>
+                        <span class="input-group-text">gr.</span>
+                        <span class="mt-1 alert alert-warning" id="error_merma" style="display: none;">La merma no puede ser un valor negativo.</span>
+                    </div> 
+
+                    <div class="m-2 row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" onclick="calculateMerma()">Calcular</button>
+                        </div> 
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="pica_check">Aceptabilidad/Rechazo:</label>
+                        <select class="form-select text-center" id="pica_check" name="pica_check">
+                            <option selected>-----Seleccione una opción-----</option>
+                            <option value="0">Aprobado</option>
+                            <option value="1">No aprobado</option>
+                          </select>
+                    </div> 
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Botón de enviar -->
+        <div class="m-2 row">
+            <div class="col d-flex justify-content-center">
+                <button type="button" class="btn btn-success" onclick="confirmSubmission()">Guardar</button>
+            </div> 
+        </div>
+    </form>            
+</div>
+{% endblock content %}
+
+{% block extrajs %}
+<script>
+    window.onload = function() {
+        // Verifica si el navegador soporta el método replaceState.
+        if (window.history.replaceState) {
+            // Reemplaza la URL actual en el historial del navegador con la misma URL.
+            // Esto evita que el formulario se vuelva a enviar si el usuario actualiza la página.
+            window.history.replaceState(null, null, window.location.href);
+        }
+    }
+
+
+    function confirmValidation() {
+        // Muestra un cuadro de confirmación al usuario.
+        // Si el usuario confirma, se llama a la función validateFieldset1.
+        if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
+            validateFieldset1();
+        }
+    }
+
+
+    function validateFieldset1() {
+        let isValid = true; // Variable para rastrear si todos los datos son válidos.
+        // Itera sobre cada materia prima para validar los datos ingresados.
+        {% for materia_prima in materias_primas %}
+        // Obtiene el valor ingresado para la materia prima actual.
+        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+        // Obtiene la cantidad total disponible para la materia prima actual.
+        let cantidadTotal_{{ materia_prima.id }} = {{ materia_prima.cantidad_total }};
+        // Obtiene el elemento span para mostrar errores.
+        let errorSpan_{{ materia_prima.id }} = document.getElementById('error_{{ materia_prima.id }}');
+
+        // Verifica si el peso ingresado excede la cantidad disponible.
+        if (peso_{{ materia_prima.id }} > cantidadTotal_{{ materia_prima.id }}) {
+            // Muestra un mensaje de error si el peso ingresado es mayor que la cantidad disponible.
+            errorSpan_{{ materia_prima.id }}.style.display = 'block';
+            isValid = false; // Marca los datos como inválidos.
+        } else {
+            // Oculta el mensaje de error si el peso ingresado es válido.
+            errorSpan_{{ materia_prima.id }}.style.display = 'none';
+        }
+        {% endfor %}
+
+        // Si todos los datos son válidos, realiza las siguientes acciones.
+        if (isValid) {
+            // Calcula el peso total de todas las materias primas.
+            calculateTotal();
+            // Deshabilita el primer fieldset para evitar cambios posteriores.
+            document.getElementById('fieldset1').disabled = true;
+            // Habilita el segundo fieldset para permitir la entrada de datos de post-producción.
+            document.getElementById('fieldset2').disabled = false;
+        }
+    }
+   
+    function calculateTotal() {
+        let total = 0; // Inicializa el total en 0.
+        // Itera sobre cada materia prima para sumar los pesos ingresados.
+        {% for materia_prima in materias_primas %}
+        // Obtiene el valor ingresado para la materia prima actual.
+        let peso_{{ materia_prima.id }} = parseFloat(document.getElementById('peso_{{ materia_prima.id }}').value) || 0;
+        // Suma el peso de la materia prima al total.
+        total += peso_{{ materia_prima.id }};
+        {% endfor %}
+        // Asigna el total calculado al campo de peso total en crudo.
+        document.getElementById('pica_cantidad_total').value = total;
+    }
+   
+    function calculateMerma() {
+        // Obtiene el peso total en crudo.
+        let pica_cantidad_total = parseFloat(document.getElementById('pica_cantidad_total').value) || 0;
+        // Obtiene el peso post-producción.
+        let pica_pesoPostProcesamiento = parseFloat(document.getElementById('pica_pesoPostProcesamiento').value) || 0;
+        // Calcula la merma como la diferencia entre el peso total en crudo y el peso post-producción.
+        let pica_merma = pica_cantidad_total - pica_pesoPostProcesamiento;
+        // Obtiene el elemento span para mostrar errores de merma.
+        let errorSpan_merma = document.getElementById('error_merma');
+        // Verifica si la merma es negativa.
+        if (pica_merma < 0) {
+            // Muestra un mensaje de error si la merma es negativa.
+            errorSpan_merma.style.display = 'block';
+        } else {
+            // Oculta el mensaje de error y asigna la merma al campo correspondiente si es válida.
+            errorSpan_merma.style.display = 'none';
+            document.getElementById('pica_merma').value = pica_merma;
+        }
+    }
+    
+    function confirmSubmission() {
+        // Muestra un cuadro de confirmación al usuario.
+        // Si el usuario confirma, se envía el formulario.
+        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
+            document.getElementById('mainForm').submit();
+        }
+    }
+</script>
+{% endblock %}

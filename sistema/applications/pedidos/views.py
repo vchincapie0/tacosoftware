@@ -1,3 +1,7 @@
+# Fecha de Creación: 20/02/2024
+# Autor: Vivian Carolina Hincapie Escobar
+# Última modificación: 15/05/2024
+
 from django.http import HttpResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -6,7 +10,6 @@ from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
-    TemplateView, 
     ListView, 
     CreateView, 
     UpdateView, 
@@ -28,8 +31,6 @@ from .forms import (
     PedidosAuditFilterForm
 
 )
-
-# Create your views here.
 
 class PedidosListView(LoginRequiredMixin, ListView):
     '''Clase para mostrar los datos de los Pedidos'''
@@ -60,7 +61,7 @@ class PedidosCreateView(LoginRequiredMixin, CreateView):
     success_url= reverse_lazy('pedidos_app:list_pedidos')
 
     def form_valid(self, form):
-        '''funcion para validar el formulario de crear pedido'''
+        '''Funcion para validar el formulario de crear pedido'''
         referencia = form.cleaned_data['ref_pedido']
         user = self.request.user
             # Guarda el formulario sin commit para asignar manualmente el usuario

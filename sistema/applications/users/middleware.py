@@ -1,3 +1,7 @@
+#Fecha de Creación: 29/04/2024
+#Autor: Vivian Carolina Hincapie Escobar
+#Última modficación: 29/04/2024
+
 import threading
 
 class CurrentUserMiddleware:
