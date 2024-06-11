@@ -6,7 +6,7 @@ app_name='produ_app'
 
 urlpatterns = [
     path('list_produ/',views.ProduListView.as_view(),name='list_produ'),
-    path('update_produ/<pk>',views.ProduUpdateView.as_view(),name='update_produ'),
+    path('update_produ/<str:pt_lote>',views.ProduUpdateView.as_view(),name='update_produ'),
     path('updatecaracteristicas_pt/<pk>',views.CaracteristicasProductoTerminadoUpdateView.as_view(),name='updatecaracteristicas_pt'),
     path('detail_PT/<str:pt_lote>',views.ProductoTerminadoDetailView.as_view(),name='detail_PT'),
     path('empaque_update/<pk>',views.EmpaqueProductoTerminadoUpdateView.as_view(),name='empaque_update'),

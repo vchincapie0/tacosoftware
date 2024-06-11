@@ -10,10 +10,7 @@
 
             {% if form.errors %}
                 <div class="alert alert-info">
-                    {{form.errors.pt_lote.0}}
                     {{form.errors.pt_nombre.0}}
-                    {{form.errors.pt_cantidad.0}}
-                    {{form.errors.pt_fechapreparacion.0}}
                     {{form.errors.pt_fechavencimiento.0}}
                 </div>
             {% endif %}
@@ -22,25 +19,14 @@
                 
                 <div class="mb-3 col-12">
                     <label for="id_pt_lote" class="form-label">Lote: </label>
-                    {{form.pt_lote}}   
+                    <div class="form-control">{{producto.pt_lote}}</div>
+                    
                 </div>
           
            
                 <div class="mb-3 col-12">
                     <label for="id_pt_nombre" class="form-label">Producto:</label>
-                    {{form.pt_nombre}}   
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="id_pt_cantidad" class="form-label">Cantidad:</label>
-                        {{form.pt_cantidad}}  
-                    </div>
-
-                    <div class="col">
-                        <label for="id_pt_fechapreparacion" class="form-label">Fecha preparación:</label>
-                        <div class="cont-fecha">{{form.pt_fechapreparacion}}</div>  
-                    </div>
+                    <div class="form-control">{{producto.pt_nombre}}</div>
                 </div>
 
                 <div class="mb-3 row">

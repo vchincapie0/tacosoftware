@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 #Importacion de modelos y formularios
 from .models import (
     ProductoTerminado,
-    ExistenciaPT,
     CaracteristicasOrganolepticasPT,
     EmpaqueProductoTerminado,
     Vacio,
@@ -23,9 +22,6 @@ from .models import (
 )
 from .forms import (
     ProductoTerminadoForm,
-    CaracteristicasOrganolepticasPTForm,
-    EmpaqueProductoTerminadoForm,
-    VacioForm,
     CaracteristicasPTUpdateForm,
     EmpaqueUpdateForm,
     VacioUpdateForm,
@@ -51,22 +47,27 @@ class ProduListView(LoginRequiredMixin, ListView):
         return lista
 
 class ProduUpdateView(LoginRequiredMixin, UpdateView):
+
     '''Vista para actualizar los datos de producto terminado'''
     model = ProductoTerminado
     template_name = "productoterminado/update_produ.html"
     login_url=reverse_lazy('users_app:login')
     form_class=ProductoTerminadoForm
     success_url= reverse_lazy('produ_app:list_produ')
+    context_object_name = 'producto'
     
-
+    def get_object(self, queryset=None):
+        lote = self.kwargs.get('pt_lote')
+        return self.model.objects.get(pt_lote=lote)
+    
     def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_nombre = form.cleaned_data['pt_nombre']
-        pt_fecha = form.cleaned_data['pt_fechapreparacion']
 
+        # Acceder al pt_lote y pt_nombre
+        pt_lote = self.object.pt_lote
+        pt_nombre =self.object.pt_nombre
 
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡El producto {pt_nombre} de la fecha de preparación {pt_fecha} se ha actualizado correctamente!')
+        messages.success(self.request, f'¡El producto {pt_nombre} del lote {pt_lote} se ha actualizado correctamente!')
 
         return super(ProduUpdateView, self).form_valid(form)
 

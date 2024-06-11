@@ -56,7 +56,6 @@ class ProductoTerminadoGenericoFilterForm(forms.ModelForm):
         self.fields['pt_tipo'].required = False
         self.fields['pt_tipo'].choices = [('', '---------')] + list(self.fields['pt_tipo'].choices)
 
-
 class ProductoTerminadoForm(forms.ModelForm):
     """Form definition for Producto Terminado."""
 
@@ -64,21 +63,23 @@ class ProductoTerminadoForm(forms.ModelForm):
         """Meta definition for ProductoTerminadoform."""
 
         model = ProductoTerminado
-        fields = (
-            'pt_cantidad',   
-            'pt_fechapreparacion',
+        fields = (  
             'pt_fechavencimiento',
             )
+        
+        widgets={
+            'pt_fechavencimiento':forms.SelectDateWidget(),
+        }
 
-    # def clean_PT_fechavencimiento(self):
-    #     fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
-    #     fecha_actual = timezone.now().date()
+    def clean_PT_fechavencimiento(self):
+        fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
+        fecha_actual = timezone.now().date()
 
-    #     # Comprueba si la fecha de vencimiento es anterior a la fecha actual
-    #     if fecha_vencimiento < fecha_actual:
-    #         raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
+        #Comprueba si la fecha de vencimiento es anterior a la fecha actual
+        if fecha_vencimiento < fecha_actual:
+            raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
 
-    #     return fecha_vencimiento
+        return fecha_vencimiento
 
 class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
