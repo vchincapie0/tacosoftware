@@ -24,15 +24,13 @@ class addEquipos(forms.ModelForm):
         fields = (
             'equi_encargadoCocina',
             'equi_encargadoEntrega',
-            'equi_calidad',
             'equi_nombre',
             'equi_check',
             )
         
         widgets={
-            'equi_encargadoCocina':forms.TextInput(attrs={'placeholder': 'Nombre del operario','class': 'form-select'}),
-            'equi_encargadoEntrega':forms.TextInput(attrs={'placeholder': 'a quien entrega ','class': 'form-select'}),
-            'equi_calidad':forms.Select(attrs={'class': 'form-select'}),
+            'equi_encargadoCocina':forms.Select(attrs={'placeholder': 'Nombre del operario','class': 'form-select'}),
+            'equi_encargadoEntrega':forms.Select(attrs={'placeholder': 'a quien entrega ','class': 'form-select'}),
             'equi_nombre':forms.TextInput(attrs={'placeholder': 'Nombre del Equipo','class': 'form-control'}),
             'equi_check':forms.Select(attrs={'class': 'form-select'}),
             
@@ -48,15 +46,13 @@ class EquiposUpdateForm(forms.ModelForm):
         fields = (
             'equi_encargadoCocina',
             'equi_encargadoEntrega',
-            'equi_calidad',
             'equi_nombre',
             'equi_check',
             )
         
         widgets={
-            'equi_encargadoCocina':forms.TextInput(attrs={'placeholder': 'Nombre del operario','class': 'form-select'}),
-            'equi_encargadoEntrega':forms.TextInput(attrs={'placeholder': 'a quien entrega ','class': 'form-select'}),
-            'equi_calidad':forms.Select(attrs={'class': 'form-select'}),
+            'equi_encargadoCocina':forms.Select(attrs={'placeholder': 'Nombre del operario','class': 'form-select'}),
+            'equi_encargadoEntrega':forms.Select(attrs={'placeholder': 'a quien entrega ','class': 'form-select'}),
             'equi_nombre':forms.TextInput(attrs={'placeholder': 'Nombre del Equipo','class': 'form-control'}),
             'equi_check':forms.Select(attrs={'class': 'form-select'}),
             

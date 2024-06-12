@@ -1,6 +1,7 @@
 from django.db import models
 from applications.productoterminado.models import ProductoTerminado
 from applications.materiaprima.models import MateriaPrimaGenerica
+from applications.users.models import User
 
 class Picado(models.Model):
 
@@ -66,14 +67,12 @@ class Equipos(models.Model):
     )
 
     id_equipo=models.AutoField(primary_key=True)
-    equi_encargadoCocina=models.CharField('Nombre', max_length=50,default="NULL")
-    equi_encargadoEntrega=models.CharField('Nombre', max_length=50,default="NULL")
-    equi_calidad=models.CharField('estado',max_length=1, choices=CHECK_CHOICES,default="0")
-    equi_nombre=models.CharField('Nombre', max_length=50,default="NULL")
+    equi_encargadoCocina=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank= True, related_name='equipos_cocina')
+    equi_encargadoEntrega=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank= True, related_name='equipos_entrega')
+    equi_nombre=models.CharField('Nombre', max_length=50, default="NULL")
     equi_check=models.CharField('estado',max_length=1, choices=CHECK_CHOICES, default="0")
     deleted = models.BooleanField(default=False) #Campo que corresponde al borrado logico
 
-    
     def __str__(self):
         return f"{self.id_equipo}-{self.equi_encargadoCocina}-{self.equi_encargadoEntrega}-{self.equi_nombre}"
     

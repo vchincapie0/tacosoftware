@@ -1,7 +1,7 @@
 <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content bg-dark text-white">
       <div class="modal-header">
-        <h5 class="modal-title">Editar Picado</h5>
+        <h5 class="modal-title">Editar Equipo</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -14,7 +14,6 @@
                     {{form.errors.equi_encargadoCocina.0}}
                     {{form.errors.equi_encargadoEntrega.0}}
                     {{form.errors.equi_nombre.0}}
-                    {{form.errors.equi_calidad.0}}
                 </div>
             {% endif %}
 
@@ -29,11 +28,6 @@
                 <div class="mb-3 col-12">
                     <label for="id_equi_encargadoEntrega" class="form-label">Quien lo Entrego:</label>
                     {{form.equi_encargadoEntrega}}   
-                </div>
-
-                <div class="mb-3 col-12">
-                    <label for="id_equi_calidad" class="form-label">Calidad del Equipo:</label>
-                    {{form.equi_calidad}}  
                 </div>
 
                 <div class="mb-3 col-12">
