@@ -3,6 +3,7 @@ import string
 from django.db import models
 from django.utils import timezone
 from applications.materiaprima.models import MateriaPrimaGenerica
+from applications.users.models import User
 
 # Creacion model Producto terminado.
 
@@ -111,7 +112,7 @@ class ProductoTerminadoAudit(models.Model):
     productoterminado = models.ForeignKey(ProductoTerminado, on_delete=models.CASCADE, related_name='audit_logs')
     action = models.CharField(max_length=1, choices=ACTION_CHOICES)
     details = models.TextField(blank=True, null=True)
-    changed_by = models.ForeignKey(ProductoTerminado, on_delete=models.SET_NULL, null=True, blank=True)
+    changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     changed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
