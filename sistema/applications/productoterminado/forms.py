@@ -185,13 +185,11 @@ class VacioUpdateForm(forms.ModelForm):
 
         model = Vacio
         fields=(
-            'pt_lote',
             'cantidad_bolsas_rechazadas',
             'cantidad_bolsas_liberadas',
           
         )   
         widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
             'cantidad_bolsas_rechazadas': forms.NumberInput(attrs={'class':'form-control'}),
             'cantidad_bolsas_liberadas':forms.NumberInput(attrs={'class':'form-control'}),
             

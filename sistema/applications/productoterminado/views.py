@@ -157,6 +157,13 @@ class VacioProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     form_class = VacioUpdateForm
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('produ_app:list_produ')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['producto_terminado'] = self.object.pt_lote.pt_lote
+        context['producto_terminado_nombre']=self.object.pt_lote.pt_nombre
+        context['fecha_prepraracion']=self.object.pt_lote.pt_fechapreparacion
+        return context
     
     def form_valid(self, form):
         '''funcion para automatizar el campo '''
