@@ -157,27 +157,39 @@ Elaborado por: Vivian Carolina Hincapie Escobar
 {% block extrajs %}
     <script>
         // Función para cargar y mostrar el modal de eliminación de usuario
-        function delete_user(url){
-            var $ = jQuery.noConflict();
-            $('#delete_usuarios').load(url,function(){
-                $(this).modal('show');
-            }); 
+        async function delete_user(url) {
+            // Realiza una solicitud fetch a la URL proporcionada.
+            const response = await fetch(url);
+            // Convierte la respuesta en texto HTML.
+            const html = await response.text();
+            // Inserta el HTML recibido en el elemento con id 'delete_proveedor'.
+            document.getElementById('delete_usuarios').innerHTML = html;
+            // Muestra el modal con el formulario de eliminación cargado.
+            $('#delete_usuarios').modal('show');
         }
 
-        // Función para cargar y mostrar el modal de edición de usuario
-        function edit_user(url){
-            var $ = jQuery.noConflict();
-            $('#edit_usuarios').load(url,function(){
-                $(this).modal('show');
-            }); 
+         // Función para cargar y mostrar el modal de edición de usuario
+        async function edit_user(url) {
+            // Realiza una solicitud fetch a la URL proporcionada.
+            const response = await fetch(url);
+            // Convierte la respuesta en texto HTML.
+            const html = await response.text();
+            // Inserta el HTML recibido en el elemento con id 'delete_proveedor'.
+            document.getElementById('edit_usuarios').innerHTML = html;
+            // Muestra el modal con el formulario de eliminación cargado.
+            $('#edit_usuarios').modal('show');
         }
 
         // Función para cargar y mostrar el modal de agregar usuario
-        function add_user(url){
-            var $ = jQuery.noConflict();
-            $('#add_usuarios').load(url,function(){
-                $(this).modal('show');
-            }); 
+        async function add_user(url) {
+            // Realiza una solicitud fetch a la URL proporcionada.
+            const response = await fetch(url);
+            // Convierte la respuesta en texto HTML.
+            const html = await response.text();
+            // Inserta el HTML recibido en el elemento con id 'delete_proveedor'.
+            document.getElementById('add_usuarios').innerHTML = html;
+            // Muestra el modal con el formulario de eliminación cargado.
+            $('#add_usuarios').modal('show');
         }
 
         // Inicialización de tooltips utilizando Bootstrap
