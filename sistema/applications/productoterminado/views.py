@@ -353,7 +353,7 @@ def export_productoterminado_to_excel(request):
     for producto in productoterminado:
         # Obtener las características organolépticas
         try:
-            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(pt_lote=producto)
+            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(producto=producto)
         except CaracteristicasOrganolepticasPT.DoesNotExist:
             caracteristicas = None
 
@@ -415,7 +415,7 @@ def export_productoterminado_to_csv(request):
     for producto in productoterminado:
         # Obtener las características organolépticas
         try:
-            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(pt_lote=producto)
+            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(producto=producto)
         except CaracteristicasOrganolepticasPT.DoesNotExist:
             caracteristicas = None
 
