@@ -80,14 +80,22 @@ class CaracteristicasProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView)
     form_class = CaracteristicasPTUpdateForm
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('produ_app:list_produ')
+    context_object_name = 'caracteristicas'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['producto_terminado'] = self.object.producto.pt_lote
+        context['producto_terminado_nombre']= self.object.producto.pt_nombre
+        context['fecha_preparacion']=self.object.producto.pt_fechapreparacion
+        return context
 
     def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
-        producto_nombre = pt_lote.pt_nombre.pt_nombre
+        # Acceder al pt_lote y pt_nombre
+        pt_lote = self.object.producto.pt_lote
+        pt_nombre =self.object.producto.pt_nombre
                
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡Las características de {producto_nombre} se ha actualizado correctamente!')
+        messages.success(self.request, f'¡Las características de {pt_nombre}  del lote {pt_lote} se ha actualizado correctamente!')
 
         return super(CaracteristicasProductoTerminadoUpdateView, self).form_valid(form)
 

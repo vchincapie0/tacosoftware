@@ -9,11 +9,15 @@
           {%csrf_token%}
               <div class="mx-4 my-2 row">
                   
-                  <div class="mb-3 col-12">
+                  <div class="mb-3 col-12 text-center">
                       <label for="id_pt_nombre" class="form-label">Lote Producto Terminado:</label>
-                      {{form.pt_lote}}   
+                      <div class="form-control"><strong>{{ producto_terminado }} - {{ producto_terminado_nombre}}</strong></div>
                   </div>
-            
+                  
+                  <div class="mb-3 col-12 text-center">
+                    <label for="id_pt_nombre" class="form-label">Fecha Preparación:</label>
+                    <div class="form-control"><strong>{{fecha_preparacion}}</strong></div>
+                  </div>
              
                   <div class="mb-3 col-12 text-center">
                       <label for="id_pt_olor" class="form-label">Olor:</label>

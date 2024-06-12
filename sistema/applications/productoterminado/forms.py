@@ -109,8 +109,6 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         model = CaracteristicasOrganolepticasPT
         fields=(
-
-            'producto',
             'observaciones',
             'olor',
             'sabor',
@@ -121,7 +119,6 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         widgets={
                 
-                'producto':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
                 'observaciones':forms.Textarea(attrs={'class':'form-control' }),
                 'olor':forms.CheckboxInput(),
                 'sabor':forms.CheckboxInput(),
