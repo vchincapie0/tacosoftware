@@ -74,7 +74,6 @@
             <div class="card-body">
                 {% if productoterminado.empaqueproductoterminado_set.all %}
                     {% for p in productoterminado.empaqueproductoterminado_set.all %}
-                        <p class="card-text">Lote: {{p.pt_lote}}</p>
                         <p class="card-text">Peso: {{p.emp_pesoKg}}</p>
                         <p class="card-text">Cantidad Bolsas: {{p.emp_cantidadBolsas}}</p>
                         <a onclick="empaque_update('{% url 'produ_app:empaque_update' p.id %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>
@@ -98,7 +97,6 @@
             <div class="card-body">
                 {% if productoterminado.vacio_set.all %}
                     {% for p in productoterminado.vacio_set.all %}
-                        <p class="card-text">Lote: {{p.pt_lote}}</p>
                         <p class="card-text">Cantidad Bolsas Rechazadas: {{p.cantidad_bolsas_rechazadas}}</p>
                         <p class="card-text">Cantidad Bolsas Liberadas: {{p.cantidad_bolsas_liberadas}}</p>
                         <a onclick="vacio_update('{% url 'produ_app:vacio_update' p.id %}')" class="btn btn-warning" type="button"><i class="fa-regular fa-circle-check"></i> Editar</a></div>

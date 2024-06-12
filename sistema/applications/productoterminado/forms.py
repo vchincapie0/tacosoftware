@@ -187,14 +187,12 @@ class EmpaqueUpdateForm(forms.ModelForm):
 
         model = EmpaqueProductoTerminado
         fields=(
-            'pt_lote',
             'emp_pesoKg',
             'emp_cantidadBolsas',
           
         )    
 
         widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
             'emp_pesoKg': forms.NumberInput(attrs={'class':'form-control'}),
             'emp_cantidadBolsas': forms.NumberInput(attrs={'class':'form-control'})
             
