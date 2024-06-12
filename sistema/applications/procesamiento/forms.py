@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate
 from applications.productoterminado.models import ProductoTerminadoGenerico
+from applications.users.models import User
 from .models import Picado, Coccion, Equipos
 
 class SelectProductoTerminado(forms.ModelForm):
@@ -15,10 +16,10 @@ class SelectProductoTerminado(forms.ModelForm):
 
 class addEquipos(forms.ModelForm):
 
-    """Form Update Equipos."""
+    """Formulario para añadir equipos en el sistema."""
 
     class Meta:
-        """Meta definition Equiposform."""
+        """Definicion Meta para Equiposform."""
 
         model = Equipos
         fields = (
@@ -35,6 +36,12 @@ class addEquipos(forms.ModelForm):
             'equi_check':forms.Select(attrs={'class': 'form-select'}),
             
         }
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Filtrar queryset para equi_encargadoCocina y equi_encargadoEntrega
+            self.fields['equi_encargadoCocina'].queryset = User.objects.filter(deleted=False)
+            self.fields['equi_encargadoEntrega'].queryset = User.objects.filter(deleted=False)
         
 class EquiposUpdateForm(forms.ModelForm):
 
@@ -57,3 +64,9 @@ class EquiposUpdateForm(forms.ModelForm):
             'equi_check':forms.Select(attrs={'class': 'form-select'}),
             
         }
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Filtrar queryset para equi_encargadoCocina y equi_encargadoEntrega
+            self.fields['equi_encargadoCocina'].queryset = User.objects.filter(deleted=False)
+            self.fields['equi_encargadoEntrega'].queryset = User.objects.filter(deleted=False)
