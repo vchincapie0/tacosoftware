@@ -149,38 +149,7 @@ class ExistenciaPTForm(forms.ModelForm):
             if cantidadegr<= 0:
                 raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
             return cantidadegr
-        
-class EmpaqueProductoTerminadoForm(forms.ModelForm):
-
-    class Meta:
-
-        model = EmpaqueProductoTerminado
-        fields=(
-            'pt_lote',
-            'emp_pesoKg',
-            'emp_cantidadBolsas',
-          
-        )     
-        
-        widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
-            'emp_pesoKg': forms.NumberInput(attrs={'class':'form-control'}),
-            'emp_cantidadBolsas': forms.NumberInput(attrs={'class':'form-control'})
-            
-        }    
-
-        def clean_Emp_pesoKgPT(self):
-            pesoPT  = self.cleaned_data['emp_pesoKgPT']
-            if pesoPT<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return pesoPT
-        
-        def clean_Emp_cantidadBolsas(self):
-            cantidadbol  = self.cleaned_data['emp_cantidadBolsas']
-            if cantidadbol<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadbol
-        
+                
 class EmpaqueUpdateForm(forms.ModelForm):
 
     class Meta:
@@ -209,37 +178,7 @@ class EmpaqueUpdateForm(forms.ModelForm):
             if cantidadbol<= 0:
                 raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
             return cantidadbol      
-        
-class VacioForm(forms.ModelForm):
-
-    class Meta:
-
-        model = Vacio
-        fields=(
-            'pt_lote',
-            'cantidad_bolsas_rechazadas',
-            'cantidad_bolsas_liberadas',
-          
-        )
-        widget={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
-            'cantidad_bolsas_rechazadas': forms.NumberInput(attrs={'class':'form-control'}),
-            'cantidad_bolsas_liberadas':forms.NumberInput(attrs={'class':'form-control'}),
-            
-        }     
-        
-        def clean_Cantidad_bolsas_rechazadas(self):
-            cantidadre  = self.cleaned_data['Cantidad_bolsas_rechazadas']
-            if cantidadre<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadre
-        
-        def clean_Cantidad_bolsas_liberadas(self):
-            cantidadlib  = self.cleaned_data['Cantidad_bolsas_liberadas']
-            if cantidadlib <= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadlib
-        
+                
 class VacioUpdateForm(forms.ModelForm):
 
     class Meta:
