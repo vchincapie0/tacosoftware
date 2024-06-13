@@ -46,16 +46,6 @@ class ProductoTerminado(models.Model):
     def __str__(self):
         return f"{self.pt_lote}-{self.pt_nombre}"
 
-class ExistenciaPT(models.Model):
-
-    pt_lote=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)
-    exisPT_CantidadIngresada = models.IntegerField('Cantidad Ingresada')
-    exisPT_CantidadEgresada = models.IntegerField('Cantidad Egresada')
-
-
-    def __str__(self):
-        return f"{self.pt_lote}-{self.exisPT_CantidadIngresada}-{self.exisPT_CantidadEgresada}"
-  
 class CaracteristicasOrganolepticasPT(models.Model):
 
     ESTADO_CHOICES=(
