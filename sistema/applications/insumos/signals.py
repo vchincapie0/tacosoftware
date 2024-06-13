@@ -7,7 +7,7 @@ import threading
 # Obtener el modelo de implementos personalizados
 User = get_user_model()
 
-@receiver(post_save, sender=InsumosAudit)
+@receiver(post_save, sender=Insumos)
 def log_user_change(sender, instance, created, **kwargs):
     current_user = getattr(threading, 'current_user', None)
 
