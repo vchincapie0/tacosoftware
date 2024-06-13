@@ -1,9 +1,8 @@
 from django.db import models
 from applications.productoterminado.models import ProductoTerminado
 from applications.materiaprima.models import MateriaPrimaGenerica
+from applications.users.models import User
 
-
-# Create your models here.
 class Picado(models.Model):
 
     ESTADO_CHOICES=(
@@ -20,7 +19,7 @@ class Picado(models.Model):
     pica_check=models.CharField('estado',max_length=1, choices=ESTADO_CHOICES)
     
     def __str__(self):
-        return f"{self.pica_producto}-{self.pica_cantidad}{self.pica_pesoMPposproceso}-{self.pica_merma}-{self.pica_check}"
+        return f"{self.pica_producto}-{self.pica_cantidad_total}{self.pica_pesoPostProcesamiento}-{self.pica_merma}-{self.pica_check}"
 
 class PicadoMateriaPrima(models.Model):
     picado = models.ForeignKey(Picado, on_delete=models.CASCADE)
@@ -49,7 +48,7 @@ class Coccion(models.Model):
 
     
     def __str__(self):
-        return f"{self.id_coccion}-{self.cocc_cantidad}-{self.cocc_pesoMPposproceso}-{self.cocc_merma}-{self.cocc_tiempoCoccion}-{self.cocc_temperaturafinal}-{self.cocc_check}"
+        return f"{self.cocc_producto}-{self.cocc_cantidad_total}-{self.cocc_pesoPostProcesamiento}-{self.cocc_merma}-{self.cocc_tiempoCoccion}-{self.cocc_temperaturafinal}-{self.cocc_check}"
 
 class CoccionMateriaPrima(models.Model):
     coccion = models.ForeignKey(Coccion, on_delete=models.CASCADE)
@@ -68,14 +67,12 @@ class Equipos(models.Model):
     )
 
     id_equipo=models.AutoField(primary_key=True)
-    equi_encargadoCocina=models.CharField('Nombre', max_length=50,default="NULL")
-    equi_encargadoEntrega=models.CharField('Nombre', max_length=50,default="NULL")
-    equi_calidad=models.CharField('estado',max_length=1, choices=CHECK_CHOICES,default="0")
-    equi_nombre=models.CharField('Nombre', max_length=50,default="NULL")
+    equi_encargadoCocina=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank= True, related_name='equipos_cocina')
+    equi_encargadoEntrega=models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank= True, related_name='equipos_entrega')
+    equi_nombre=models.CharField('Nombre', max_length=50, default="NULL")
     equi_check=models.CharField('estado',max_length=1, choices=CHECK_CHOICES, default="0")
     deleted = models.BooleanField(default=False) #Campo que corresponde al borrado logico
 
-    
     def __str__(self):
         return f"{self.id_equipo}-{self.equi_encargadoCocina}-{self.equi_encargadoEntrega}-{self.equi_nombre}"
     

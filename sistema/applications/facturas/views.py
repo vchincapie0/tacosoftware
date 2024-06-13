@@ -1,7 +1,8 @@
 # Fecha de Creación: 27/02/2024
-# Última modificación: 22/05/2024
+# Última modificación: 05/06/2024
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -94,15 +95,16 @@ class FacturasCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
-
-    def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']
+        pedido = form.cleaned_data['fac_numeroPedido']
+
+        if Facturas.objects.filter(fac_numeroPedido=pedido).exists():
+            messages.error(self.request, f'El pedido {pedido} ya cuenta con una factura registrada')
+            return redirect(reverse_lazy('facturas_app:list_factura'))
 
         # Agregar un mensaje de éxito con el numero de factura
         messages.success(self.request, f'¡La factura {numeroFactura} se ha agregado correctamente!')
-
-        return super(FacturasCreateView, self).form_valid(form)
+        return super().form_valid(form)
 
 #Autor:
 class FacturasUpdateView(LoginRequiredMixin, UpdateView):
@@ -114,11 +116,8 @@ class FacturasUpdateView(LoginRequiredMixin, UpdateView):
     success_url= reverse_lazy('facturas_app:list_factura')
 
     def form_valid(self, form):
-        form.instance.updated_by = self.request.user
-        return super().form_valid(form)
-
-    def form_valid(self, form):
         numeroFactura = form.cleaned_data['num_factura']
+        form.instance.updated_by = self.request.user
 
         # Agregar un mensaje de éxito con el numero de factura
         messages.success(self.request, f'¡La factura {numeroFactura} se ha actualizado correctamente!')

@@ -96,28 +96,45 @@ Elaborado por: Vivian Carolina Hincapie Escobar
          }
      }
  
-     // Función que valida y envía el formulario.
-     function validateAndSubmit() {
-         // Obtiene la cantidad de bolsas empaquetadas.
-         let cantidadEmpaque = parseFloat(document.getElementById('cantidad_empaque').value) || 0;
-         // Obtiene la cantidad de bolsas rechazadas.
-         let bolsasRechazadas = parseFloat(document.getElementById('bolsas_rechazadas').value) || 0;
-         // Obtiene la cantidad de bolsas liberadas.
-         let bolsasLiberadas = parseFloat(document.getElementById('bolsas_liberadas').value) || 0;
-         
-         // Verifica si la cantidad de bolsas empaquetadas es igual a la suma de las bolsas rechazadas y liberadas.
-         if (cantidadEmpaque !== (bolsasRechazadas + bolsasLiberadas)) {
-             // Muestra una alerta si las cantidades no coinciden.
-             alert('La cantidad de bolsas x 500g debe ser igual a la sumatoria de las bolsas rechazadas y liberadas.');
-             return false; // Evita el envío del formulario.
-         }
-         
-         // Solicita confirmación al usuario antes de enviar el formulario.
-         if (confirm('¿Está seguro de que desea guardar el formulario?')) {
-             // Envía el formulario si el usuario confirma.
-             document.getElementById('empaqueForm').submit();
-         }
-     }
+    function validateAndSubmit() {
+        // Obtiene la cantidad de bolsas empaquetadas.
+        let cantidadEmpaque = parseFloat(document.getElementById('cantidad_empaque').value) || 0;
+        // Obtiene la cantidad de bolsas rechazadas.
+        let bolsasRechazadas = parseFloat(document.getElementById('bolsas_rechazadas').value) || 0;
+        // Obtiene la cantidad de bolsas liberadas.
+        let bolsasLiberadas = parseFloat(document.getElementById('bolsas_liberadas').value) || 0;
+
+        // Verifica si la cantidad de bolsas empaquetadas es igual a la suma de las bolsas rechazadas y liberadas.
+        if (cantidadEmpaque !== (bolsasRechazadas + bolsasLiberadas)) {
+            // Muestra una alerta si las cantidades no coinciden.
+            Swal.fire({
+                title: 'Error',
+                text: 'La cantidad de bolsas x 500g debe ser igual a la sumatoria de las bolsas rechazadas y liberadas.',
+                icon: 'error',
+                background: '#343a40',  // Fondo oscuro
+                color: '#ffffff'  // Texto blanco
+            });
+            return false; // Evita el envío del formulario.
+        }
+
+        // Solicita confirmación al usuario antes de enviar el formulario.
+        Swal.fire({
+            title: 'Confirmar',
+            text: '¿Está seguro de que desea guardar el formulario?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar',
+            background: '#343a40',  // Fondo oscuro
+            color: '#ffffff'  // Texto blanco
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Envía el formulario si el usuario confirma.
+                document.getElementById('empaqueForm').submit();
+            }
+        });
+    }
+
  </script>
 {% endblock %}
  

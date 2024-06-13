@@ -12,7 +12,6 @@ from django.urls import reverse_lazy
 #Importacion de modelos y formularios
 from .models import (
     ProductoTerminado,
-    ExistenciaPT,
     CaracteristicasOrganolepticasPT,
     EmpaqueProductoTerminado,
     Vacio,
@@ -23,9 +22,6 @@ from .models import (
 )
 from .forms import (
     ProductoTerminadoForm,
-    CaracteristicasOrganolepticasPTForm,
-    EmpaqueProductoTerminadoForm,
-    VacioForm,
     CaracteristicasPTUpdateForm,
     EmpaqueUpdateForm,
     VacioUpdateForm,
@@ -49,79 +45,31 @@ class ProduListView(LoginRequiredMixin, ListView):
             pt_nombre__pt_nombre__icontains = palabra_clave
         )
         return lista
-    
-class ProduCreateView(LoginRequiredMixin, CreateView):
-    '''Clase donde se crea un producto terminado'''
-    model = ProductoTerminado
-    template_name = "productoterminado/add_produ.html"
-    login_url=reverse_lazy('users_app:login')
-    #Campos que se van a mostrar en el formulario
-    form_class = ProductoTerminadoForm
-    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
-    success_url= reverse_lazy('produ_app:list_produ')  
-
-    def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_nombre = form.cleaned_data['pt_nombre']
-
-        # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡El producto {pt_nombre} se ha guardado correctamente!')
-
-        return super(ProduCreateView, self).form_valid(form)
 
 class ProduUpdateView(LoginRequiredMixin, UpdateView):
+
     '''Vista para actualizar los datos de producto terminado'''
     model = ProductoTerminado
     template_name = "productoterminado/update_produ.html"
     login_url=reverse_lazy('users_app:login')
     form_class=ProductoTerminadoForm
     success_url= reverse_lazy('produ_app:list_produ')
+    context_object_name = 'producto'
     
-
+    def get_object(self, queryset=None):
+        lote = self.kwargs.get('pt_lote')
+        return self.model.objects.get(pt_lote=lote)
+    
     def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_nombre = form.cleaned_data['pt_nombre']
-        pt_fecha = form.cleaned_data['pt_fechapreparacion']
 
+        # Acceder al pt_lote y pt_nombre
+        pt_lote = self.object.pt_lote
+        pt_nombre =self.object.pt_nombre
 
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡El producto {pt_nombre} de la fecha de preparación {pt_fecha} se ha actualizado correctamente!')
+        messages.success(self.request, f'¡El producto {pt_nombre} del lote {pt_lote} se ha actualizado correctamente!')
 
         return super(ProduUpdateView, self).form_valid(form)
-
-class ProduDeleteView(LoginRequiredMixin, DeleteView):
-    '''Vista para borrar los producto terminado'''
-    model = ProductoTerminado
-    template_name = "productoterminado/delete_produ.html"
-    login_url=reverse_lazy('users_app:login')
-    success_url= reverse_lazy('produ_app:list_produ')
-
-class ExistenciaPTView(LoginRequiredMixin, ListView):
-    '''Vists para la creacion de la existencias producto terminado'''
-    model = ExistenciaPT
-    template_name = "productoterminado/existenciaPT.html"
-    login_url=reverse_lazy('users_app:login')
-    success_url= reverse_lazy('produ_app:exitenciaPT')
-
-class CaracteristicasProductoTerminadoCreateView(LoginRequiredMixin, CreateView):
-    '''Vista para la creacion de las caracteristicas organolepticas de Producto terminado'''
-    model = CaracteristicasOrganolepticasPT
-    template_name = "productoterminado/caracteristicas_PT.html"
-    login_url=reverse_lazy('users_app:login')
-    #Campos que se van a mostrar en el formulario
-    form_class = CaracteristicasOrganolepticasPTForm
-    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
-    success_url= reverse_lazy('produ_app:list_produ')
-
-    def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
-        producto_nombre = pt_lote.pt_nombre.pt_nombre
-                
-        # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡Las características de {producto_nombre} se ha guardado correctamente!')
-
-        return super(CaracteristicasProductoTerminadoCreateView, self).form_valid(form)
 
 class CaracteristicasProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     '''Vista para la edición de las caracteristicas organolepticas de producto terminado'''
@@ -132,14 +80,22 @@ class CaracteristicasProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView)
     form_class = CaracteristicasPTUpdateForm
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('produ_app:list_produ')
+    context_object_name = 'caracteristicas'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['producto_terminado'] = self.object.producto.pt_lote
+        context['producto_terminado_nombre']= self.object.producto.pt_nombre
+        context['fecha_preparacion']=self.object.producto.pt_fechapreparacion
+        return context
 
     def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
-        producto_nombre = pt_lote.pt_nombre.pt_nombre
+        # Acceder al pt_lote y pt_nombre
+        pt_lote = self.object.producto.pt_lote
+        pt_nombre =self.object.producto.pt_nombre
                
         # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡Las características de {producto_nombre} se ha actualizado correctamente!')
+        messages.success(self.request, f'¡Las características de {pt_nombre}  del lote {pt_lote} se ha actualizado correctamente!')
 
         return super(CaracteristicasProductoTerminadoUpdateView, self).form_valid(form)
 
@@ -155,36 +111,6 @@ class ProductoTerminadoDetailView(LoginRequiredMixin, DetailView):
         lote = self.kwargs.get('pt_lote')
         return self.model.objects.get(pt_lote=lote)
     
-class EmpaqueProductoTerminadoCreateView(LoginRequiredMixin, CreateView):
-    '''Vists para la creacion del empaque producto terminado'''
-    model = EmpaqueProductoTerminado
-    template_name = "productoterminado/empaque_pt.html"
-    login_url=reverse_lazy('users_app:login')
-    #Campos que se van a mostrar en el formulario
-    form_class = EmpaqueProductoTerminadoForm
-    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
-    success_url= reverse_lazy('produ_app:list_produ')
-    
-    def form_valid(self, form):
-        '''funcion para automatizar el campo '''
-        user = self.request.user
-             # Guarda el formulario sin commit para asignar manualmente el usuario
-        empaque = form.save(commit=False)
-             # Asigna el usuario al campo pedi_user
-        empaque.responsable = user
-             # Ahora sí, guarda el pedido en la base de datos
-        empaque.save()
-        return super().form_valid(form)
-    
-    def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
-        
-        # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡El empacado de {pt_lote} se ha guardado correctamente!')
-
-        return super(EmpaqueProductoTerminadoCreateView, self).form_valid(form)
-
 class EmpaqueProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     '''Vists para la edición del empaque producto terminado'''
     model = EmpaqueProductoTerminado
@@ -194,6 +120,13 @@ class EmpaqueProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     form_class = EmpaqueUpdateForm
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('produ_app:list_produ')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['producto_terminado'] = self.object.pt_lote.pt_lote
+        context['producto_terminado_nombre']=self.object.pt_lote.pt_nombre
+        context['fecha_prepraracion']=self.object.pt_lote.pt_fechapreparacion
+        return context
     
     def form_valid(self, form):
         '''funcion para automatizar el campo '''
@@ -208,44 +141,13 @@ class EmpaqueProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
+        pt_lote = self.object.pt_lote.pt_lote
         
         # Agregar un mensaje de éxito con el nombre de usuario
         messages.success(self.request, f'¡El empacado de {pt_lote} se ha actualizado correctamente!')
 
         return super(EmpaqueProductoTerminadoUpdateView, self).form_valid(form)
     
-class VacioProductoTerminadoCreateView(LoginRequiredMixin, CreateView):
-    '''Vists para la creacion del vacio producto terminado'''
-    model = Vacio
-    template_name = "productoterminado/vacio_pt.html"
-    login_url=reverse_lazy('users_app:login')
-    #Campos que se van a mostrar en el formulario
-    form_class = VacioForm
-    #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
-    success_url= reverse_lazy('produ_app:list_produ')
-    
-    def form_valid(self, form):
-        '''funcion para automatizar el campo '''
-        user = self.request.user
-             # Guarda el formulario sin commit para asignar manualmente el usuario
-        Vacio = form.save(commit=False)
-             # Asigna el usuario al campo pedi_user
-        Vacio.responsable = user
-             # Ahora sí, guarda el pedido en la base de datos
-        Vacio.save()
-        return super().form_valid(form)
-    
-    def form_valid(self, form):
-        #Obtener los datos del fomulario
-        pt_lote = form.cleaned_data['pt_lote']
-        
-        # Agregar un mensaje de éxito con el nombre de usuario
-        messages.success(self.request, f'¡El empacado al vacio de {pt_lote} se ha guardado correctamente!')
-
-        return super(VacioProductoTerminadoCreateView, self).form_valid(form)
-
-
 class VacioProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     '''Vists para la edición del vacio producto terminado'''
     model = Vacio
@@ -255,6 +157,13 @@ class VacioProductoTerminadoUpdateView(LoginRequiredMixin, UpdateView):
     form_class = VacioUpdateForm
     #url donde se redirecciona una vez acaba el proceso el "." es para redireccionar a la misma pagina
     success_url= reverse_lazy('produ_app:list_produ')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['producto_terminado'] = self.object.pt_lote.pt_lote
+        context['producto_terminado_nombre']=self.object.pt_lote.pt_nombre
+        context['fecha_prepraracion']=self.object.pt_lote.pt_fechapreparacion
+        return context
     
     def form_valid(self, form):
         '''funcion para automatizar el campo '''
@@ -444,7 +353,7 @@ def export_productoterminado_to_excel(request):
     for producto in productoterminado:
         # Obtener las características organolépticas
         try:
-            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(pt_lote=producto)
+            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(producto=producto)
         except CaracteristicasOrganolepticasPT.DoesNotExist:
             caracteristicas = None
 
@@ -506,7 +415,7 @@ def export_productoterminado_to_csv(request):
     for producto in productoterminado:
         # Obtener las características organolépticas
         try:
-            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(pt_lote=producto)
+            caracteristicas = CaracteristicasOrganolepticasPT.objects.get(producto=producto)
         except CaracteristicasOrganolepticasPT.DoesNotExist:
             caracteristicas = None
 

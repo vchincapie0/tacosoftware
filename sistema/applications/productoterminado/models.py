@@ -3,6 +3,7 @@ import string
 from django.db import models
 from django.utils import timezone
 from applications.materiaprima.models import MateriaPrimaGenerica
+from applications.users.models import User
 
 # Creacion model Producto terminado.
 
@@ -44,7 +45,7 @@ class ProductoTerminado(models.Model):
 
     def __str__(self):
         return f"{self.pt_lote}-{self.pt_nombre}"
-
+    
 class ExistenciaPT(models.Model):
 
     pt_lote=models.ForeignKey(ProductoTerminado,on_delete=models.CASCADE)
@@ -54,7 +55,7 @@ class ExistenciaPT(models.Model):
 
     def __str__(self):
         return f"{self.pt_lote}-{self.exisPT_CantidadIngresada}-{self.exisPT_CantidadEgresada}"
-  
+
 class CaracteristicasOrganolepticasPT(models.Model):
 
     ESTADO_CHOICES=(
@@ -71,7 +72,7 @@ class CaracteristicasOrganolepticasPT(models.Model):
     estado=models.CharField('Estado',max_length=1,choices=ESTADO_CHOICES, default=0)
     
     def __str__(self):
-        return str(self.pt_lote)+'-'+self.estado
+        return f'{self.producto}-{self.estado}-{self.observaciones}'
 
 class EmpaqueProductoTerminado(models.Model):
 
@@ -111,7 +112,7 @@ class ProductoTerminadoAudit(models.Model):
     productoterminado = models.ForeignKey(ProductoTerminado, on_delete=models.CASCADE, related_name='audit_logs')
     action = models.CharField(max_length=1, choices=ACTION_CHOICES)
     details = models.TextField(blank=True, null=True)
-    changed_by = models.ForeignKey(ProductoTerminado, on_delete=models.SET_NULL, null=True, blank=True)
+    changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     changed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

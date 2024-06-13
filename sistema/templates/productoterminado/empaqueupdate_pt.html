@@ -11,10 +11,15 @@
 
           <div class="mx-4 my-2 row">
                       
-            <div class="mb-3 col-12">
-                <label for="id_pt_lote" class="form-label">Lote Empaque:</label>
-                {{form.pt_lote}}  
-            </div>
+          <div class="mb-3 col-12 text-center">
+              <label for="id_pt_nombre" class="form-label">Lote Producto Terminado:</label>
+              <div class="form-control"><strong>{{ producto_terminado }} - {{ producto_terminado_nombre}}</strong></div>
+          </div>
+          
+          <div class="mb-3 col-12 text-center">
+            <label for="id_pt_nombre" class="form-label">Fecha Preparación:</label>
+            <div class="form-control"><strong>{{fecha_prepraracion}}</strong></div>
+          </div>
 
             <div class="row">
               <div class="col-12">

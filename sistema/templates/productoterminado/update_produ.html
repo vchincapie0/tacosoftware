@@ -10,37 +10,23 @@
 
             {% if form.errors %}
                 <div class="alert alert-info">
-                    {{form.errors.pt_lote.0}}
                     {{form.errors.pt_nombre.0}}
-                    {{form.errors.pt_cantidad.0}}
-                    {{form.errors.pt_fechapreparacion.0}}
                     {{form.errors.pt_fechavencimiento.0}}
                 </div>
             {% endif %}
 
             <div class="mx-4 my-2 row">
                 
-                <div class="mb-3 col-12">
+                <div class="mb-3 col-12 text-center">
                     <label for="id_pt_lote" class="form-label">Lote: </label>
-                    {{form.pt_lote}}   
+                    <div class="form-control"><strong>{{producto.pt_lote}}</strong></div>
+                    
                 </div>
           
            
-                <div class="mb-3 col-12">
+                <div class="mb-3 col-12 text-center">
                     <label for="id_pt_nombre" class="form-label">Producto:</label>
-                    {{form.pt_nombre}}   
-                </div>
-
-                <div class="row">
-                    <div class="col">
-                        <label for="id_pt_cantidad" class="form-label">Cantidad:</label>
-                        {{form.pt_cantidad}}  
-                    </div>
-
-                    <div class="col">
-                        <label for="id_pt_fechapreparacion" class="form-label">Fecha preparación:</label>
-                        <div class="cont-fecha">{{form.pt_fechapreparacion}}</div>  
-                    </div>
+                    <div class="form-control"><strong>{{producto.pt_nombre}}</strong></div>
                 </div>
 
                 <div class="mb-3 row">

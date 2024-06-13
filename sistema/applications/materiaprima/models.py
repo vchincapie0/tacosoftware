@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from applications.users.models import User
 from django.utils import timezone
@@ -23,6 +25,7 @@ class MateriaPrimaGenerica(models.Model):
         return f"{self.mp_nombre}"
     
     def actualizar_cantidad_total(self):
+        # Verificar si existen características organolépticas aprobadas y desinfección asociada
         total = sum([materia.mp_cantidad for materia in self.materiaprima_set.all()])
         self.cantidad_total = total
         self.save()
@@ -88,7 +91,7 @@ class MateriaPrimaAudit(models.Model):
     materiaprima = models.ForeignKey(MateriaPrima, on_delete=models.CASCADE, related_name='audit_logs')
     action = models.CharField(max_length=1, choices=ACTION_CHOICES)
     details = models.TextField(blank=True, null=True)
-    changed_by = models.ForeignKey(MateriaPrima, on_delete=models.SET_NULL, null=True, blank=True)
+    changed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     changed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -56,7 +56,6 @@ class ProductoTerminadoGenericoFilterForm(forms.ModelForm):
         self.fields['pt_tipo'].required = False
         self.fields['pt_tipo'].choices = [('', '---------')] + list(self.fields['pt_tipo'].choices)
 
-
 class ProductoTerminadoForm(forms.ModelForm):
     """Form definition for Producto Terminado."""
 
@@ -64,21 +63,23 @@ class ProductoTerminadoForm(forms.ModelForm):
         """Meta definition for ProductoTerminadoform."""
 
         model = ProductoTerminado
-        fields = (
-            'pt_cantidad',   
-            'pt_fechapreparacion',
+        fields = (  
             'pt_fechavencimiento',
             )
+        
+        widgets={
+            'pt_fechavencimiento':forms.SelectDateWidget(),
+        }
 
-    # def clean_PT_fechavencimiento(self):
-    #     fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
-    #     fecha_actual = timezone.now().date()
+    def clean_PT_fechavencimiento(self):
+        fecha_vencimiento = self.cleaned_data['pt_fechavencimiento']
+        fecha_actual = timezone.now().date()
 
-    #     # Comprueba si la fecha de vencimiento es anterior a la fecha actual
-    #     if fecha_vencimiento < fecha_actual:
-    #         raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
+        #Comprueba si la fecha de vencimiento es anterior a la fecha actual
+        if fecha_vencimiento < fecha_actual:
+            raise forms.ValidationError('La fecha de vencimiento debe ser posterior a la fecha actual.')
 
-    #     return fecha_vencimiento
+        return fecha_vencimiento
 
 class CaracteristicasOrganolepticasPTForm(forms.ModelForm):
 
@@ -108,8 +109,6 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         model = CaracteristicasOrganolepticasPT
         fields=(
-
-            'producto',
             'observaciones',
             'olor',
             'sabor',
@@ -120,7 +119,6 @@ class CaracteristicasPTUpdateForm(forms.ModelForm):
 
         widgets={
                 
-                'producto':forms.TextInput(attrs={'class':'form-control-plaintext text-light'}),
                 'observaciones':forms.Textarea(attrs={'class':'form-control' }),
                 'olor':forms.CheckboxInput(),
                 'sabor':forms.CheckboxInput(),
@@ -151,52 +149,19 @@ class ExistenciaPTForm(forms.ModelForm):
             if cantidadegr<= 0:
                 raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
             return cantidadegr
-        
-class EmpaqueProductoTerminadoForm(forms.ModelForm):
-
-    class Meta:
-
-        model = EmpaqueProductoTerminado
-        fields=(
-            'pt_lote',
-            'emp_pesoKg',
-            'emp_cantidadBolsas',
-          
-        )     
-        
-        widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
-            'emp_pesoKg': forms.NumberInput(attrs={'class':'form-control'}),
-            'emp_cantidadBolsas': forms.NumberInput(attrs={'class':'form-control'})
-            
-        }    
-
-        def clean_Emp_pesoKgPT(self):
-            pesoPT  = self.cleaned_data['emp_pesoKgPT']
-            if pesoPT<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return pesoPT
-        
-        def clean_Emp_cantidadBolsas(self):
-            cantidadbol  = self.cleaned_data['emp_cantidadBolsas']
-            if cantidadbol<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadbol
-        
+                
 class EmpaqueUpdateForm(forms.ModelForm):
 
     class Meta:
 
         model = EmpaqueProductoTerminado
         fields=(
-            'pt_lote',
             'emp_pesoKg',
             'emp_cantidadBolsas',
           
         )    
 
         widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
             'emp_pesoKg': forms.NumberInput(attrs={'class':'form-control'}),
             'emp_cantidadBolsas': forms.NumberInput(attrs={'class':'form-control'})
             
@@ -213,50 +178,18 @@ class EmpaqueUpdateForm(forms.ModelForm):
             if cantidadbol<= 0:
                 raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
             return cantidadbol      
-        
-class VacioForm(forms.ModelForm):
-
-    class Meta:
-
-        model = Vacio
-        fields=(
-            'pt_lote',
-            'cantidad_bolsas_rechazadas',
-            'cantidad_bolsas_liberadas',
-          
-        )
-        widget={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
-            'cantidad_bolsas_rechazadas': forms.NumberInput(attrs={'class':'form-control'}),
-            'cantidad_bolsas_liberadas':forms.NumberInput(attrs={'class':'form-control'}),
-            
-        }     
-        
-        def clean_Cantidad_bolsas_rechazadas(self):
-            cantidadre  = self.cleaned_data['Cantidad_bolsas_rechazadas']
-            if cantidadre<= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadre
-        
-        def clean_Cantidad_bolsas_liberadas(self):
-            cantidadlib  = self.cleaned_data['Cantidad_bolsas_liberadas']
-            if cantidadlib <= 0:
-                raise forms.ValidationError("La cantidad debe ser un número mayor que 0.")
-            return cantidadlib
-        
+                
 class VacioUpdateForm(forms.ModelForm):
 
     class Meta:
 
         model = Vacio
         fields=(
-            'pt_lote',
             'cantidad_bolsas_rechazadas',
             'cantidad_bolsas_liberadas',
           
         )   
         widgets={
-            'pt_lote': forms.NumberInput(attrs={'class':'form-control'}),
             'cantidad_bolsas_rechazadas': forms.NumberInput(attrs={'class':'form-control'}),
             'cantidad_bolsas_liberadas':forms.NumberInput(attrs={'class':'form-control'}),
             

@@ -41,8 +41,14 @@ document.getElementById("selec_picado").addEventListener("submit", function(even
     var productoTerminado = document.getElementById("producto_terminado").value;
     
     if (productoTerminado == "") {
-        alert("Por favor, seleccione una opción válida");
-        event.preventDefault(); // Evita que el formulario se envíe si no se ha seleccionado una opción válida
-    }
+            Swal.fire({
+            title: "Selección Inválida",
+            text: "Por favor, seleccione una opción válida",
+            icon: "error",
+            background: '#343a40',  // Fondo oscuro
+            color: '#ffffff'  // Texto blanco
+            });
+        event.preventDefault();
+    } // Evita que el formulario se envíe si no se ha seleccionado una opción válida
 });
 </script>

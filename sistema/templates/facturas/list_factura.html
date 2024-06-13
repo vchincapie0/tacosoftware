@@ -2,7 +2,7 @@
 Titulo: Template para mostrar las facturas de pedidos registrados en el sistema
 Fecha Elaboracion: 04/03/2024 
 Elaborado por: Vivian Carolina Hincapie Escobar 
-Última actualización: 17/05/2024
+Última actualización: 05/06/2024
  -->
 
 {% extends 'base.html' %}
@@ -14,11 +14,19 @@ Elaborado por: Vivian Carolina Hincapie Escobar
 <div class="mt-3 container">
     {% if messages %}
         {% for message in messages %}
-            <!-- Muestra mensajes de éxito si existen -->
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ message|safe }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>                      
+            {% if message.tags == 'error' %}
+                <!-- Muestra mensajes de error -->
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ message|safe }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>   
+            {% elif message.tags == 'success' %}
+                <!-- Muestra mensajes de éxito -->
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message|safe }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>  
+            {% endif %}
         {% endfor %}
     {% endif %}
     <div class="card text-bg-dark mb-3">
@@ -26,7 +34,7 @@ Elaborado por: Vivian Carolina Hincapie Escobar
             <div class="row">
                 <div class="col-6">
                     <!-- Botón para agregar una nueva factura, abre un modal -->
-                    <a name="" id="" class="btn btn-success"  onclick="add_factura('{% url 'facturas_app:add_factura' %}')" role="button">Agregar Factura</a>
+                    <a name="" id="" class="btn btn-success" onclick="add_factura('{% url 'facturas_app:add_factura' %}')" role="button">Agregar Factura</a>
                 </div>
                 
                 <div class="col-6">
@@ -85,7 +93,7 @@ Elaborado por: Vivian Carolina Hincapie Escobar
                                 <!-- Enlace para editar la factura, abre un modal -->
                                 <a onclick="edit_factura('{% url 'facturas_app:edit_factura' f.pk %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{f.num_factura}}</a>
                             </td>
-                            <td>{{f.fac_proveedor}}</td>
+                            <td>{{f.fac_numeroPedido.pedi_proveedor}}</td>
                             <td>{{f.fac_numeroPedido.ref_pedido}}</td>
                             <td>{{f.fac_fechaLlegada|date:"d/m/y"}}</td>
                             <td>{{f.fac_numeroUnidades}}</td>

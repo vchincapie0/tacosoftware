@@ -132,13 +132,20 @@ Elaborado por: Vivian Carolina Hincapie Escobar
 
 
     function confirmValidation() {
-        // Muestra un cuadro de confirmación al usuario.
-        // Si el usuario confirma, se llama a la función validateFieldset1.
-        if (confirm('¿Está seguro de que los datos suministrados son correctos?')) {
-            validateFieldset1();
-        }
+        Swal.fire({
+            title: '¿Está seguro de que los datos suministrados son correctos?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, estoy seguro',
+            cancelButtonText: 'Cancelar',
+            background: '#343a40',  // Fondo oscuro
+            color: '#ffffff'  // Texto blanco
+        }).then((result) => {
+            if (result.isConfirmed) {
+                validateFieldset1();
+            }
+        });
     }
-
 
     function validateFieldset1() {
         let isValid = true; // Variable para rastrear si todos los datos son válidos.
@@ -207,11 +214,20 @@ Elaborado por: Vivian Carolina Hincapie Escobar
     }
     
     function confirmSubmission() {
-        // Muestra un cuadro de confirmación al usuario.
-        // Si el usuario confirma, se envía el formulario.
-        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
-            document.getElementById('mainForm').submit();
-        }
+        Swal.fire({
+            title: '¿Está seguro de que desea guardar el formulario?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar',
+            background: '#343a40',  // Fondo oscuro
+            color: '#ffffff'  // Texto blanco
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('mainForm').submit();
+            }
+        });
     }
+
 </script>
 {% endblock %}

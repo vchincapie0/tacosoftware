@@ -3,7 +3,7 @@ Titulo: Modal para mostrar el formulario de registro de datos
 de las facturas
 Fecha Elaboracion: 07/03/2024 
 Elaborado por: Vivian Carolina Hincapie Escobar 
-Última actualización: 13/04/2024
+Última actualización: 05/06/2024
  -->
 
 <!-- Modal de tamaño scrollable para añadir una nueva factura -->
@@ -16,10 +16,13 @@ Elaborado por: Vivian Carolina Hincapie Escobar
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+            <!-- Contenedor para mensajes de error -->
+            <div id="error-message" class="alert alert-danger d-none"></div>
+
             <!-- Formulario para añadir una nueva factura -->
             <form id="facAddForm" action="{% url 'facturas_app:add_factura' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;" enctype="multipart/form-data">
                 {% csrf_token %}
-
+                     
                 <div class="mx-4 my-2 row">
                     
                     <div class="mb-3 col-12">
@@ -27,23 +30,11 @@ Elaborado por: Vivian Carolina Hincapie Escobar
                         <label for="id_num_factura" class="form-label">Número Factura: </label>
                         {{ form.num_factura }}   
                     </div>
-            
-                    <div class="mb-3 col-12">
-                        <!-- Campo para el proveedor -->
-                        <label for="id_fac_proveedor" class="form-label">Proveedor:</label>
-                        {{ form.fac_proveedor }}   
-                    </div>
 
                     <div class="mb-3 col-12">
                         <!-- Campo para el número de pedido -->
                         <label for="id_fac_numeroPedido" class="form-label">Pedido:</label>
                         {{ form.fac_numeroPedido }}  
-                    </div>
-
-                    <div class="mb-3 col-12">
-                        <!-- Campo para la fecha de llegada -->
-                        <label for="" class="form-label">Fecha de Llegada: </label>
-                        <div class="cont-fecha">{{ form.fac_fechaLlegada }}</div>
                     </div>
 
                     <div class="mb-3 col-12">
@@ -97,21 +88,21 @@ Elaborado por: Vivian Carolina Hincapie Escobar
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function () {
-            $('#facAddForm').submit(function (event) {
-                event.preventDefault(); // Evita la redirección predeterminada
+        $('#facAddForm').submit(function (event) {
+            event.preventDefault(); // Evita la redirección predeterminada
 
-                $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        // Verifica la respuesta y actualiza el contenido del modal
-                        $('#add_factura').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        // Maneja errores de Ajax, si es necesario
-                    }
-                });
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                success: function (data) {
+                    // Verifica la respuesta y actualiza el contenido del modal
+                    $('#add_factura').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Maneja errores de Ajax, si es necesario
+                }
             });
         });
+    });
 </script>

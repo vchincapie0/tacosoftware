@@ -16,17 +16,14 @@ def actualizar_estado(sender, instance, **kwargs):
 # Obtener el modelo de producto personalizado
 User = get_user_model()
 
-@receiver(post_save, sender=MateriaPrimaAudit)
+@receiver(post_save, sender=MateriaPrima)
 def log_user_change(sender, instance, created, **kwargs):
     current_user = getattr(threading, 'current_user', None)
 
     if current_user:
         changed_by = current_user
 
-    if instance.deleted:
-        action = 'D'  # Marcar como eliminado
-        details = f"{instance.mp_nombre} ha sido borrado."
-    elif created:
+    if created:
         action = 'C'  # Creación de producto
         details = f"{instance.mp_nombre} ha sido creado."
     else:

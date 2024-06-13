@@ -96,9 +96,19 @@ Elaborado por: Vivian Carolina Hincapie Escobar
 
     // Función que solicita confirmación al usuario y, si se confirma, envía el formulario.
     function confirmSubmission() {
-        if (confirm('¿Está seguro de que desea guardar el formulario?')) {
-            document.getElementById('mainForm').submit();
-        }
+        Swal.fire({
+            title: '¿Está seguro de que desea guardar el formulario?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar',
+            background: '#343a40',  // Fondo oscuro
+            color: '#ffffff'  // Texto blanco
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('mainForm').submit();
+            }
+        });
     }
 </script>
 {% endblock extrajs %}

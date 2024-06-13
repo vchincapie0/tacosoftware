@@ -23,12 +23,10 @@
                 <table class="table table-secondary">
                     <thead>
                         <tr>
-                            <th scope="col">Codigo de Equipos</th>
-                            <th scope="col">Encargado Cosina</th>
+                            <th scope="col">Encargado Cocina</th>
                             <th scope="col">Encargado Entrega</th>
-                            <th scope="col">Calida</th>
-                            <th scope="col" class="text-center">Nombre Equipos</th>
-                            <th scope="col">Check</th>
+                            <th scope="col" class="text-center">Nombre de Equipo Utilizado</th>
+                            <th scope="col">Estado</th>
                             <th scope="col" class="text-center">Eliminar</th>
 
                         </tr>
@@ -37,17 +35,9 @@
                         <a onclick="add_equipos('{% url 'procesamientos_app:add_equipos'%}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" ></a>
                         {%for p in procesamientos%}
                         <tr>
-                            <td><a onclick="edit_equipo('{% url 'procesamientos_app:edit_equipo' p.id_equipo %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{p.id_equipo}} </a></td>
                             <td>{{p.equi_encargadoCocina}}</td>
                             <td>{{p.equi_encargadoEntrega}}</td>
-                            <td>
-                                {% if p.equi_calidad == '0' %}
-                                <p class="text-success">{{p.get_equi_calidad_display}}</p>
-                                {% elif p.equi_calidad == '1' %}
-                                    <p class="text-danger">{{p.get_equi_calidad_display}}</p> 
-                                {% endif %}
-                            </td>
-                            <td>{{p.equi_nombre}}</td>
+                            <td><a onclick="edit_equipo('{% url 'procesamientos_app:edit_equipo' p.id_equipo %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{p.equi_nombre}}</a></td>
                             <td>
                                 {% if p.equi_check == '0' %}
                                 <p class="text-success">{{p.get_equi_check_display}}</p>
