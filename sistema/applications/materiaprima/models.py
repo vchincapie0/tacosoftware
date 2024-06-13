@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from applications.users.models import User
 from django.utils import timezone
@@ -32,11 +34,16 @@ class MateriaPrima(models.Model):
     ''''Tabla de materia prima con caracteristicas'''
     
 
-    mp_lote = models.IntegerField('Lote', primary_key=True)
+    mp_lote = models.CharField(max_length=8, unique=True, editable=False)
     mp_nombre = models.ForeignKey(MateriaPrimaGenerica, on_delete=models.CASCADE)
     mp_cantidad=models.IntegerField(default=100)
     mp_fechallegada=models.DateField('Fecha Ingreso',default=timezone.now)
     mp_fechavencimiento = models.DateField('Fecha Vencimiento',default=timezone.now)
+
+    def save(self, *args, **kwargs):
+        if not self.pt_lote:
+            self.pt_lote = 'MP' + ''.join(random.choices(string.digits, k=4))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.mp_lote)+'-'+str(self.mp_nombre)
