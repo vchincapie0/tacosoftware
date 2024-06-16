@@ -41,7 +41,7 @@ class MateriaPrima(models.Model):
     mp_fechavencimiento = models.DateField('Fecha Vencimiento',default=timezone.now)
 
     def __str__(self):
-        return str(self.mp_lote)+'-'+str(self.mp_nombre)
+        return f'{self.mp_nombre}-{self.mp_fechallegada}'
 
 class CaracteristicasOrganolepticas(models.Model):
     '''Tabla para caracteristicas organolepticas de materiaprima'''
