@@ -2,14 +2,15 @@
 # Autor: Vivian Carolina Hincapie Escobar 
 # Última modificación: 01/06/2024
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import F
 from django.contrib.auth.mixins import LoginRequiredMixin
+from applications.users.decorators import login_required
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from applications.materiaprima.models import MateriaPrimaGenerica
 from applications.insumos.models import InsumosGenerico
-from applications.productoterminado.models import ProductoTerminadoGenerico
+from applications.productoterminado.models import ProductoTerminadoGenerico, SalidaProductoTerminado
 
 class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
     '''Clase encargada de la vista que muestra las existencias de Materia Prima'''
@@ -77,3 +78,11 @@ class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['palabra_clave'] = self.request.GET.get('kword', '')
         return context
+
+@login_required
+def registrar_salida(request):
+    if request.method == 'POST':
+
+        return redirect(reverse_lazy('procesamientos_app:procesamiento_picado'))
+    
+    return render(request, 'existencias/registrar_salida.html')
