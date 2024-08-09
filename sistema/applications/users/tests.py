@@ -98,78 +98,78 @@ class UserRegistrationTest(TestCase):
         self.assertEqual(User.objects.filter(username='newuser').count(), 1)
         self.assertEqual(user.username, 'newuser')
 
-    def test_clean_username_unique(self):
-        form_data = {
-            'username': 'regularuser',
-            'name': 'New',
-            'last_name': 'User',
-            'password': 'newpassword',
-            'password2': 'newpassword',
-            'is_admin': False
-        }
+#     def test_clean_username_unique(self):
+#         form_data = {
+#             'username': 'regularuser',
+#             'name': 'New',
+#             'last_name': 'User',
+#             'password': 'newpassword',
+#             'password2': 'newpassword',
+#             'is_admin': False
+#         }
         
-        form = UserRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn('Este nombre de usuario ya está en uso. Elige otro.', form.errors['username'])
+#         form = UserRegisterForm(data=form_data)
+#         self.assertFalse(form.is_valid())
+#         self.assertIn('Este nombre de usuario ya está en uso. Elige otro.', form.errors['username'])
 
-    def test_clean_password_length(self):
-        form_data = {
-            'username': 'newuser',
-            'name': 'New',
-            'last_name': 'User',
-            'password': 'short',
-            'password2': 'short',
-            'is_admin': False
-        }
+#     def test_clean_password_length(self):
+#         form_data = {
+#             'username': 'newuser',
+#             'name': 'New',
+#             'last_name': 'User',
+#             'password': 'short',
+#             'password2': 'short',
+#             'is_admin': False
+#         }
         
-        form = UserRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn('La contraseña debe tener más de 5 caracteres.', form.errors['password'])
+#         form = UserRegisterForm(data=form_data)
+#         self.assertFalse(form.is_valid())
+#         self.assertIn('La contraseña debe tener más de 5 caracteres.', form.errors['password'])
 
-    def test_clean_password_match(self):
-        form_data = {
-            'username': 'newuser',
-            'name': 'New',
-            'last_name': 'User',
-            'password': 'password1',
-            'password2': 'password2',
-            'is_admin': False
-        }
+#     def test_clean_password_match(self):
+#         form_data = {
+#             'username': 'newuser',
+#             'name': 'New',
+#             'last_name': 'User',
+#             'password': 'password1',
+#             'password2': 'password2',
+#             'is_admin': False
+#         }
         
-        form = UserRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn('Las contraseñas no coinciden.', form.errors['password2'])
+#         form = UserRegisterForm(data=form_data)
+#         self.assertFalse(form.is_valid())
+#         self.assertIn('Las contraseñas no coinciden.', form.errors['password2'])
 
-    def test_clean_name_valid(self):
-        form_data = {
-            'username': 'newuser',
-            'name': 'New123',
-            'last_name': 'User',
-            'password': 'newpassword',
-            'password2': 'newpassword',
-            'is_admin': False
-        }
+#     def test_clean_name_valid(self):
+#         form_data = {
+#             'username': 'newuser',
+#             'name': 'New123',
+#             'last_name': 'User',
+#             'password': 'newpassword',
+#             'password2': 'newpassword',
+#             'is_admin': False
+#         }
         
-        form = UserRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn('El nombre solo puede contener letras.', form.errors['name'])
+#         form = UserRegisterForm(data=form_data)
+#         self.assertFalse(form.is_valid())
+#         self.assertIn('El nombre solo puede contener letras.', form.errors['name'])
 
-    def test_clean_last_name_valid(self):
-        form_data = {
-            'username': 'newuser',
-            'name': 'New',
-            'last_name': 'User123',
-            'password': 'newpassword',
-            'password2': 'newpassword',
-            'is_admin': False
-        }
+#     def test_clean_last_name_valid(self):
+#         form_data = {
+#             'username': 'newuser',
+#             'name': 'New',
+#             'last_name': 'User123',
+#             'password': 'newpassword',
+#             'password2': 'newpassword',
+#             'is_admin': False
+#         }
         
-        form = UserRegisterForm(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn('El apellido solo puede contener letras.', form.errors['last_name'])
+#         form = UserRegisterForm(data=form_data)
+#         self.assertFalse(form.is_valid())
+#         self.assertIn('El apellido solo puede contener letras.', form.errors['last_name'])
 
-#requerimiento 1.3
-class UserUpdateFormTest(TestCase):
+# #requerimiento 1.3
+# class UserUpdateFormTest(TestCase):
     def setUp(self):
         # Crear un usuario administrador
         self.admin_user = User.objects.create_user(

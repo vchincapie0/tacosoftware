@@ -27,6 +27,22 @@ class ProductoTerminadoGenerico(models.Model):
         self.cantidad_total = total
         self.save()
 
+class SalidaProductoTerminado(models.Model):
+    producto = models.ForeignKey(ProductoTerminadoGenerico, on_delete=models.CASCADE, related_name='salidas')
+    cantidad = models.IntegerField('Cantidad Salida')
+    fecha_salida = models.DateTimeField('Fecha de Salida', default=timezone.now)
+    realizado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        # Deducir la cantidad de stock
+        self.producto.cantidad_total -= self.cantidad
+        self.producto.save()
+           
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f'Salida de {self.cantidad} unidades de {self.pt_lote.pt_nombre} por {self.realizado_por} en {self.fecha_salida}'
+
 class ProductoTerminado(models.Model):
     '''Clase para la creacion de tabla de producto terminado'''
     pt_lote= models.CharField(max_length=8, unique=True, editable=False)
