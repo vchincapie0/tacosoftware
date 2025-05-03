@@ -1,0 +1,98 @@
+<!-- 
+Titulo: Formulario de Salidas de Productos Terminados 
+Fecha Elaboracion: 12/08/2024 
+Elaborado por: Vivian Carolina Hincapie Escobar 
+
+Última actualización: 12/08/2024 
+ -->
+
+ {% extends 'base.html' %}
+
+ {% block title %}
+     Salidas Productos Terminados
+ {% endblock title %}
+ 
+ {% block content %}
+ <div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 style="color: #fff;">Salidas Productos Terminados</h1>
+        </div>
+    </div>
+
+    <div class="mt-4 row justify-content-center">
+        <div class="col-md-7">
+            <div class="table-responsive">
+                <table class="table table-secondary text-center">
+                    <thead>
+                        <tr>
+                            <th>Producto Terminado</th>
+                            <th>Cantidad Disponible</th>
+                            <th>Cantidad de Salida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        {% for producto in producto %}
+                        <tr>
+                            <td>{{producto.pt_nombre}}</td>
+                            <td>{{producto.cantidad_total}}</td>
+                            <td>
+                                <form action="" method="POST" id="salidasForm">
+                                    {% csrf_token %}
+                                    <input type="number" min="0" class="form-control" id="producto_{{ producto.id }}" onchange="validateQuantity('{{ producto.id }}', {{ producto.cantidad_total }})">
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    
+                </table>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary" onclick="confirmSubmission()">Confirmar Salida</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ {% endblock content %}
+
+ 
+ {% block extrajs %}
+ <script>
+    // Function that validates the input quantity against the available quantity
+    function validateQuantity(productId, availableQuantity) {
+        const inputElement = document.getElementById('producto_' + productId);
+        const inputQuantity = parseInt(inputElement.value, 10);
+
+        if (inputQuantity > availableQuantity) {
+            Swal.fire({
+                title: 'Error',
+                text: 'La cantidad de salida no puede exceder la cantidad disponible.',
+                icon: 'error',
+                background: '#343a40',  // Dark background
+                color: '#ffffff'  // White text
+            });
+            inputElement.value = ''; // Clear the invalid input
+        }
+    }
+
+    // Existing function that asks for confirmation and submits the form
+    function confirmSubmission() {
+        Swal.fire({
+            title: '¿Está seguro de que desea generar la salida de productos?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText: 'Cancelar',
+            background: '#343a40',  // Dark background
+            color: '#ffffff'  // White text
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('salidasForm').submit();
+            }
+        });
+    }
+</script>
+
+ {% endblock extrajs %}
+    

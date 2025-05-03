@@ -2,7 +2,7 @@
 # Autor: Vivian Carolina Hincapie Escobar 
 # Última modificación: 01/06/2024
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
 from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.users.decorators import login_required
@@ -10,7 +10,7 @@ from django.views.generic import ListView
 from django.urls import reverse_lazy
 from applications.materiaprima.models import MateriaPrimaGenerica
 from applications.insumos.models import InsumosGenerico
-from applications.productoterminado.models import ProductoTerminadoGenerico, SalidaProductoTerminado
+from applications.productoterminado.models import ProductoTerminadoGenerico
 
 class ExistenciasMateriaPrimaListView(LoginRequiredMixin, ListView):
     '''Clase encargada de la vista que muestra las existencias de Materia Prima'''
@@ -80,9 +80,15 @@ class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
         return context
 
 @login_required
+#Autor: Vivian carolina Hincapie Escobar
 def registrar_salida(request):
-    if request.method == 'POST':
+    '''
+    Vista para registrar las salidas de producto terminado 
+    '''
+    producto = ProductoTerminadoGenerico.objects.all()
 
-        return redirect(reverse_lazy('procesamientos_app:procesamiento_picado'))
+    if request.method == 'POST':
+      
+        return redirect(reverse_lazy('existencias_app:stock_pt'))
     
-    return render(request, 'existencias/registrar_salida.html')
+    return render(request, 'existencias/registrar_salida.html',{'producto': producto})

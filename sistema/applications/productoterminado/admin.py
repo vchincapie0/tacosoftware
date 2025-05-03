@@ -7,4 +7,5 @@ admin.site.register(ProductoTerminado)
 admin.site.register(CaracteristicasOrganolepticasPT)
 admin.site.register(EmpaqueProductoTerminado)
 admin.site.register(Vacio)
+admin.site.register(SalidaProductoTerminado)
 
