@@ -23,6 +23,11 @@
                         <button class="btn btn-outline-success" type="submit">Buscar</button>
                     </form>
                 </div>
+                <div class="col-6">
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'existencias_app:salida_pt' %}" type="button" class="btn btn-warning">Registrar Salida</a>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -37,6 +42,8 @@
                           <th scope="col">Bolsas Totales Disponible (Unidades)</th>
                           <th scope="col">Fecha Último Ingreso</th>
                           <th scope="col">Hora Último Ingreso</th>
+                          <th scope="col">Fecha Última Salida</th>
+                          <th scope="col">Hora Última Salida</th>
                         </tr>
                     </thead>
 
@@ -58,8 +65,7 @@
                     </tbody>
 
                 </table>
-            </div>
-            
+            </div>          
         </div>
     </div>
 
@@ -102,11 +108,12 @@
             </div>
         </div>
     </div>
-</div>  
+</div>
+
+
 {% endblock content %}
 
 {% block extrajs %}
+{% endblock %}
 
-{% endblock  %}
-    
     

@@ -8,7 +8,6 @@ from .models import (
     Vacio,
     ProductoTerminadoGenerico,
     ProductoTerminadoAudit,
-    
 )
 from applications.users.models import User
 
@@ -227,6 +226,4 @@ class ProductoAuditFilterForm(forms.Form):
     end_date = forms.DateField(label='Fecha final', 
                                required=False, 
                                widget=forms.DateInput(attrs={'type': 'date', 'class':'form-control'}))
-        
-
         

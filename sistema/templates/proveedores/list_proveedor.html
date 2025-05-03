@@ -28,7 +28,7 @@ Fecha Elaboración: 16/02/2024
             <div class="row">
                 <div class="col-6">
                     <!-- Botón para agregar nuevo proveedor -->
-                    <a name="" id="" class="btn btn-success" onclick="add_proveedor('{% url 'proveedores_app:add_proveedores' %}')" role="button">Agregar Proveedor</a>
+                    <a name="" id="" class="btn btn-success" href="{% url 'proveedores_app:add_proveedores' %}" role="button">Agregar Proveedor</a>
                 </div>
                 <div class="col-6">
                     <!-- Formulario de búsqueda -->
@@ -76,7 +76,7 @@ Fecha Elaboración: 16/02/2024
                         {% for p in proveedor %}
                         <tr>
                             <td>
-                                <a onclick="update_proveedor('{% url 'proveedores_app:update_proveedores' p.prov_id %}')" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{ p.nit }}</a>
+                                <a href="{% url 'proveedores_app:update_proveedores' p.prov_id %}" type="button" style="color: blue; text-decoration-line: underline;" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Editar">{{ p.nit }}</a>
                             </td>
                             <td>{{ p.prov_nombre }}</td>
                             <td>{{ p.prov_telefono }}</td>

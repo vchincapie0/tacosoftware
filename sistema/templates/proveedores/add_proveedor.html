@@ -6,26 +6,30 @@ Fecha Elaboración: 16/02/2024
 -->
 
 <!-- Estructura del modal para añadir un proveedor -->
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content bg-dark text-white">
-        <!-- Encabezado del modal -->
-        <div class="modal-header">
-            <h5 class="modal-title">Añadir Proveedor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+{% extends "base.html" %}
+
+{% block title %} 
+Agregar Proveedor
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 style="color: #fff;">Agregar Proveedor</h1>
         </div>
-        
-        <!-- Cuerpo del modal -->
-        <div class="modal-body">
-            <!-- Formulario para añadir un proveedor -->
-            <form id="provAddForm" action="{% url 'proveedores_app:add_proveedores' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                {% csrf_token %}
-                
-                <!-- Mostrar mensajes de error si existen -->
-                {% if form.errors %}
-                    <div class="alert alert-info">    
-                        {{ form.errors.prov_nombre.0 }}
-                        {{ form.errors.prov_telefono.0 }}
-                    </div>
+    </div>
+
+    <div class="mt-4 row justify-content-center">
+        <div class="col-md-7">
+            <form action="" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+               {% csrf_token %}
+               <!-- Mostrar mensajes de error si existen -->
+               {% if form.errors %}
+                <div class="alert alert-info">    
+                    {{ form.errors.prov_nombre.0 }}
+                    {{ form.errors.prov_telefono.0 }}
+                </div>
                 {% endif %}
 
                 <div class="mx-4 my-2 row">
@@ -60,30 +64,14 @@ Fecha Elaboración: 16/02/2024
                     </div>
                 </div>
             </form>
-        </div>    
+        </div>
     </div>
 </div>
 
-<!-- Script para manejar el envío del formulario mediante AJAX -->
-<script>
-    $(document).ready(function () {
-        // Cuando el formulario se envíe
-        $('#provAddForm').submit(function (event) {
-            event.preventDefault(); // Evita la redirección predeterminada
+{% endblock %}
 
-            // Realiza la solicitud AJAX
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                success: function (data) {
-                    // Verifica la respuesta y actualiza el contenido del modal
-                    $('#add_proveedor').html(data);
-                },
-                error: function (xhr, status, error) {
-                    // Maneja errores de Ajax, si es necesario
-                }
-            });
-        });
-    });
-</script>
+{% block extrajs %}
+
+{% endblock %}
+
+

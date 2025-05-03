@@ -28,8 +28,10 @@ def log_user_logout(sender, request, user, **kwargs):
 
 @receiver(post_save, sender=User)
 def log_user_change(sender, instance, created, **kwargs):
-    '''Señal para validar si el usuario se crea, modifica o se borra para auditorias'''
+    '''Señal para validar si el usuario se crea, modifica o se borra para auditorías'''
     current_user = getattr(threading, 'current_user', None)
+
+    changed_by = None  # Inicializar changed_by como None
 
     if current_user:
         changed_by = current_user
@@ -42,7 +44,7 @@ def log_user_change(sender, instance, created, **kwargs):
         details = f"{instance.name} {instance.last_name} ha sido creado."
     else:
         action = 'U'  # Actualización de usuario
-        details = f"La información de {instance.name} {instance.last_name} ha sido actualizado."
+        details = f"La información de {instance.name} {instance.last_name} ha sido actualizada."
 
     # Crear el registro de auditoría con el usuario que realizó la acción
     UserAudit.objects.create(user=instance, action=action, details=details, changed_by=changed_by)

@@ -3,16 +3,24 @@
     Creado por Vivian Carolina Hincapie Escobar el 02/02/2024.
     Última actualización el 15/05/2024.
 -->
-<div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div class="modal-content bg-dark text-white">
-        <div class="modal-header">
-            <h5 class="modal-title">Añadir Usuario</h5>
-            <!-- Botón para cerrar el modal -->
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <!-- Formulario para agregar usuario -->
-            <form id="userAddForm" action="{% url 'users_app:add_user' %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+
+ {% extends "base.html" %}
+
+ {% block title %} 
+Agregar Usuario
+ {% endblock %}
+ 
+ {% block content %}
+ <div class="container">
+     <div class="row">
+         <div class="col-12 d-flex justify-content-center">
+             <h1 style="color: #fff;">Agregar Usuario</h1>
+         </div>
+     </div>
+ 
+     <div class="mt-4 row justify-content-center">
+         <div class="col-md-7">
+             <form action="" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
                 {% csrf_token %}
                 <!-- Muestra mensajes de error si existen -->
                 {% if form.errors %}
@@ -63,31 +71,15 @@
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
+             </form>
+         </div>
+     </div>
+ </div>
+ 
+ {% endblock %}
+ 
+ {% block extrajs %}
+ 
+ {% endblock %}
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-<script>
-    // Script para enviar el formulario por AJAX
-    jQuery(document).ready(function($) {
-        $('#userAddForm').submit(function (event) {
-            event.preventDefault(); // Evita la redirección predeterminada
-            // Envía el formulario por AJAX
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                data: $(this).serialize(),
-                success: function (data) {
-                    // Verifica la respuesta y actualiza el contenido del modal
-                    $('#add_usuarios').html(data);
-                },
-                error: function (xhr, status, error) {
-                    // Maneja errores de Ajax, si es necesario
-                }
-            });
-        });
-    });
-    
-</script>
+

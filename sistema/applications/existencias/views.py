@@ -2,9 +2,10 @@
 # Autor: Vivian Carolina Hincapie Escobar 
 # Última modificación: 01/06/2024
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import F
 from django.contrib.auth.mixins import LoginRequiredMixin
+from applications.users.decorators import login_required
 from django.views.generic import ListView
 from django.urls import reverse_lazy
 from applications.materiaprima.models import MateriaPrimaGenerica
@@ -77,3 +78,17 @@ class ExistenciasProductoTerminadoListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['palabra_clave'] = self.request.GET.get('kword', '')
         return context
+
+@login_required
+#Autor: Vivian carolina Hincapie Escobar
+def registrar_salida(request):
+    '''
+    Vista para registrar las salidas de producto terminado 
+    '''
+    producto = ProductoTerminadoGenerico.objects.all()
+
+    if request.method == 'POST':
+      
+        return redirect(reverse_lazy('existencias_app:stock_pt'))
+    
+    return render(request, 'existencias/registrar_salida.html',{'producto': producto})

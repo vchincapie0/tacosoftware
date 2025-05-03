@@ -1,42 +1,58 @@
 <!-- 
-Titulo: Modal que muestra formulario para editar datos de proveedores registrados en el sistema
+Titulo: Modal que muestra formulario para actualización
+de datos de proveedores registrados en el sistema
 Fecha Elaboración: 16/02/2024   
 Última actualización: 06/05/2024
 -->
 
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content bg-dark text-white">
-        <div class="modal-header">
-            <h5 class="modal-title">Editar Proveedor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Estructura del modal para añadir un proveedor -->
+{% extends "base.html" %}
+
+{% block title %} 
+Actualizar Proveedor
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <h1 style="color: #fff;">Actualizar Proveedor</h1>
         </div>
-        <div class="modal-body">
-            <form id="provEditForm" action="{% url 'proveedores_app:update_proveedores' object.prov_id %}" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
-                {% csrf_token %}
-                {% if form.errors %}
-                    <div class="alert alert-info">
-                        {{form.errors.prov_nombre.0}}
-                        {{form.errors.prov_telefono.0}}
-                    </div>
+    </div>
+
+    <div class="mt-4 row justify-content-center">
+        <div class="col-md-7">
+            <form action="" method="POST" class="form-control bg-dark text-white" style="--bs-bg-opacity: .5;">
+               {% csrf_token %}
+               <!-- Mostrar mensajes de error si existen -->
+               {% if form.errors %}
+                <div class="alert alert-info">    
+                    {{ form.errors.prov_nombre.0 }}
+                    {{ form.errors.prov_telefono.0 }}
+                </div>
                 {% endif %}
 
                 <div class="mx-4 my-2 row">
+                    <!-- Campo para el NIT del proveedor -->
                     <div class="mb-3 col-12">
-                        <label for="id_nit" class="form-label">NIT: </label>
-                        {{form.nit}}
+                        <label for="id_nit" class="form-label">NIT:</label>
+                        {{ form.nit }}
                     </div>
-
+                    
+                    <!-- Campo para la razón social del proveedor -->
                     <div class="mb-3 col-12">
                         <label for="id_prov_nombre" class="form-label">Razón Social:</label>
-                        {{form.prov_nombre}}
+                        {{ form.prov_nombre }}
                     </div>
 
+                    <!-- Campo para el teléfono del proveedor -->
                     <div class="mb-3 col-12">
                         <label for="id_prov_telefono" class="form-label">Teléfono:</label>
                         <br>
-                        {{form.prov_telefono}}
+                        {{ form.prov_telefono }}
                     </div>
 
+                    <!-- Botones para guardar o cancelar la acción -->
                     <div class="d-flex justify-content-center">
                         <div class="row">
                             <div class="col">
@@ -52,26 +68,10 @@ Fecha Elaboración: 16/02/2024
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        // Escucha el evento submit del formulario con id 'provEditForm'
-        $('#provEditForm').submit(function (event) {
-            event.preventDefault(); // Evita la redirección predeterminada del formulario
+{% endblock %}
 
-            // Realiza una solicitud Ajax
-            $.ajax({
-                type: 'POST', // Método de la solicitud
-                url: $(this).attr('action'), // URL a la que se envía el formulario
-                data: $(this).serialize(), // Datos serializados del formulario
-                success: function (data) {
-                    // Si la solicitud es exitosa, actualiza el contenido del modal
-                    $('#update_proveedor').html(data);
-                },
-                error: function (xhr, status, error) {
-                    // Maneja errores de la solicitud Ajax, si es necesario
-                    console.error('Error en la solicitud:', error);
-                }
-            });
-        });
-    });
-</script>
+{% block extrajs %}
+
+{% endblock %}
+
+
